@@ -1,4 +1,4 @@
-#include ".\headers\reader.h"
+#include "./headers/reader.h"
 
 void mem_reset(char* buff, size_t n)
 {
@@ -35,7 +35,7 @@ void frametostr (char* nomfic, char* save)
 
     while (getline(&buff, &len, fd) != -1)
     {
-        printf("buff : %s\n", buff);
+        printf("buff : %s", buff);
         if (strncmp(prefix, buff, strlen(prefix)) == 0)
         {
             if (str[0] != '\0')
@@ -63,5 +63,44 @@ void frametostr (char* nomfic, char* save)
     writedown(str, save);
     
     free(str);
+    fclose(fd);
+}
+
+void verif (char* nomfic, char* save)
+{
+    FILE* fd = fopen(nomfic, "r");
+    if (!fd)
+    {
+         puts("Problème d'ouverture du fichier (reader.c, verif).");
+        return;
+    }
+    
+    char* ligne = NULL;
+    size_t len = 0;
+    ssize_t read;
+    int i = 0, k;
+    
+    while ((read = getline(&ligne, &len, fd)) != -1)
+    {
+        k = 1;
+        printf("Ligne length = %zu\n", read);
+        printf("Ligne : %s", ligne);
+        for  (i = 0; i < (int)strlen(ligne); i++)
+        {
+            if (k == 0) break;
+            if (isxdigit(ligne[i] != 0))
+            {
+                if (ligne[i] != ' ')
+                {
+                    k = 0;
+                    puts("Caractère non hexa lu");
+                }
+            }
+        }
+        if (k == 1)
+            writedown(ligne, save);
+        read = 0;
+    }
+    free(ligne);
     fclose(fd);
 }
