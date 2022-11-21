@@ -7,23 +7,28 @@
 # le compilateur
 CC = gcc
 # les options de compilateur
-CFLAGS = -g -Wall
+CCFLAGS = -g -fsanitize=address -Wall -Wextra -c
+COFLAGS = -g -fsanitize=address -Wall -Wextra -o
 # liste des programme à créer 
 PROGRAMS = main
 
 # premiere regle : liste des programme à compiler
-# règle sans action, seulement aavec des dépendances 
+# règle sans action, seulement avec des dépendances 
 all : $(PROGRAMS)
 
 # règle pour compiler le main
 # il faut mettre tous les noms des fichiers .o dans les dépendances
-main : main.o 
-	$(CC) $(CFLAGS) -o $@ $^
-# règle générique de compilation des .o à partir des .c
-%.o : %.c %h
-	$(CC) $(CFLAGS) -c $<
+main : main.o reader.o
+	$(CC) $(COFLAGS) main sources/bin/*.o 
+
+main.o :   sources/main.c sources/headers/*.h
+	$(CC) $(CCFLAGS) sources/main.c -o sources/bin/main.o
+
+reader.o : sources/reader.c
+	$(CC) $(CCFLAGS) sources/reader.c -o sources/bin/reader.o
 
 # effacer les .o et les executables 
 # pour executer cette regle il faut taper dans le termnal "make clean"
 clean : 
-	rm *.O $(PROGRAMS)
+	rm -f sources/bin/*.o
+	rm $(PROGRAMS)
