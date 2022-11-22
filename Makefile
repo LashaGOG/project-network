@@ -18,15 +18,13 @@ all : $(PROGRAMS)
 
 # règle pour compiler le main
 # il faut mettre tous les noms des fichiers .o dans les dépendances
-main : main.o reader.o
+main : main.o tests.o reader.o tools.o
 	$(CC) $(COFLAGS) main sources/bin/*.o 
-
 main.o :   sources/main.c sources/headers/*.h
 	$(CC) $(CCFLAGS) sources/main.c -o sources/bin/main.o
-
-reader.o : sources/reader.c
-	$(CC) $(CCFLAGS) sources/reader.c -o sources/bin/reader.o
-
+# règle générique de compilation des .o à partir des .c
+%.o : sources/%.c 
+	$(CC) $(CCFLAGS) $< -o sources/bin/$@
 # effacer les .o et les executables 
 # pour executer cette regle il faut taper dans le termnal "make clean"
 clean : 
