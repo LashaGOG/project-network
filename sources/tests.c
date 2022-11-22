@@ -37,3 +37,13 @@ void test_hexToDec() {
     printf("Test de la fonction hexToDec terminé\n");
     printf("________________________________\n");
 }
+
+void test_frametostr_verif()
+{
+    FILE *fd = fopen("test2.txt", "w");
+    fclose(fd);
+    fd = fopen("test3.txt", "w");
+    fclose(fd);
+    frametostr("format.txt", "test2.txt");
+    verif("test2.txt", "test3.txt");
+}
