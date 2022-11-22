@@ -1,5 +1,4 @@
 #include "./headers/tests.h"
-
 /* on définit les tests pour chaque fonction ici */
 
 void test_hexToBin() {
@@ -37,7 +36,43 @@ void test_hexToDec() {
     printf("Test de la fonction hexToDec terminé\n");
     printf("________________________________\n");
 }
-
+void test_decToHex () {
+    printf("________________________________\n");
+    printf("Test de la fonction decToHex\n");
+    for (int i = 0; i < 17; i++) {
+        printf ("Nombre decimale : %d\n",i);
+        printf ("Son equivalent en hexa : ");
+        decToHex(i);
+        printf("\n");
+    }
+    srand(time(NULL)); 
+    int nb = rand() % 255 + 1 ;
+    printf ("Nombre decimale : %d\n",nb);
+    printf ("Son equivalent en hexa : ");
+    decToHex(nb);
+    printf("\n");
+    printf("Test de la fonction decToHex terminé\n");
+    printf("________________________________\n");
+}
+void test_decToBin() {
+    srand(time(NULL)); 
+    int nb = rand() % 255 + 1 ;
+    printf ("Nombre decimale : %d\n",nb);
+    printf ("Son equivalent en bin : ");
+    decToBin(nb);
+    printf("\n");
+}
+void test_binToDec(){
+    printf("________________________________\n");   
+    printf("Test de la fonction binToDec\n");
+    char *testBinToDec[] = {"0000","0001","0010","1111"};
+    for (int i = 0; i < 4; i++) {
+        printf("Nombre en bin : %s \n", testBinToDec[i]);
+        printf("Son equivalent en Dec : %d\n", binToDec(testBinToDec[i]));
+    }
+    printf("Test de la fonction binToDec terminé\n");
+    printf("________________________________\n");    
+}
 void test_frametostr_verif()
 {
     FILE *fd = fopen("test2.txt", "w");

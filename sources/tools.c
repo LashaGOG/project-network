@@ -112,3 +112,54 @@ int hexToDec (char *hex) {
     return nbdec; 
 }
 
+void decToHex (int dec) {
+    /* convertir nb decimale en hexa */
+    char hexTemp[20] ; // Taille 20 ? 
+    int i = 0 ; 
+    while (dec != 0) {
+        int temp = 0 ; 
+
+        temp = dec % 16 ; 
+
+        if (temp < 10) {
+            hexTemp[i++] = 48 + temp ;  
+        }
+        else {
+            hexTemp[i++] = 55 + temp ; 
+        }
+        dec /= 16 ; 
+    }
+    
+    for (int j = i - 1; j >= 0; j--) {
+        printf("%c",hexTemp[j]);
+    }
+    return ;
+}
+
+void decToBin(int n) {
+    /* convertir de decimale vers binaire */
+    int bin[32];
+    int i = 0;
+    while (n > 0) {
+        bin[i] = n % 2;
+        n = n / 2;
+        i++;
+    }
+  
+    for (int j = i - 1; j >= 0; j--)
+        printf("%d", bin[j]);
+}
+
+int binToDec(char *bin) {
+    /* convertir de binaire vers decimale */
+    int dec = 0; 
+    int puiss = strlen(bin) - 1; 
+    int i = 0; 
+    while (bin[i]) {
+        int dig = (int)(bin[i]) - (int)('0');
+        dec += dig * pow(2,puiss); 
+        i++;
+        puiss --; 
+    }
+    return dec; 
+}
