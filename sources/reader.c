@@ -60,8 +60,9 @@ void frametostr (char* nomfic, char* save)
         str[i++] = ' ';
         mem_reset(buff, len);
     }
-    writedown(str, save);
+    writedown(str, save); 
     
+    puts("");
     free(str);
     fclose(fd);
 }
@@ -78,28 +79,30 @@ void verif (char* nomfic, char* save)
     char* ligne = NULL;
     size_t len = 0;
     ssize_t read;
-    int i = 0, k;
+    int i = 0, k, nbtrame;
     
     while ((read = getline(&ligne, &len, fd)) != -1)
     {
+        nbtrame++;
         k = 1;
-        printf("Ligne length = %zu\n", read);
-        printf("Ligne : %s", ligne);
         for  (i = 0; i < (int)strlen(ligne); i++)
         {
             if (k == 0) break;
-            if (isxdigit(ligne[i] != 0))
+            if (isxdigit(ligne[i]) == 0)
             {
-                if (ligne[i] != ' ')
+                if (ligne[i] != ' ' && ligne[i] != '\n' && ligne[i] != '\0')
                 {
                     k = 0;
-                    puts("Caractère non hexa lu");
+                    printf("Trame n°%d ignorée, caractère non hexadécimal detecté\n", nbtrame);
                 }
             }
         }
         if (k == 1)
+        {
+            ligne[strlen(ligne)] = '\0';
+            ligne[strlen(ligne) - 1] = '\0';
             writedown(ligne, save);
-        read = 0;
+        }
     }
     free(ligne);
     fclose(fd);
