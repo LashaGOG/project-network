@@ -79,7 +79,7 @@ void verif (char* nomfic, char* save)
     char* ligne = NULL;
     size_t len = 0;
     ssize_t read;
-    int i = 0, k, nbtrame;
+    int i = 0, k, nbtrame = 0;
     
     while ((read = getline(&ligne, &len, fd)) != -1)
     {
