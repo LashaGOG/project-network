@@ -1,8 +1,3 @@
-# racourcis :
-# $@ représente la cible
-# $^ représente la liste des dépendances
-# $< représente la première dépendance (la plus à gauche dans la liste)
-
 # déclaration de variables
 # le compilateur
 CC = gcc
