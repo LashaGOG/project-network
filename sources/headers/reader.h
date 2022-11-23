@@ -14,4 +14,4 @@ void writedown(char* str, char* nomfic);
 void frametostr(char* nomfic, char* save);
 void verif (char* nomfic, char* save);
 
-#endif
+#endif //READER_H

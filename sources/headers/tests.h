@@ -5,6 +5,7 @@
 #include <time.h>
 #include "tools.h"
 #include "reader.h"
+#include "ethernet.h"
 
 #ifndef TESTS
 #define TESTS
@@ -15,9 +16,12 @@ void test_binToHex();
 void test_hexToDec();
 void test_decToHex ();
 void test_decToBin();
-void test_binToDec(); 
+void test_binToDec();
 
 /* TESTS DE READER.C */
 void test_frametostr_verif();
+
+/* TESTS DE ETHERNET.C*/
+void test_get_mac_address();
 
 #endif

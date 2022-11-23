@@ -163,3 +163,11 @@ int binToDec(char *bin) {
     }
     return dec; 
 }
+
+void change_separator_str (char *str, const char old_separator, const char new_separator) {
+    /* change separator in string */
+    int length = strlen(str); 
+    for (int i = 0; i < length; i++) {
+        if (str[i] == old_separator) str[i] = new_separator;
+    }
+}

@@ -82,3 +82,22 @@ void test_frametostr_verif()
     frametostr("format.txt", "test2.txt");
     verif("test2.txt", "test3.txt");
 }
+/* ETHERNET.C */
+
+void test_get_mac_address() {
+    static int frame_counter = 1; 
+    char testBytes[1000];
+    FILE *fd;
+    if ((fd = fopen("test3.txt", "r")) == NULL) {
+        printf("Error! File cannot be opened.");
+        // Program exits if the file pointer returns NULL.
+        exit(1);
+    }
+
+    // reads text until newline is encountered
+    fscanf(fd, "%[^\n]", testBytes);
+    eth_frame *test_frame = create_eth_frame(testBytes,&frame_counter);
+    print_eth_frame(test_frame);
+    delete_eth_frame(test_frame);
+    fclose(fd);
+}
