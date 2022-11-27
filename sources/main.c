@@ -9,10 +9,11 @@ int main(void)
     /* TEST DE TOOLS.C */
     // test_hexToBin();
     // test_binToHex(); 
-    // test_hexToDec();
+    test_hexToDec(); 
     // test_decToHex();
     // test_decToBin(); 
     // test_binToDec(); 
+    // test_hexToBinchar();
     /* END TEST */
 
     /* TEST DE READER.C */
@@ -20,6 +21,6 @@ int main(void)
     /* END TEST */
 
     /* TEST DE ETHERNET.C */
-    test_get_mac_address();
+    //test_get_mac_address();
     return 0;
 }

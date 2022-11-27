@@ -2,11 +2,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
+#include <time.h>
+#include <unistd.h>
 
 #ifndef TOOLS 
 #define TOOLS
 
-void hexToBin(char *hex); 
+void hexToBin(char *hex);
+char *hexToBinchar(char *hex);
 unsigned char binToHex (char *bin);
 int hexToDec (char *hex);
 void decToHex (int dec);

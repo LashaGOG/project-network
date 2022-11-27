@@ -17,6 +17,7 @@ void test_hexToDec();
 void test_decToHex ();
 void test_decToBin();
 void test_binToDec();
+void test_hexToBinchar();
 
 /* TESTS DE READER.C */
 void test_frametostr_verif();

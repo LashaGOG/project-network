@@ -28,8 +28,8 @@ void test_binToHex() {
 void test_hexToDec() {
     printf("________________________________\n");
     printf("Test de la fonction HexToDec\n");
-    char *testHexToDec[] = {"A","1","0","AB","ab","fa","f9"}; 
-    for (int i = 0; i < 7; i++) {
+    char *testHexToDec[] = {"A","1","0","AB","ab","fa","f9","10   28"};     //La fonction ne gère pas les espaces, à réparer
+    for (int i = 0; i < 8; i++) {
         printf("Nombre en hex : %s \n", testHexToDec[i]);
         printf("Son equivalent en decimale : %d\n", hexToDec(testHexToDec[i]));
     }
@@ -96,8 +96,16 @@ void test_get_mac_address() {
 
     // reads text until newline is encountered
     fscanf(fd, "%[^\n]", testBytes);
-    eth_frame *test_frame = create_eth_frame(testBytes,&frame_counter);
+    char* testpointer = &testBytes[0];                                     //on devrait utiliser un pointer pour faciliter le parcours
+    eth_frame *test_frame = create_eth_frame(testpointer,&frame_counter);
     print_eth_frame(test_frame);
     delete_eth_frame(test_frame);
     fclose(fd);
+}
+
+void test_hexToBinchar() {
+    char *test = "ae 74";
+    char *res = hexToBinchar(test);
+    printf("hextobinchar : %s\n", res);
+    free(res);
 }
