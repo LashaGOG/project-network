@@ -12,7 +12,7 @@ void get_header_length (char *bytes){
 
 tos get_TOS (char *bytes){
     char *TOS = strndup(&bytes[3], 2);  //copy 1 byte
-    char TOS_bits = hexToBinchar(TOS);
+    char *TOS_bits = hexToBinchar(TOS);
     char *Prededence = (char *) calloc(21, sizeof(char));
     int delay = 0, throughput = 0, reliability = 0, cost = 0, reserved = 0;
     free(TOS);
