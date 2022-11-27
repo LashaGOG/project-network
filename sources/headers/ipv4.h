@@ -7,7 +7,7 @@ typedef struct _ipv4{
     int num_frame;
     char *version;
     char header_length;
-    struct _tos Types_of_Services;
+    struct _tos typesos;
     char total_length;
     char identifier;
     struct _fragmentation *fragment;
