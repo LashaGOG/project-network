@@ -6,6 +6,7 @@
 #include "tools.h"
 #include "reader.h"
 #include "ethernet.h"
+#include "ipv4.h"
 
 #ifndef TESTS
 #define TESTS
@@ -24,5 +25,8 @@ void test_frametostr_verif();
 
 /* TESTS DE ETHERNET.C*/
 void test_get_mac_address();
+
+/* TESTS DE IPV4.C */
+void test_ipv4();
 
 #endif

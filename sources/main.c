@@ -9,7 +9,7 @@ int main(void)
     /* TEST DE TOOLS.C */
     // test_hexToBin();
     // test_binToHex(); 
-    test_hexToDec(); 
+    // test_hexToDec(); 
     // test_decToHex();
     // test_decToBin(); 
     // test_binToDec(); 
@@ -22,5 +22,8 @@ int main(void)
 
     /* TEST DE ETHERNET.C */
     //test_get_mac_address();
+
+    /* TEST DE IPV4.C */
+    test_ipv4();
     return 0;
 }

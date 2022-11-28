@@ -109,3 +109,29 @@ void test_hexToBinchar() {
     printf("hextobinchar : %s\n", res);
     free(res);
 }
+
+void test_ipv4() {
+    static int frame_counter = 1;
+    char *test = "45 00 00 28 95 11 40 00 80 06 00 00 c0 a8 00 0a a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
+    char *testpointer = &test[0];
+    ipv4 *test_ipv4 = create_ipv4(testpointer, &frame_counter);
+    print_ipv4(test_ipv4);
+
+
+    //free(test_ipv4->typesos->precedence); Segfault why ?????
+    free(test_ipv4->typesos);
+    free(test_ipv4->fragment->offset);
+    free(test_ipv4->fragment);
+
+    free(test_ipv4->version);
+    free(test_ipv4->header_length); 
+    free(test_ipv4->total_length);
+    free(test_ipv4->identifier);  
+    free(test_ipv4->ttl);
+    free(test_ipv4->protocol);
+    free(test_ipv4->header_checksum);
+    free(test_ipv4->src_ip);
+    free(test_ipv4->dest_ip);
+    free(test_ipv4);
+    //delete_ipv4(test_ipv4);
+}
