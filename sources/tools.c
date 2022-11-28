@@ -1,5 +1,14 @@
 #include "./headers/tools.h"
 
+char *intToStr (int n) {
+    /* cast n to str */
+    int len = sizeof(int)*8+1; 
+    char* nb = (char*) calloc (len, sizeof(char)); 
+    snprintf(nb, len, "%d", n);
+    // sprintf(nb, n);
+    return nb; 
+}
+
 void hexToBin(char *hex) {
     /* Convertir nombre hexadecimale au nombre Binaire */
     int i = 0; 
@@ -207,6 +216,11 @@ int hexToDec (char *hex) {
         }
     }
     return nbdec; 
+}
+
+char *hexToDec_c (char *hex) {
+    /* return value of hex as decimal, casted to string */
+    return intToStr(hexToDec(hex));
 }
 
 void decToHex (int dec) {

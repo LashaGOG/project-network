@@ -9,10 +9,12 @@
 #ifndef TOOLS 
 #define TOOLS
 
+char *intToStr (int n);
 void hexToBin(char *hex);
 char *hexToBinchar(char *hex);
 unsigned char binToHex (char *bin);
 int hexToDec (char *hex);
+char *hexToDec_c (char *hex);
 void decToHex (int dec);
 void decToBin(int n);
 int binToDec(char *bin);
