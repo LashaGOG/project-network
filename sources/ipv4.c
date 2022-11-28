@@ -79,3 +79,22 @@ char* get_identifier (char* bytes) {
     char* identifier = strndup(&bytes[12], 5);
     return identifier;
 }
+
+fragmentation *get_fragmentation (char *bytes) {
+    char *fragment = strndup(&bytes[18], 5);
+    char *fragment_bits = hexToBinchar(fragment);
+    free(fragment);
+    
+    int R = 0, DF = 0, MF = 0;
+    if (fragment_bits[0] == '1')
+        R = 1;
+    if (fragment_bits[1] == '1')
+        RF = 1;
+    if (fragment_bits[2] == "1")
+        MF = 1;
+    
+    char *offset = strndup(&fragment_bits[3], 13);
+
+    free(fragment_bits);
+    return create_fragmentation(R, DF, MF, offset);
+}
