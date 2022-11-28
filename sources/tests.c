@@ -116,22 +116,5 @@ void test_ipv4() {
     char *testpointer = &test[0];
     ipv4 *test_ipv4 = create_ipv4(testpointer, &frame_counter);
     print_ipv4(test_ipv4);
-
-
-    //free(test_ipv4->typesos->precedence); Segfault why ?????
-    free(test_ipv4->typesos);
-    free(test_ipv4->fragment->offset);
-    free(test_ipv4->fragment);
-
-    free(test_ipv4->version);
-    free(test_ipv4->header_length); 
-    free(test_ipv4->total_length);
-    free(test_ipv4->identifier);  
-    free(test_ipv4->ttl);
-    free(test_ipv4->protocol);
-    free(test_ipv4->header_checksum);
-    free(test_ipv4->src_ip);
-    free(test_ipv4->dest_ip);
-    free(test_ipv4);
-    //delete_ipv4(test_ipv4);
+    delete_ipv4(test_ipv4);
 }

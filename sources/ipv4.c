@@ -13,7 +13,7 @@ char *get_header_length (char *bytes){
 tos *get_TOS (char *bytes){
     char *TOS = strndup(&bytes[3], 2);  //copy 1 byte
     char *TOS_bits = hexToBinchar(TOS);
-    char *Precedence = (char *) calloc(21, sizeof(char));
+    char *Precedence;
     int delay = 0, throughput = 0, reliability = 0, cost = 0, reserved = 0;
     free(TOS);
     if (TOS_bits[0] == '0') {           //First 3 bits = Precedence
@@ -52,7 +52,6 @@ tos *get_TOS (char *bytes){
             }
         }
     }
-    //Precedence = realloc(Precedence, strlen(Precedence) + 1);
 
     if (TOS_bits[3] == '1')
         delay = 1;
@@ -152,7 +151,7 @@ fragmentation *create_fragmentation(int R, int DF, int MF, char *offset) {
 
 tos *create_tos (char *precedence, int delay, int throughput, int reliability, int cost, int reserved) {
     tos *typesos = (tos*) calloc(1, sizeof(tos));
-    typesos->precedence = precedence;
+    typesos->precedence = strdup(precedence);
     typesos->delay = delay;
     typesos->throughput = throughput;
     typesos->reliability = reliability;
@@ -165,11 +164,9 @@ void delete_ipv4 (ipv4 *ipf) {
     free(ipf->version);
     free(ipf->header_length);
     delete_tos(ipf->typesos);
-    //free(ipf->typesos);
     free(ipf->total_length);
     free(ipf->identifier);
     delete_fragmentation(ipf->fragment);
-    //free(ipf->fragment);
     free(ipf->ttl);
     free(ipf->protocol);
     free(ipf->header_checksum);
