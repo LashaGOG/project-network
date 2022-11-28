@@ -15,6 +15,7 @@
 void test_hexToBin();
 void test_binToHex();
 void test_hexToDec();
+void test_hexToDec_c ();
 void test_decToHex ();
 void test_decToBin();
 void test_binToDec();

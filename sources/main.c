@@ -10,6 +10,7 @@ int main(void)
     // test_hexToBin();
     // test_binToHex(); 
     // test_hexToDec(); 
+    // test_hexToDec_c();
     // test_decToHex();
     // test_decToBin(); 
     // test_binToDec(); 

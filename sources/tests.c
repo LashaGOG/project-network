@@ -36,6 +36,18 @@ void test_hexToDec() {
     printf("Test de la fonction hexToDec terminé\n");
     printf("________________________________\n");
 }
+
+void test_hexToDec_c () {
+    printf("________________________________\n");
+    printf("Test de la fonction HexToDec_c\n");
+    char *testHexToDec[] = {"A","1","0","AB","ab","fa","f9","10   28"};     //La fonction ne gère pas les espaces, à réparer
+    for (int i = 0; i < 8; i++) {
+        printf("Nombre en hex : %s \n", testHexToDec[i]);
+        printf("Son equivalent en decimale : %s\n", hexToDec_c(testHexToDec[i]));
+    }
+    printf("Test de la fonction hexToDec_c terminé\n");
+    printf("________________________________\n");
+}
 void test_decToHex () {
     printf("________________________________\n");
     printf("Test de la fonction decToHex\n");
