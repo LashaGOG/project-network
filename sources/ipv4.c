@@ -197,6 +197,8 @@ void print_ipv4(ipv4 *ipf) {
     printf(" = Header length : %d bytes (%d)\n", (hexToDec(ipf->header_length) * 4) , hexToDec(ipf->header_length));
    
     printf("Type of Service (TOS) :\n     -Precedence : %s\n     -Delay, throughput, reliability, cost, reserved : %d, %d, %d, %d, %d\n", ipf->typesos->precedence, ipf->typesos->delay, ipf->typesos->throughput, ipf->typesos->reliability,  ipf->typesos->cost, ipf->typesos->reserved);
+    if (ipf->typesos->reserved != 0)
+        puts("The reserved bit should always be set to zero. Here, reserved != 0, the reading of the frame might contain errors.");
     
     remove_spaces(temp, ipf->total_length);
     printf("Total length : %d\n", hexToDec(temp));
@@ -205,17 +207,32 @@ void print_ipv4(ipv4 *ipf) {
     remove_spaces(temp, ipf->identifier);
     printf("Identification : 0x%s (%d)\n", temp, hexToDec(temp));
     
-    printf("Fragmentation :\n    -Flags...\n    -%s = Fragment offset : %d\n", ipf->fragment->offset, binToDec(ipf->fragment->offset)); 
+    char *str1 = intToStr(ipf->fragment->R);
+    char *str2 = intToStr(ipf->fragment->DF);
+    char *str3 = intToStr(ipf->fragment->MF);
+    strcat(str1, str2);
+    strcat(str1, str3);
+
+    printf("Fragmentation :\n    -%s = Flags : 0x%d", str1, binToHex(str1));
+    if (str1[1] == '1')
+        printf(", Don't fragment");
+    if (str1[2] == '1')
+        printf(", More fragments");
+    if (str1[0] != '0')
+        puts("The reserved bit should always be set to zero. Here, reserved != 0, the reading of the frame might contain errors.");
+    printf("\n    -%s = Fragment offset : %d\n", ipf->fragment->offset, binToDec(ipf->fragment->offset)); 
+    free(str2);
+    free(str3);
+    free(str1);
 
     printf("Time to Live (TTL) : %d\n", hexToDec(ipf->ttl));
     
     if (strcmp("06", ipf->protocol) != 0) {
-        printf("Protocol not supported.");
+        printf("Protocol not supported (0x%s).\n", ipf->protocol);
     }
     else {
-        printf("Protocol :  TCP (6)");
+        printf("Protocol : TCP (6)\n");
     }
-    puts("");
     
     remove_spaces(temp, ipf->header_checksum);
     printf("Header Checksum : 0x%s\n", temp);
