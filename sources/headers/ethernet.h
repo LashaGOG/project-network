@@ -6,7 +6,7 @@
 #ifndef ETHERNET_H
 #define ETHERNET_H
 
-typedef struct _eth_frame{
+typedef struct _eth_frame{ // !!! Payload and CRC are not TREATED in this structure !!!
     int num_frame; 
     char *src_mac;  // source mac adress (ex: AA:BB:CC:DD:FF:EE)
     char *dest_mac;  // destination mac address 

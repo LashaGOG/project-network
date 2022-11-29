@@ -130,3 +130,10 @@ void test_ipv4() {
     print_ipv4(test_ipv4);
     delete_ipv4(test_ipv4);
 }
+
+void test_tcp() {
+    // static int frame_counter = 1; 
+    char *bytes = "45 00 aa 28 95 11 40 00 80 06 00 0f 80 a8 c0 c0 a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
+    char *checksum = get_urg_pointer(bytes);
+    printf("Win : 0x%s\n",checksum);
+}

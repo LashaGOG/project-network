@@ -2,6 +2,7 @@
 #include "./headers/tests.h"
 #include "./headers/tools.h"
 #include "./headers/ethernet.h"
+#include "./headers/tcp.h"
 int main(void)
 {
     // static int frame_count = 0; 
@@ -25,6 +26,9 @@ int main(void)
     //test_get_mac_address();
 
     /* TEST DE IPV4.C */
-    test_ipv4();
+    // test_ipv4();
+
+    /* TEST DE TCP.C */
+    test_tcp();
     return 0;
 }

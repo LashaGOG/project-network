@@ -7,6 +7,7 @@
 #include "reader.h"
 #include "ethernet.h"
 #include "ipv4.h"
+#include "tcp.h"
 
 #ifndef TESTS
 #define TESTS
@@ -29,5 +30,8 @@ void test_get_mac_address();
 
 /* TESTS DE IPV4.C */
 void test_ipv4();
+
+/* TESTS DE TCP.C */
+void test_tcp(); 
 
 #endif

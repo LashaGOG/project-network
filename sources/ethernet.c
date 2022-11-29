@@ -16,8 +16,8 @@ void get_mac_dest_src (char *bytes, char **mac_src, char **mac_dst) {
 
 char* get_eth_proto (char *bytes) {
     /* return ethernet protocl type from ethernet frame*/
-    char *ch1 = strndup(&bytes[36],2); // copy 2 bytes 
-    char *ch2 = strndup(&bytes[39],2); // copy 2 bytes 
+    char *ch1 = strndup(&bytes[36],2); // copy 2 bites 
+    char *ch2 = strndup(&bytes[39],2); // copy 2 bites 
 
     int length = strlen(ch1) + strlen(ch2);  
 
