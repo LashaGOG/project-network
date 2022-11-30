@@ -125,12 +125,23 @@ void get_src_dest_ip (char *bytes, char **ip_src, char **ip_dest) {
 }
 
 ipv4 *create_ipv4(char* bytes, int *num) {
+    if ((int) strlen(bytes) < 59) {
+        puts("WARNING : Frame's length is less than IP protocol's header length, function will return a NULL pointer");
+        return NULL;
+    }
+
     ipv4 *ipf = (ipv4*) calloc(1, sizeof(ipv4));
     ipf->num_frame = *num;
     ipf->version = get_ip_version(bytes);
     ipf->header_length =  get_header_length(bytes);
     ipf->typesos = get_TOS(bytes);
     ipf->total_length = get_total_length(bytes);
+
+    if ((int)strlen(bytes) < (hexToDec(ipf->total_length)))
+    {
+        puts("WARNING : Frame's total length isn't matching the announced length, the frame may have an error, or our reader doesn't support its size");
+    }
+
     ipf->identifier = get_identifier(bytes);
     ipf->fragment = get_fragmentation(bytes);
     ipf->ttl = get_ttl(bytes);
