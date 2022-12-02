@@ -218,6 +218,26 @@ int hexToDec (char *hex) {
     return nbdec; 
 }
 
+unsigned long hexToUnsLong (char *hex) {
+    /* convertir nb hexadecimale au nb decimale */
+    unsigned long nbdec = 0 ; 
+    int length = strlen(hex);
+    for (int i = 0; i < length; i++) {
+        char digit = hex[length - 1 - i]; 
+
+        if (digit >= '0' && digit <= '9') {
+            nbdec += (digit - '0') * pow(16,i); 
+        }
+        else if  ((digit >= 'a' && digit <= 'f')){
+            nbdec += (digit - 'a' + 10) * pow(16,i); 
+        }
+        else if ((digit >= 'A' && digit <= 'F')){
+            nbdec += (digit - 'A' + 10) * pow(16,i); 
+        }
+    }
+    return nbdec; 
+}
+
 char *hexToDec_c (char *hex) {
     /* return value of hex as decimal, casted to string */
     return intToStr(hexToDec(hex));
@@ -295,4 +315,16 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
     str_untrimmed++;
   }
   *str_trimmed = '\0';
+}
+
+int calculate_nb_char_hex (char *bytes){
+    /* returns nb of hexadecimal characters in bytes. */
+    /* this fonction will allow us to calculate nb of bits/bytes */
+    int length = strlen(bytes);
+    int nb_separators = 0; 
+
+    for (int i = 0; bytes[i]!='\0'; i++) {
+        if (bytes[i]== ' ') nb_separators++; 
+    }
+    return (int)((length-nb_separators)); 
 }

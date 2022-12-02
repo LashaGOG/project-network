@@ -6,6 +6,7 @@
 #ifndef TCP
 #define TCP
 typedef struct _tcp_flags {
+    char *val_hexa; // valeur in hexa of flags
     char *reserved; //6
     int urg; // 1 bit
     int ack; // 1 bit
@@ -39,10 +40,11 @@ char *get_checksum(char *bytes);
 char *get_urg_pointer(char *bytes); 
 
 tcp *create_tcp (char *bytes, int *num); 
-tcp_flags *create_tcp_flags(char *reserved, int urg, int ack, int psh, int rst, int syn, int fin); 
+tcp_flags *create_tcp_flags(char *reserved, char *val_hx, int urg, int ack, int psh, int rst, int syn, int fin); 
 void delete_tcp_flags (tcp_flags *tflags); 
 void delete_tcp (tcp *tcp_seg); 
 
+void print_tcp_flags (tcp_flags *tflags);
 void print_tcp (tcp *tcp_seg); 
 
 #endif // TCP

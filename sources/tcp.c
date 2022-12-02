@@ -50,10 +50,14 @@ char *get_thl(char *bytes) {
 }
 
 tcp_flags *get_tcp_flags(char *bytes) {
-    char *flags = strndup(&bytes[37], 4); // copy 12 bits
-    char *flags_bits = hexToBinchar(flags); // read as bin
-    free(flags);
+    char *val_hexa_flags = strndup(&bytes[37], 4); // copy 12 bits
+    char *flags_bits = hexToBinchar(val_hexa_flags); // read as bin
+
     char *reserved = strndup(&flags_bits[0], 6);
+    int length = strlen(val_hexa_flags) + 1;
+    char *val_hexa_without_space = (char *) calloc (length,sizeof(char));
+    remove_spaces(val_hexa_without_space,val_hexa_flags);
+    free(val_hexa_flags);
     int urg = 0, ack = 0, psh = 0, rst = 0, syn = 0, fin = 0; 
     if (flags_bits[6] == '1') {
         urg = 1;
@@ -74,7 +78,7 @@ tcp_flags *get_tcp_flags(char *bytes) {
         fin = 1;
     }
     free(flags_bits);
-    return create_tcp_flags(reserved,urg,ack,psh,rst,syn,fin);
+    return create_tcp_flags(reserved,val_hexa_without_space,urg,ack,psh,rst,syn,fin);
 }
 
 char *get_window(char *bytes) {
@@ -121,8 +125,9 @@ tcp *create_tcp (char *bytes, int *num) {
     return tcp_seg;
 }
 
-tcp_flags *create_tcp_flags(char *reserved, int urg, int ack, int psh, int rst, int syn, int fin) {
+tcp_flags *create_tcp_flags(char *reserved, char *val_hx, int urg, int ack, int psh, int rst, int syn, int fin) {
     tcp_flags *tflags = (tcp_flags *) calloc(1,sizeof(tcp_flags)); 
+    tflags -> val_hexa = val_hx;
     tflags ->reserved = reserved; 
     tflags ->urg = urg; 
     tflags ->ack = ack; 
@@ -134,6 +139,9 @@ tcp_flags *create_tcp_flags(char *reserved, int urg, int ack, int psh, int rst, 
 }
 
 void delete_tcp_flags (tcp_flags *tflags) {
+    if (tflags ->val_hexa) {
+        free(tflags -> val_hexa);
+    }
     if (tflags ->reserved) {
         free(tflags->reserved);
     }
@@ -154,7 +162,77 @@ void delete_tcp (tcp *tcp_seg) {
     free(tcp_seg);
 }
 
+void print_tcp_flags (tcp_flags *tflags) {
+        printf ("Flags : 0x%s \n",tflags->val_hexa);
+
+        if (strncmp(tflags->reserved,"000",3) == 0) {
+            printf ("\t%s...... = reserved (Not Set) \n", tflags->reserved);
+        }
+        else if (strncmp(tflags->reserved,"111",3) == 0){
+            printf ("\t%s...... = reserved (Set) \n", tflags->reserved);
+        }
+        
+        if (tflags->urg == 1) {
+            printf ("\t......%d..... = Urgent (Set) \n", tflags->urg);
+        } 
+        else {
+            printf ("\t......%d..... = Urgent (Not Set) \n", tflags->urg);
+        }
+        if (tflags->ack == 1) {
+            printf ("\t.......%d.... = Acknowledgement (Set) \n", tflags->ack);
+        } 
+        else {
+            printf ("\t.......%d.... = Acknowledgement (Not Set) \n", tflags->ack);
+        }
+        
+        if (tflags->psh == 1) {
+            printf ("\t........%d... = Push (Set) \n", tflags->psh);
+        } 
+        else {
+            printf ("\t........%d... = Push (Not Set) \n", tflags->psh);
+        }
+
+        if (tflags->rst == 1) {
+            printf ("\t.........%d.. = Reset (Set) \n", tflags->rst);
+        } 
+        else {
+            printf ("\t.........%d.. = Reset (Not Set) \n", tflags->rst);
+        }
+
+        if (tflags->syn == 1) {
+             printf ("\t..........%d. = Syn (Set) \n", tflags->syn);
+        } 
+        else {
+             printf ("\t..........%d. = Syn (Not Set) \n", tflags->syn);
+        }
+
+        if (tflags->fin == 1) {
+            printf ("\t...........%d = Fin (Set) \n", tflags->fin);
+        } 
+        else {
+            printf ("\t...........%d = Fin (Not Set) \n", tflags->fin);
+        }
+
+}
+
 void print_tcp (tcp *tcp_seg) {
     /* prints tcp segment */
-    /* this function needs to be completed */
+    int print_details;
+    printf ("Transmission Control Protocol, Src Port : %s, Dst port : %s, Seq : %s, Ack : %s \n",hexToDec_c(tcp_seg->src_port), hexToDec_c(tcp_seg->dst_port), tcp_seg->seq_number, tcp_seg ->ack_number); 
+    printf ("1. Voir les détails du trame\n");
+    printf ("2. Quitter \n");
+    scanf("%d",&print_details);
+    if (print_details == 1) { // print TCP details if print_details is set to 1 
+        printf ("TCP DETAILS : \n"); 
+        printf ("Source Port : %s (0x%s)\n", hexToDec_c(tcp_seg->src_port), tcp_seg->src_port);
+        printf ("Destination port : %s (0x%s)\n", hexToDec_c(tcp_seg->dst_port), tcp_seg->dst_port);
+        printf ("Sequence number: %lu (0x%s)\n", hexToUnsLong(tcp_seg->seq_number), tcp_seg->seq_number);
+        printf ("Acknowledgement number : %lu (0x%s)\n", hexToUnsLong(tcp_seg->ack_number), tcp_seg->ack_number);
+        printf ("Data offset (THL) : %s (0x%s)\n", hexToDec_c(tcp_seg->thl), tcp_seg->thl);
+        print_tcp_flags(tcp_seg->flags);
+        printf ("Window : %s (0x%s)\n", hexToDec_c(tcp_seg->window), tcp_seg->window);
+        printf ("Checksum : %s (0x%s)\n", hexToDec_c(tcp_seg->checksum), tcp_seg->checksum);
+        printf ("Urgent pointer : %s (0x%s)\n", hexToDec_c(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
+        // OPTIONS + PADDING IS MISSING
+    }
 }
