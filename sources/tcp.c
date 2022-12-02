@@ -230,6 +230,6 @@ void print_tcp (tcp *tcp_seg,int print_details) {
         printf ("Window : %d (0x%s)\n", hexToDec(tcp_seg->window), tcp_seg->window);
         printf ("Checksum : %d (0x%s)\n", hexToDec(tcp_seg->checksum), tcp_seg->checksum);
         printf ("Urgent pointer : %d (0x%s)\n", hexToDec(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
-        // OPTIONS + PADDING IS MISSING
+        // OPTIONS + PADDING IS MISSING Hihi
     }
 }
