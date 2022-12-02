@@ -317,44 +317,65 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
   *str_trimmed = '\0';
 }
 
-char *hexToChar(char *bytes)
+//char *hexToChar(char *bytes)
+//{
+//    char *doublon = strdup(bytes);
+//    char *first = doublon;
+//    int i = 0, len = strlen(bytes), k = 0;
+//    int res[len];
+//    char* ptr = strtok(doublon, ". ");
+//    while (ptr)
+//    {
+//        res[i] = hexToDec(ptr);
+//        //printf("ptr : '%s' => res[%d] = %d\n", ptr, i, res[i]);
+//        i++;
+//        ptr = strtok(NULL,". ");
+//    }
+//
+//    
+// 
+//    k = i + 1;
+//    char *str = (char *) calloc(k, sizeof(char));
+//    i = 0;
+//    while (res[i])
+//    {
+//        if (res[i])
+//        {
+//            str[i] = res[i];
+//        }
+//        else{
+//            break;
+//        }
+//        i++;
+//    }
+//
+//    free(first);
+//    return str;
+//}
+
+int word_count(char *s)
 {
-    char *doublon = strdup(bytes);
-    char *first = doublon;
-    int i = 0, len = strlen(bytes), k = 0;
-    int res[len];
-    char* ptr = strtok(doublon, ". ");
-    while (ptr)
+    int count;
+    for (int i = 0; s[i] != '\0'; i++)
     {
-        res[i] = hexToDec(ptr);
-        //printf("ptr : '%s' => res[%d] = %d\n", ptr, i, res[i]);
-        i++;
-        ptr = strtok(NULL,". ");
+        if (s[i] == ' ' && s[i+1] != ' ')
+            count++;    
     }
-    
-    i = 0;
-    
-    while (res[i])
+    return count;
+}
+
+int *hexToChar(char *bytes)
+{
+    int res[(strlen(bytes)/2) + word_count(bytes) + 1];
+    char *ptr = bytes;
+    int i = 0, j = 1, k = 0;
+    while (j < strlen(bytes))
     {
-        i++;
-    }
-    k = i + 1;
-    char *str = (char *) calloc(k, sizeof(char));
-    i = 0;
-    while (res[i])
-    {
-        if (res[i])
-        {
-            str[i] = res[i];
-        }
-        else{
-            break;
-        }
-        i++;
+        res[k] = 16
     }
 
-    free(first);
-    return str;
+
+    return res;   
 }
 
 int calculate_nb_char_hex (char *bytes){
