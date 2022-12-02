@@ -94,6 +94,15 @@ void test_frametostr_verif()
     frametostr("format.txt", "test2.txt");
     verif("test2.txt", "test3.txt");
 }
+
+void test_hexToChar()
+{
+    char *bytes =  "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b 0d 0a";
+    char *zebi = hexToChar(bytes);
+    printf("Bytes à traduire : %s\nTraduction : %s\n", bytes, zebi);
+    free(zebi);
+}
+
 /* ETHERNET.C */
 
 void test_get_mac_address() {
@@ -136,4 +145,12 @@ void test_tcp() {
     char *bytes = "45 00 aa 28 95 11 40 00 80 06 00 0f 80 a8 c0 c0 a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
     char *checksum = get_urg_pointer(bytes);
     printf("Win : 0x%s\n",checksum);
+}
+
+void test_http() {
+    char *bytes = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
+    header *test = get_header(bytes);
+    //printf("uristat : %s\n", test->meth_ver);
+    print_header(test);
+    free(test);
 }

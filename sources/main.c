@@ -3,6 +3,8 @@
 #include "./headers/tools.h"
 #include "./headers/ethernet.h"
 #include "./headers/tcp.h"
+#include "./headers/http.h"
+
 int main(void)
 {
     // static int frame_count = 0; 
@@ -16,6 +18,7 @@ int main(void)
     // test_decToBin(); 
     // test_binToDec(); 
     // test_hexToBinchar();
+    //test_hexToChar();
     /* END TEST */
 
     /* TEST DE READER.C */
@@ -29,6 +32,10 @@ int main(void)
     // test_ipv4();
 
     /* TEST DE TCP.C */
-    test_tcp();
+    //test_tcp();
+    
+    /* TEST DE HTTP.C */
+    test_http();
+
     return 0;
 }

@@ -18,6 +18,7 @@ char *hexToDec_c (char *hex);
 void decToHex (int dec);
 void decToBin(int n);
 int binToDec(char *bin);
+char *hexToChar(char *bytes);
 
 void change_separator_str (char *str, const char old_separator, const char new_separator);
 

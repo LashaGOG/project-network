@@ -55,35 +55,43 @@ champ *get_champ (char *bytes) {
 }
 
 header *get_header (char *bytes) {
+    printf("bytes : %s\n", bytes);
     int i = 0, j = 1, k = 0;
     int pos = 0;
-    char *meth_ver;
-    char *uri_stat;
-    char *ver_msg;
+    char *mv;
+    char *us;
+    char *vm;
+
     while (j < (int) strlen(bytes))
     {
-        if (bytes[i] == '0' && bytes[j] == '2')
-        {
+        if (bytes[i] == '2' && bytes[j] == '0')
+        {               
+            if (k == 1) {
+                char uri_stat[i - pos];
+                strncpy(uri_stat, &bytes[pos], (i - pos - 1));
+                us = uri_stat;
+                printf("us = %s\n", us);
+                char ver_msg[strlen(bytes) - (j + 1)];
+                strncpy(ver_msg, &bytes[j+2], (strlen(bytes) - (j + 2)));
+                vm = ver_msg;
+                printf("vm = %s\n", vm);
+                //printf("meth_ver : %s\nuri_stat : %s\nver_msg : %s\n", meth_ver, uri_stat, ver_msg);
+                break;
+            }
             if (k == 0) {
-                meth_ver = strndup(&bytes[0], (i - 1));
+                char meth_ver[i];
+                strncpy(meth_ver, &bytes[0], (i - 1));
+                mv = meth_ver;
+                printf("mv = %s\n", mv);
                 pos = j+2;
                 k++;
-            }
-                
-            if (k == 1) {
-                uri_stat = strndup(&bytes[pos], (i - 1));
-                ver_msg = strndup(&bytes[j+2], (strlen(bytes) - (j + 3)));
-                break;
             }
         }
         i++;
         j++;
     }
-    header *ptr = create_header(meth_ver, uri_stat, ver_msg);
-    free(meth_ver);
-    free(uri_stat);
-    free(ver_msg);
-    return ptr;
+    //header *ptr = create_header(meth_ver, uri_stat, ver_msg);
+    return create_header(mv, us, vm);
 }
 
 champ *create_champ(char *entete, char *valeur) {
@@ -121,9 +129,9 @@ e_http *create_http (header *he, champ *ch)
 
 void print_header(header *entete)
 {
-    char *ent1 = hextochar(entete->meth_ver);
-    char *ent2 = hextochar(entete->uri_stat);
-    char *ent3 = hextochar(entete->ver_msg);
+    char *ent1 = hexToChar(entete->meth_ver);
+    char *ent2 = hexToChar(entete->uri_stat);
+    char *ent3 = hexToChar(entete->ver_msg);
     if (strcmp("HTTP", ent1) == 0)
     {
         printf("Response Version : %s\nStatus code : %s\n, Response Phrase : %s\n", ent1, ent2, ent3);
@@ -132,17 +140,24 @@ void print_header(header *entete)
     {
         printf("Request Method : %s\nRequest URI : %s\nRequest Version : %s\n", ent1, ent2, ent3);
     }
+    free(ent1);
+    free(ent2);
+    free(ent3);
 }
 
 void print_champ(champ *first)
 {
     int i = 0;
-    champ* tmp;
+    champ* tmp = first;
     while (tmp)
     {
         if (tmp->entete && tmp->valeur)
         {
-            printf("Champ n°%d :\n-%s\n-%s\n\n", ++i, hextochar(tmp->entete), hextochar(tmp->valeur));
+            char *entete = hexToChar(tmp->entete);
+            char *value =  hexToChar(tmp->valeur);
+            printf("Champ n°%d :\n-%s\n-%s\n\n", ++i, entete, value);
+            free(entete);
+            free(value);
         }
         tmp = tmp->suivant;
     }

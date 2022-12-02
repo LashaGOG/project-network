@@ -296,3 +296,43 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
   }
   *str_trimmed = '\0';
 }
+
+char *hexToChar(char *bytes)
+{
+    char *doublon = strdup(bytes);
+    char *first = doublon;
+    int i = 0, len = strlen(bytes), k = 0;
+    int res[len];
+    char* ptr = strtok(doublon, ". ");
+    while (ptr)
+    {
+        res[i] = hexToDec(ptr);
+        //printf("ptr : '%s' => res[%d] = %d\n", ptr, i, res[i]);
+        i++;
+        ptr = strtok(NULL,". ");
+    }
+    
+    i = 0;
+    
+    while (res[i])
+    {
+        i++;
+    }
+    k = i + 1;
+    char *str = (char *) calloc(k, sizeof(char));
+    i = 0;
+    while (res[i])
+    {
+        if (res[i])
+        {
+            str[i] = res[i];
+        }
+        else{
+            break;
+        }
+        i++;
+    }
+
+    free(first);
+    return str;
+}
