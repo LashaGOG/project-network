@@ -221,15 +221,15 @@ void print_tcp (tcp *tcp_seg,int print_details) {
 
     if (print_details == 1) { // print TCP details if print_details is set to 1 
         printf ("TCP DETAILS : \n"); 
-        printf ("Source Port : %s (0x%s)\n", hexToDec_c(tcp_seg->src_port), tcp_seg->src_port);
-        printf ("Destination port : %s (0x%s)\n", hexToDec_c(tcp_seg->dst_port), tcp_seg->dst_port);
+        printf ("Source Port : %d (0x%s)\n", hexToDec(tcp_seg->src_port), tcp_seg->src_port);
+        printf ("Destination port : %d (0x%s)\n", hexToDec(tcp_seg->dst_port), tcp_seg->dst_port);
         printf ("Sequence number: %lu (0x%s)\n", hexToUnsLong(tcp_seg->seq_number), tcp_seg->seq_number);
         printf ("Acknowledgement number : %lu (0x%s)\n", hexToUnsLong(tcp_seg->ack_number), tcp_seg->ack_number);
-        printf ("Data offset (THL) : %s (0x%s)\n", hexToDec_c(tcp_seg->thl), tcp_seg->thl);
+        printf ("Data offset (THL) : %d (0x%s)\n", hexToDec(tcp_seg->thl), tcp_seg->thl);
         print_tcp_flags(tcp_seg->flags);
-        printf ("Window : %s (0x%s)\n", hexToDec_c(tcp_seg->window), tcp_seg->window);
-        printf ("Checksum : %s (0x%s)\n", hexToDec_c(tcp_seg->checksum), tcp_seg->checksum);
-        printf ("Urgent pointer : %s (0x%s)\n", hexToDec_c(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
-        // OPTIONS + PADDING IS MISSING
+        printf ("Window : %d (0x%s)\n", hexToDec(tcp_seg->window), tcp_seg->window);
+        printf ("Checksum : %d (0x%s)\n", hexToDec(tcp_seg->checksum), tcp_seg->checksum);
+        printf ("Urgent pointer : %d (0x%s)\n", hexToDec(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
+        // OPTIONS + PADDING IS MISSING Hihi
     }
 }
