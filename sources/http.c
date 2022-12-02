@@ -68,12 +68,15 @@ header *get_header (char *bytes) {
         {               
             if (k == 1) {
                 char uri_stat[i - pos];
+                uri_stat[i - pos - 1] = '\0';
                 strncpy(uri_stat, &bytes[pos], (i - pos - 1));
-                us = uri_stat;
-                printf("us = %s\n", us);
+                us = &uri_stat[0];
+                printf("uv = %s\n", us);
+                
                 char ver_msg[strlen(bytes) - (j + 1)];
                 strncpy(ver_msg, &bytes[j+2], (strlen(bytes) - (j + 2)));
-                vm = ver_msg;
+                ver_msg[strlen(bytes) - (j + 1) - 1] = '\0';
+                vm = &ver_msg[0];
                 printf("vm = %s\n", vm);
                 //printf("meth_ver : %s\nuri_stat : %s\nver_msg : %s\n", meth_ver, uri_stat, ver_msg);
                 break;
@@ -81,7 +84,8 @@ header *get_header (char *bytes) {
             if (k == 0) {
                 char meth_ver[i];
                 strncpy(meth_ver, &bytes[0], (i - 1));
-                mv = meth_ver;
+                meth_ver[i - 1] = '\0';
+                mv = &meth_ver[0];
                 printf("mv = %s\n", mv);
                 pos = j+2;
                 k++;
