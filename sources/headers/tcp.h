@@ -45,6 +45,6 @@ void delete_tcp_flags (tcp_flags *tflags);
 void delete_tcp (tcp *tcp_seg); 
 
 void print_tcp_flags (tcp_flags *tflags);
-void print_tcp (tcp *tcp_seg); 
+void print_tcp (tcp *tcp_seg,int print_details);
 
 #endif // TCP

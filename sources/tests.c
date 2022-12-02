@@ -136,6 +136,6 @@ void test_tcp() {
     char *bytes = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
     tcp *tcp_test = create_tcp(bytes,&frame_counter);
     // printf("Length total of bytes : %d\n",(int)(0.5*calculate_nb_char_hex(bytes)));
-    print_tcp(tcp_test);
+    print_tcp(tcp_test,1);
     delete_tcp(tcp_test);
 }

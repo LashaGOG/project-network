@@ -215,13 +215,10 @@ void print_tcp_flags (tcp_flags *tflags) {
 
 }
 
-void print_tcp (tcp *tcp_seg) {
+void print_tcp (tcp *tcp_seg,int print_details) {
     /* prints tcp segment */
-    int print_details;
     printf ("Transmission Control Protocol, Src Port : %s, Dst port : %s, Seq : %s, Ack : %s \n",hexToDec_c(tcp_seg->src_port), hexToDec_c(tcp_seg->dst_port), tcp_seg->seq_number, tcp_seg ->ack_number); 
-    printf ("1. Voir les détails du trame\n");
-    printf ("2. Quitter \n");
-    scanf("%d",&print_details);
+
     if (print_details == 1) { // print TCP details if print_details is set to 1 
         printf ("TCP DETAILS : \n"); 
         printf ("Source Port : %s (0x%s)\n", hexToDec_c(tcp_seg->src_port), tcp_seg->src_port);
