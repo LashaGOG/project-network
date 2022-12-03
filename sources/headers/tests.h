@@ -8,6 +8,7 @@
 #include "ethernet.h"
 #include "ipv4.h"
 #include "tcp.h"
+#include "flowGraph.h"
 
 #ifndef TESTS
 #define TESTS
@@ -33,5 +34,8 @@ void test_ipv4();
 
 /* TESTS DE TCP.C */
 void test_tcp(); 
+
+/* TEST DE FLOW GRAPH */
+void test_flow_graph();
 
 #endif

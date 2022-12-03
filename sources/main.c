@@ -3,6 +3,7 @@
 #include "./headers/tools.h"
 #include "./headers/ethernet.h"
 #include "./headers/tcp.h"
+#include "./headers/flowGraph.h"
 int main(void)
 {
     // static int frame_count = 0; 
@@ -29,6 +30,8 @@ int main(void)
     // test_ipv4();
 
     /* TEST DE TCP.C */
-    test_tcp();
+    // test_tcp();
+    
+    test_flow_graph();
     return 0;
 }

@@ -11,6 +11,7 @@ typedef struct _eth_frame{ // !!! Payload and CRC are not TREATED in this struct
     char *src_mac;  // source mac adress (ex: AA:BB:CC:DD:FF:EE)
     char *dest_mac;  // destination mac address 
     char *proto;    // protocole 
+    char *Payload; 
 }eth_frame;
 
 char *get_mac_address(char *bytes);

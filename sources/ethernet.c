@@ -34,7 +34,8 @@ eth_frame *create_eth_frame (char *bytes, int *num) {
     eth_frame *ef = (eth_frame *) malloc (sizeof (eth_frame));
     ef -> num_frame = *num;
     ef -> proto = get_eth_proto (bytes); 
-    get_mac_dest_src(bytes, &(ef->src_mac), &(ef->dest_mac)); 
+    get_mac_dest_src(bytes, &(ef->src_mac), &(ef->dest_mac));
+    ef->Payload = strdup(&bytes[42]);
     return ef;
 } 
 
@@ -51,5 +52,6 @@ void delete_eth_frame (eth_frame *ef) {
     free(ef->src_mac);
     free(ef->dest_mac);
     free(ef->proto);
+    free(ef->Payload);
     free(ef);
 }
