@@ -37,5 +37,6 @@ void print_http(e_http *ptr);
 
 void delete_header(header *ptr);
 void delete_champ(champ *ptr);
+void delete_http(e_http *ptr);
 
 #endif //_HTTP

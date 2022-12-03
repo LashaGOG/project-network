@@ -150,9 +150,28 @@ void test_tcp() {
 }
 
 void test_http() {
+    /* Test header */
+    puts("____Test header____");
     char *bytes = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
     header *test = get_header(bytes);
     //printf("uristat : %s\n", test->meth_ver);
     print_header(test);
-    delete_header(test);
+
+    /* Test champ */
+    puts("____Test champ____");
+    char *bytes3 = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67";
+    char *bytes2 = "58 2d 46 65 64 6f 72 61 2d 50 72 6f 78 79 53 65 72 76 65 72 3a 20 70 72 6f 78 79 30 31 2e 69 61 64 32 2e 66 65 64 6f 72 61 70 72 6f 6a 65 63 74 2e 6f 72 67";
+    champ *test2  = get_champ(bytes2);
+    champ *test3  = get_champ(bytes3);
+    test2->suivant = test3;
+    print_champ(test2);
+
+    /* Test http */
+    puts("____Test http____");
+    e_http *http = create_http(test, test2);
+
+    //delete_header(test);
+    //delete_champ(test2);
+    print_http(http);
+    delete_http(http);
 }

@@ -4,8 +4,8 @@ char* separate_chunks (char *bytes) {
     char *str = strdup(bytes);
     char tmp[4] = {0};
     tmp[2] = ' ';
-    int i = 0, j = 1;
-    char *res = (char *) calloc(2, sizeof(char));
+    int i = 0, j = 1, k = 0;
+    char *res = (char *) calloc(strlen(bytes), sizeof(char));
     
     while (str[j+3])
     {
@@ -15,11 +15,15 @@ char* separate_chunks (char *bytes) {
             tmp[0] = str[i+3];
             tmp[1] = str[j+3];
             if (tmp[0] == '0' && tmp[1] == 'a')
-                continue;
-            break;
+            {
+                if (i == 0  && j == 1)
+                {
+                    k = 1;
+                }
+                break;
+            }
         }
         else {
-           res = (char *) realloc(res, (strlen(res) + 3) * sizeof(char));
            res[i] = tmp[0];
            res[j] = tmp[1];
         }
@@ -27,10 +31,27 @@ char* separate_chunks (char *bytes) {
         j++;
     }
 
-    res = (char *) realloc(res, (strlen(res) + 1) * sizeof(char));
-    res[strlen(str)] = '\0';
-    free(str);
+    if (k == 0)
+    {
+        res = (char *) realloc(res, (strlen(res) + 1) * sizeof(char));
+        res[strlen(str)] = '\0';
+        if  (j + 5 < (int) strlen(bytes))
+        {
+            bytes = &bytes[j + 5];
+        }
+        else {
+            bytes = &bytes[strlen(bytes) - 1];
+        }
+    }
+    else
+    {
+        free(res);
+        free(str);
+        return NULL;
+    }
 
+    free(str);
+    //if (j + 5 > strlen()
     //modify byte -> byte[j + 5] if it exists
 
     return res;
@@ -70,23 +91,6 @@ header *get_header (char *bytes) {
     return create_header(meth_ver, uri_stat, ver_msg);
 }
 
-//champ *get_champ (char *bytes) {
-//    int i = 0, j = 1;
-//    char *entete;
-//    char *value;
-//    while(j < (int) strlen(bytes))
-//    {
-//        if (bytes[i] == '0' && bytes[j] == '2')
-//        {
-//            entete = strndup(&bytes[0], (i - 1));
-//            value = strndup(&bytes[j+2], (strlen(bytes) - (j + 3)));
-//            break;
-//        }
-//        i++;
-//        j++;
-//    }  
-//    return create_champ(entete, value);
-//}
 champ *get_champ (char *bytes) {
     int i = 0, j = 1;
     int pos = 0;
@@ -170,7 +174,7 @@ void print_champ(champ *first)
         {
             char *entete = hexToChar(tmp->entete);
             char *value =  hexToChar(tmp->valeur);
-            printf("Champ n°%d :\n-%s\n-%s\n\n", ++i, entete, value);
+            printf("Champ n°%d = %s : %s\n", ++i, entete, value);
             free(entete);
             free(value);
         }
@@ -204,4 +208,11 @@ void delete_champ(champ *ptr)
         free(tmp->valeur);
         free(tmp);
     }
+}
+
+void delete_http(e_http *ptr)
+{
+    delete_champ(ptr->champs);
+    delete_header(ptr->http_header);
+    free(ptr);
 }
