@@ -1,60 +1,49 @@
 #include "./headers/http.h"
 
-char* separate_chunks (char *bytes) {
-    char *str = strdup(bytes);
-    char tmp[4] = {0};
+char *separate_chunks(char *bytes)
+{
+    char tmp[3] = {0};
     tmp[2] = ' ';
-    int i = 0, j = 1, k = 0;
+    int i = 0, j = 1, first = 0;
     char *res = (char *) calloc(strlen(bytes), sizeof(char));
-    
-    while (str[j+3])
+
+    while(j < (int) strlen(bytes) + 3)
     {
-        tmp[0] = str[i];
-        tmp[1] = str[j];
-        if (tmp[0] == '0' && tmp[1] == 'd') {
-            tmp[0] = str[i+3];
-            tmp[1] = str[j+3];
-            if (tmp[0] == '0' && tmp[1] == 'a')
+        tmp[0] = bytes[i];
+        tmp[1] = bytes[j];
+        if (tmp[0] == '0' && tmp[1] == 'd')
+        {
+            if(bytes[i + 3] == '0' && bytes[j + 3] == 'a')
             {
-                if (i == 0  && j == 1)
+                if (i == 0 && j == 1)
                 {
-                    k = 1;
+                    free(res);
+                    return NULL;
                 }
-                break;
+                else
+                {
+                    bytes = &bytes[j + 5];
+                    res[i - 1] = '\0';
+                    res = (char *) realloc(res, (strlen(res) + 1) * sizeof(char));
+                    return res;
+                }
             }
         }
-        else {
-           res[i] = tmp[0];
-           res[j] = tmp[1];
+        else
+        {
+            if (first == 0)
+            {
+                res[i] = bytes[i];
+                first++;
+            }
+            res[j] = bytes[j];
         }
         i++;
         j++;
     }
-
-    if (k == 0)
-    {
-        res = (char *) realloc(res, (strlen(res) + 1) * sizeof(char));
-        res[strlen(str)] = '\0';
-        if  (j + 5 < (int) strlen(bytes))
-        {
-            bytes = &bytes[j + 5];
-        }
-        else {
-            bytes = &bytes[strlen(bytes) - 1];
-        }
-    }
-    else
-    {
-        free(res);
-        free(str);
-        return NULL;
-    }
-
-    free(str);
-    //if (j + 5 > strlen()
-    //modify byte -> byte[j + 5] if it exists
-
-    return res;
+    puts("Could not fetch any http field in these bytes");
+    free(res);
+    return NULL;
 }
 
 header *get_header (char *bytes) {
@@ -87,7 +76,6 @@ header *get_header (char *bytes) {
         i++;
         j++;
     }
-    //header *ptr = create_header(meth_ver, uri_stat, ver_msg);
     return create_header(meth_ver, uri_stat, ver_msg);
 }
 
