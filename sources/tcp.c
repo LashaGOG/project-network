@@ -217,7 +217,7 @@ void print_tcp_flags (tcp_flags *tflags) {
 
 void print_tcp (tcp *tcp_seg,int print_details) {
     /* prints tcp segment */
-    printf ("Transmission Control Protocol, Src Port : %s, Dst port : %s, Seq : %s, Ack : %s \n",hexToDec_c(tcp_seg->src_port), hexToDec_c(tcp_seg->dst_port), tcp_seg->seq_number, tcp_seg ->ack_number); 
+    printf ("Transmission Control Protocol, Src Port : %d, Dst port : %d, Seq : %s, Ack : %s \n",hexToDec(tcp_seg->src_port), hexToDec(tcp_seg->dst_port), tcp_seg->seq_number, tcp_seg ->ack_number); 
 
     if (print_details == 1) { // print TCP details if print_details is set to 1 
         printf ("TCP DETAILS : \n"); 
