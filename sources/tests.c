@@ -149,6 +149,14 @@ void test_tcp() {
     delete_tcp(tcp_test);
 }
 
+
+void test_flow_graph() {
+    static int frame_counter = 10;
+    char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
+    print_heading_row();
+    print_comm(bytes,&frame_counter);
+   
+}
 void test_http() {
     /* Test serarate_chunks */
     puts("____Test separate____");
@@ -191,4 +199,5 @@ void test_http() {
     //delete_champ(test2);
     print_http(http);
     delete_http(http);
+
 }

@@ -3,6 +3,8 @@
 #include "./headers/tools.h"
 #include "./headers/ethernet.h"
 #include "./headers/tcp.h"
+
+#include "./headers/flowGraph.h"
 #include "./headers/http.h"
 
 int main(void)
@@ -32,10 +34,15 @@ int main(void)
     // test_ipv4();
 
     /* TEST DE TCP.C */
+
+    // test_tcp();
+    
+    //test_flow_graph();
     //test_tcp();
     
     /* TEST DE HTTP.C */
     test_http();
+
 
     return 0;
 }
