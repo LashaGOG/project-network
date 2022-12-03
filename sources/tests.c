@@ -94,6 +94,15 @@ void test_frametostr_verif()
     frametostr("format.txt", "test2.txt");
     verif("test2.txt", "test3.txt");
 }
+
+void test_hexToChar()
+{
+    char *bytes =  "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b 0d 0a";
+    char *zebi = hexToChar(bytes);
+    printf("Bytes à traduire : %s\nTraduction : %s\n", bytes, zebi);
+    free(zebi);
+}
+
 /* ETHERNET.C */
 
 void test_get_mac_address() {
@@ -140,10 +149,55 @@ void test_tcp() {
     delete_tcp(tcp_test);
 }
 
+
 void test_flow_graph() {
     static int frame_counter = 10;
     char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
     print_heading_row();
     print_comm(bytes,&frame_counter);
    
+}
+void test_http() {
+    /* Test serarate_chunks */
+    puts("____Test separate____");
+    char *chunks = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67 0d 0a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 74 65 78 74 2f 70 6c 61 69 6e 0d 0a 0d 0a";
+    char *ptr = chunks;
+    printf("avant separate ptr = %s\n", ptr);
+    char *strchunk = separate_chunks(ptr);
+    printf("apres separate ptr = %s\n", ptr);
+    printf("strchunk = %s\n", strchunk);
+    char *end = "0d 0a";
+    ptr = end;
+    char *strchunk2 = separate_chunks(ptr);
+    printf("strchunk2 = %s\n", strchunk2);
+
+
+    free(strchunk);
+    free(strchunk2);
+
+    /* Test header */
+    puts("____Test header____");
+    char *bytes = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
+    header *test = get_header(bytes);
+    //printf("uristat : %s\n", test->meth_ver);
+    print_header(test);
+
+    /* Test champ */
+    puts("____Test champ____");
+    char *bytes3 = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67";
+    char *bytes2 = "58 2d 46 65 64 6f 72 61 2d 50 72 6f 78 79 53 65 72 76 65 72 3a 20 70 72 6f 78 79 30 31 2e 69 61 64 32 2e 66 65 64 6f 72 61 70 72 6f 6a 65 63 74 2e 6f 72 67";
+    champ *test2  = get_champ(bytes2);
+    champ *test3  = get_champ(bytes3);
+    test2->suivant = test3;
+    print_champ(test2);
+
+    /* Test http */
+    puts("____Test http____");
+    e_http *http = create_http(test, test2);
+
+    //delete_header(test);
+    //delete_champ(test2);
+    print_http(http);
+    delete_http(http);
+
 }

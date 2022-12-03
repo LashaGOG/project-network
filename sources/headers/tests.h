@@ -9,6 +9,7 @@
 #include "ipv4.h"
 #include "tcp.h"
 #include "flowGraph.h"
+#include "http.h"
 
 #ifndef TESTS
 #define TESTS
@@ -22,6 +23,7 @@ void test_decToHex ();
 void test_decToBin();
 void test_binToDec();
 void test_hexToBinchar();
+void test_hexToChar();
 
 /* TESTS DE READER.C */
 void test_frametostr_verif();
@@ -35,7 +37,11 @@ void test_ipv4();
 /* TESTS DE TCP.C */
 void test_tcp(); 
 
+
 /* TEST DE FLOW GRAPH */
 void test_flow_graph();
+=======
+/* TESTS DE HTTP.C */
+void test_http();
 
 #endif
