@@ -332,8 +332,6 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
 //        ptr = strtok(NULL,". ");
 //    }
 //
-//    
-// 
 //    k = i + 1;
 //    char *str = (char *) calloc(k, sizeof(char));
 //    i = 0;
@@ -353,6 +351,31 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
 //    return str;
 //}
 
+char *hexToChar(char *bytes)
+{
+    char *res =  calloc(((strlen(bytes)/2) + word_count(bytes) + 1), sizeof(char));
+    char *str = strndup(&bytes[0], strlen(bytes));
+    char *first = str;
+   
+    const char *separators = " ";
+    char *tok = strtok(str, separators); //replaces all separators to '\0'
+    char *tmp = (char *) calloc(2,sizeof(char));
+    long a;
+    
+    while(tok)
+    {
+        a = strtol(tok, 0, 16);          //convert characters to long (base 16)
+        sprintf(tmp, "%c", (int) a);     //convert long to ascii
+        strcat(res, tmp);                //concatenate in res
+        mem_reset(tmp, (size_t) 2);
+        tok = strtok(NULL, separators);  //tok retrieves pointer of char right after next  separator
+    }
+    free(first);
+    free(tmp);
+    return res;   
+}
+
+
 int word_count(char *s)
 {
     int count;
@@ -362,20 +385,6 @@ int word_count(char *s)
             count++;    
     }
     return count;
-}
-
-int *hexToChar(char *bytes)
-{
-    int res[(strlen(bytes)/2) + word_count(bytes) + 1];
-    char *ptr = bytes;
-    int i = 0, j = 1, k = 0;
-    while (j < strlen(bytes))
-    {
-        res[k] = 16
-    }
-
-
-    return res;   
 }
 
 int calculate_nb_char_hex (char *bytes){

@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <unistd.h>
+#include "reader.h"
 
 #ifndef TOOLS 
 #define TOOLS

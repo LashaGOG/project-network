@@ -154,5 +154,5 @@ void test_http() {
     header *test = get_header(bytes);
     //printf("uristat : %s\n", test->meth_ver);
     print_header(test);
-    free(test);
+    delete_header(test);
 }

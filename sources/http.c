@@ -36,57 +36,29 @@ char* separate_chunks (char *bytes) {
     return res;
 }
 
-champ *get_champ (char *bytes) {
-    int i = 0, j = 1;
-    char *entete;
-    char *value;
-    while(j < (int) strlen(bytes))
-    {
-        if (bytes[i] == '0' && bytes[j] == '2')
-        {
-            entete = strndup(&bytes[0], (i - 1));
-            value = strndup(&bytes[j+2], (strlen(bytes) - (j + 3)));
-            break;
-        }
-        i++;
-        j++;
-    }  
-    return create_champ(entete, value);
-}
-
 header *get_header (char *bytes) {
-    printf("bytes : %s\n", bytes);
+    //printf("bytes : %s\n", bytes);
     int i = 0, j = 1, k = 0;
     int pos = 0;
-    char *mv;
-    char *us;
-    char *vm;
+    char *meth_ver;
+    char *uri_stat;
+    char *ver_msg;
 
     while (j < (int) strlen(bytes))
     {
         if (bytes[i] == '2' && bytes[j] == '0')
         {               
             if (k == 1) {
-                char uri_stat[i - pos];
-                uri_stat[i - pos - 1] = '\0';
+                uri_stat = (char *) calloc(i - pos, sizeof(char));
                 strncpy(uri_stat, &bytes[pos], (i - pos - 1));
-                us = &uri_stat[0];
-                printf("uv = %s\n", us);
-                
-                char ver_msg[strlen(bytes) - (j + 1)];
+
+                ver_msg = calloc(strlen(bytes) - (j + 1), sizeof(char));
                 strncpy(ver_msg, &bytes[j+2], (strlen(bytes) - (j + 2)));
-                ver_msg[strlen(bytes) - (j + 1) - 1] = '\0';
-                vm = &ver_msg[0];
-                printf("vm = %s\n", vm);
-                //printf("meth_ver : %s\nuri_stat : %s\nver_msg : %s\n", meth_ver, uri_stat, ver_msg);
                 break;
             }
             if (k == 0) {
-                char meth_ver[i];
+                meth_ver = (char  *) calloc(i, sizeof(char));
                 strncpy(meth_ver, &bytes[0], (i - 1));
-                meth_ver[i - 1] = '\0';
-                mv = &meth_ver[0];
-                printf("mv = %s\n", mv);
                 pos = j+2;
                 k++;
             }
@@ -95,7 +67,46 @@ header *get_header (char *bytes) {
         j++;
     }
     //header *ptr = create_header(meth_ver, uri_stat, ver_msg);
-    return create_header(mv, us, vm);
+    return create_header(meth_ver, uri_stat, ver_msg);
+}
+
+//champ *get_champ (char *bytes) {
+//    int i = 0, j = 1;
+//    char *entete;
+//    char *value;
+//    while(j < (int) strlen(bytes))
+//    {
+//        if (bytes[i] == '0' && bytes[j] == '2')
+//        {
+//            entete = strndup(&bytes[0], (i - 1));
+//            value = strndup(&bytes[j+2], (strlen(bytes) - (j + 3)));
+//            break;
+//        }
+//        i++;
+//        j++;
+//    }  
+//    return create_champ(entete, value);
+//}
+champ *get_champ (char *bytes) {
+    int i = 0, j = 1;
+    int pos = 0;
+    char *entete;
+    char *valeur;
+
+    while (j < (int) strlen(bytes))
+    {
+        if (bytes[i] == '2' && bytes[j] == '0')
+        {
+            entete = (char *) calloc(i, sizeof(char));
+            strncpy(entete, &bytes[pos], (i - 1));
+            
+            valeur = calloc(strlen(bytes) - (j + 1), sizeof(char));
+            strncpy(valeur, &bytes[j+2], (strlen(bytes) - (j + 2)));
+        }
+        i++;
+        j++;
+    }
+    return create_champ(entete, valeur);
 }
 
 champ *create_champ(char *entete, char *valeur) {
@@ -172,4 +183,25 @@ void print_http(e_http *ptr)
     print_header(ptr->http_header);
     print_champ(ptr->champs);
     //print_corps(ptr->corps);
+}
+
+void delete_header(header *ptr)
+{
+    free(ptr->meth_ver);
+    free(ptr->uri_stat);
+    free(ptr->ver_msg);
+    free(ptr);
+}
+
+void delete_champ(champ *ptr) 
+{
+    champ *tmp;
+    while(ptr)
+    {
+        tmp = ptr;
+        ptr = ptr->suivant;
+        free(tmp->entete);
+        free(tmp->valeur);
+        free(tmp);
+    }
 }

@@ -13,7 +13,7 @@ typedef struct _header{
     char *meth_ver;
     char *uri_stat;
     char *ver_msg;
-}   header;
+} header;
 
 typedef struct entete_http {
     struct _header *http_header;
@@ -34,5 +34,8 @@ champ *queue_champ (champ **ptr, champ* suiv);
 void print_header(header *entete);
 void print_champ(champ *first);
 void print_http(e_http *ptr);
+
+void delete_header(header *ptr);
+void delete_champ(champ *ptr);
 
 #endif //_HTTP
