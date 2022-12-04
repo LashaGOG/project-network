@@ -34,15 +34,13 @@ int main(void)
     // test_ipv4();
 
     /* TEST DE TCP.C */
-
     // test_tcp();
     
-    //test_flow_graph();
-    //test_tcp();
-    
     /* TEST DE HTTP.C */
-    test_http();
+    //test_http();
 
+    /* TEST DE FLOWGRAPH.C */
+    test_flow_graph();
 
     return 0;
 }
