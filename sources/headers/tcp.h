@@ -27,6 +27,7 @@ typedef struct _tcp { // !!! Options + padding not treated in this structure !!!
     char *window; // 2 bytes
     char *checksum; // 2 bytes
     char *urg_pointer; // 2 bytes
+    char *Payload;
 }tcp; // 20 bytes
 
 char *get_port(char *bytes); 

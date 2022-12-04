@@ -35,25 +35,24 @@ void print_comm (char *bytes, int *frame_counter)
     delete_eth_frame(eFrame);
 }
 
-//void *print_flow(eth_frame *eFrame){
-//    char *temp1;
-//    char *temp2;
-//    char *temp3;
-//    char *temp4;
-//    if (eFrame->Payload != NULL){
-//        ipv4 *ip_frame = create_ipv4(eFrame->Payload);
-//        if (ip_frame->Payload != NULL){
-//            tcp *tcp_frame = create_tcp(ip_frame->Payload);
-//            if (tcp_frame->Payload != NULL){
-//                http *http_frame =  create_http(tcp_frame->Payload);
-//                temp1 = hexToChar(http_frame->entete->meth_ver);
-//                temp2 = hexToChar(http_frame->entete->uri_stat);
-//                temp3 = hexToChar(http_frame->entete->ver_msg);
-//                printf("|      |                  %s %s")
-//
-//            }
-//        }
-//    }
-//    
-//}
+void *print_flow(eth_frame *eFrame){
+   if (eFrame->Payload != NULL){
+       ipv4 *ip_frame = create_ipv4(eFrame->Payload);
+       if (ip_frame->Payload != NULL){
+           tcp *tcp_frame = create_tcp(ip_frame->Payload);
+           if (tcp_frame->Payload != NULL){
+               http *http_frame =  create_http(tcp_frame->Payload);
+               print_http_fg(tcp_frame, http_frame);
+               delete_http(http_frame);
+           }
+           else{
+               print_tcp_fg(tcp_frame);
+           }
+           delete_tcp(tcp_frame);
+       }
+       print_ip_fg(ip_frame);
+       delete_ipv4(ipv4_frame);
+   }
+}
+
 

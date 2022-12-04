@@ -13,5 +13,6 @@
 
 void print_heading_row();
 void print_comm (char *bytes, int *frame_counter);
+void *print_flow(eth_frame *eFrame);
 
 #endif // FLOW_GRAPH

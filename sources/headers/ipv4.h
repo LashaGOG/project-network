@@ -17,6 +17,7 @@ typedef struct _ipv4{
     char *header_checksum;  //2 bytes
     char *src_ip;   //4 bytes
     char *dest_ip;  //4 bytes
+    char *Payload;
 }ipv4;  //20 bytes
 
 typedef struct _fragmentation{
