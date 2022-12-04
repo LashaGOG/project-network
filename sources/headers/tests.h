@@ -24,6 +24,7 @@ void test_decToBin();
 void test_binToDec();
 void test_hexToBinchar();
 void test_hexToChar();
+void test_hex_to_ip();
 
 /* TESTS DE READER.C */
 void test_frametostr_verif();
@@ -37,11 +38,11 @@ void test_ipv4();
 /* TESTS DE TCP.C */
 void test_tcp(); 
 
-
 /* TEST DE FLOW GRAPH */
 void test_flow_graph();
 
 /* TESTS DE HTTP.C */
 void test_http();
+void test_get_http();
 
 #endif

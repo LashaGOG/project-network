@@ -2,8 +2,9 @@
 # le compilateur
 CC = gcc
 # les options de compilateur
-CCFLAGS = -g -fsanitize=address -Wall -Wextra -c
-COFLAGS = -g -fsanitize=address -Wall -Wextra -o
+#-fsanitize=address
+CCFLAGS = -g  -Wall -Wextra -c
+COFLAGS = -g  -Wall -Wextra -o
 # liste des programme à créer 
 PROGRAMS = main
 
