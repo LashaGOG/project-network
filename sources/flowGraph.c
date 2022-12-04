@@ -51,6 +51,7 @@ void *print_flow(eth_frame *eFrame){
            delete_tcp(tcp_frame);
        }
        print_ip_fg(ip_frame);
+       printf("|      |                                                                       |\n");
        delete_ipv4(ipv4_frame);
    }
 }
