@@ -160,9 +160,11 @@ e_http *create_http (header *he, champ *ch)
 
 void print_header(header *entete)
 {
+    puts("on rentre  dans print_header");
     char *ent1 = hexToChar(entete->meth_ver);
     char *ent2 = hexToChar(entete->uri_stat);
     char *ent3 = hexToChar(entete->ver_msg);
+    if (ent1 == NULL || ent2 == NULL || ent3 == NULL) puts("nsm\n");
     if (strcmp("HTTP", ent1) == 0)
     {
         printf("Response Version : %s\nStatus code : %s\n, Response Phrase : %s\n", ent1, ent2, ent3);

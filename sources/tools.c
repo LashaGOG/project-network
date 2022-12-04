@@ -353,23 +353,33 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
 
 char *hexToChar(char *bytes)
 {
+    printf("bytes in hextochar : %s\n", bytes);
     char *res =  calloc(((strlen(bytes)/2) + word_count(bytes) + 1), sizeof(char));
     char *str = strndup(&bytes[0], strlen(bytes));
     char *first = str;
-   
+    
+    puts("1");
     const char *separators = " ";
     char *tok = strtok(str, separators); //replaces all separators to '\0'
+    printf("first tok = %s\n", tok);
+    puts("2");
+
     char *tmp = (char *) calloc(2,sizeof(char));
     long a;
     
-    while(tok)
-    {
+    puts("3");
+    while(tok)              //BIG PROBLEMS WITH HEXTOCHAR WTF CRASHES RIGHT HERE (SEGFAULT)
+    {   
+        puts("IN THE  LOOP");
+        printf("%s ", tok);
         a = strtol(tok, 0, 16);          //convert characters to long (base 16)
         sprintf(tmp, "%c", (int) a);     //convert long to ascii
         strcat(res, tmp);                //concatenate in res
         mem_reset(tmp, (size_t) 2);
+        puts("AT THE END OF  THE LOOP");
         tok = strtok(NULL, separators);  //tok retrieves pointer of char right after next  separator
     }
+    puts("\n juste avant free balise n°4");
     free(first);
     free(tmp);
     return res;   
