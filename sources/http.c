@@ -1,49 +1,16 @@
 #include "./headers/http.h"
 
-char *separate_chunks(char *bytes)
-{
-    char tmp[3] = {0};
-    tmp[2] = ' ';
-    int i = 0, j = 1, first = 0;
-    char *res = (char *) calloc(strlen(bytes), sizeof(char));
-
-    while(j < (int) strlen(bytes) + 3)
+char *separate_chunks(char *bytes, char **ptr) {
+    *ptr = strstr(bytes,"0d 0a");
+    if (ptr[0] == bytes[0] && ptr[1] == bytes[1])
     {
-        tmp[0] = bytes[i];
-        tmp[1] = bytes[j];
-        if (tmp[0] == '0' && tmp[1] == 'd')
-        {
-            if(bytes[i + 3] == '0' && bytes[j + 3] == 'a')
-            {
-                if (i == 0 && j == 1)
-                {
-                    free(res);
-                    return NULL;
-                }
-                else
-                {
-                    bytes = &bytes[j + 5];
-                    res[i - 1] = '\0';
-                    res = (char *) realloc(res, (strlen(res) + 1) * sizeof(char));
-                    return res;
-                }
-            }
-        }
-        else
-        {
-            if (first == 0)
-            {
-                res[i] = bytes[i];
-                first++;
-            }
-            res[j] = bytes[j];
-        }
-        i++;
-        j++;
+        if (ptr[3]  == bytes[3] && ptr[4] == bytes[4])
+            return NULL;
     }
-    puts("Could not fetch any http field in these bytes");
-    free(res);
-    return NULL;
+    int length = strlen(bytes) - strlen(*ptr); 
+    *ptr += 6; 
+    char *rep = strndup(bytes,length);
+    return rep; 
 }
 
 header *get_header (char *bytes) {

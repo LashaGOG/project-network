@@ -21,7 +21,7 @@ typedef struct entete_http {
     char *corps;
 } e_http;
 
-char *separate_chunks (char *bytes);
+char *separate_chunks(char *bytes, char **ptr);
 champ *get_champ (char *bytes);
 header *get_header (char *bytes);
 

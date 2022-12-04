@@ -161,18 +161,18 @@ void test_http() {
     /* Test serarate_chunks */
     puts("____Test separate____");
     char *chunks = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67 0d 0a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 74 65 78 74 2f 70 6c 61 69 6e 0d 0a 0d 0a";
-    char *ptr = chunks;
+    char *ptr = chunks; // don't forget to initialize
     printf("avant separate ptr = %s\n", ptr);
-    char *strchunk = separate_chunks(ptr);
+    char *strchunk = separate_chunks(chunks, &ptr); // adress of pointer on argument
     printf("apres separate ptr = %s\n", ptr);
     printf("strchunk = %s\n", strchunk);
     char *end = "0d 0a";
     ptr = end;
-    char *strchunk2 = separate_chunks(ptr);
+    char *strchunk2 = separate_chunks(end,&ptr);
     printf("strchunk2 = %s\n", strchunk2);
 
 
-    free(strchunk);
+    // free(ptr);
     free(strchunk2);
 
     /* Test header */
