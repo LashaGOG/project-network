@@ -21,6 +21,7 @@ int main(void)
     // test_binToDec(); 
     // test_hexToBinchar();
     //test_hexToChar();
+    //test_hex_to_ip();
     /* END TEST */
 
     /* TEST DE READER.C */
@@ -37,10 +38,11 @@ int main(void)
     // test_tcp();
     
     /* TEST DE HTTP.C */
-    test_http();
+    //test_http();
+    //test_get_http();
 
     /* TEST DE FLOWGRAPH.C */
-    // test_flow_graph();
+    test_flow_graph();
 
     return 0;
 }

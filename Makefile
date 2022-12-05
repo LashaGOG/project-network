@@ -2,6 +2,7 @@
 # le compilateur
 CC = gcc
 # les options de compilateur
+#-fsanitize=address
 CCFLAGS = -g -fsanitize=address -Wall -Wextra -c
 COFLAGS = -g -fsanitize=address -Wall -Wextra -o
 # liste des programme à créer 

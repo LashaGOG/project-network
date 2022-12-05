@@ -2,9 +2,11 @@
 
 char *separate_chunks(char *bytes, char **ptr) {
     *ptr = strstr(bytes,"0d 0a");
-    if (ptr[0] == bytes[0] && ptr[1] == bytes[1])
+    if (*ptr == NULL || strcmp(bytes, "") == 0 || strlen(bytes) < 2)
+        return NULL;
+    if (*ptr[0] == bytes[0] && *ptr[1] == bytes[1])
     {
-        if (ptr[3]  == bytes[3] && ptr[4] == bytes[4])
+        if (*ptr[3]  == bytes[3] && *ptr[4] == bytes[4])
             return NULL;
     }
     int length = strlen(bytes) - strlen(*ptr); 
@@ -28,14 +30,17 @@ header *get_header (char *bytes) {
             if (k == 1) {
                 uri_stat = (char *) calloc(i - pos, sizeof(char));
                 strncpy(uri_stat, &bytes[pos], (i - pos - 1));
+                //printf("uri_stat = %s\n", uri_stat);
 
                 ver_msg = calloc(strlen(bytes) - (j + 1), sizeof(char));
                 strncpy(ver_msg, &bytes[j+2], (strlen(bytes) - (j + 2)));
+                //printf("ver_msg = %s\n", ver_msg);
                 break;
             }
             if (k == 0) {
                 meth_ver = (char  *) calloc(i, sizeof(char));
                 strncpy(meth_ver, &bytes[0], (i - 1));
+                //printf("meth_ver = %s\n", meth_ver);
                 pos = j+2;
                 k++;
             }
@@ -52,7 +57,7 @@ champ *get_champ (char *bytes) {
     char *entete;
     char *valeur;
 
-    while (j < (int) strlen(bytes))
+    while (j < (int) strlen(bytes) - 2)
     {
         if (bytes[i] == '2' && bytes[j] == '0')
         {
@@ -68,6 +73,55 @@ champ *get_champ (char *bytes) {
     return create_champ(entete, valeur);
 }
 
+e_http *get_http(char *bytes) {
+    char *ptr1 = bytes;
+    char *ptr2;
+    char *str = separate_chunks(bytes, &ptr1);
+    int first = 0;
+    
+    header *entete;
+    champ *first_champ;
+    champ *ptr_ch;
+    
+    while (str != NULL &&  strcmp(str, "") != 0)
+    {
+        if (first == 0) {
+            first = 1;
+            entete = get_header(str);
+            free(str);
+            
+            ptr2 = ptr1;
+            str = separate_chunks(ptr2, &ptr1);
+            continue;
+        }
+        if  (first == 1)
+        {
+            first = 2;
+            
+            first_champ = get_champ(str);
+            ptr_ch = first_champ;
+            free(str);
+            
+            ptr2 = ptr1;
+            str = separate_chunks(ptr2, &ptr1);
+            continue;
+        }
+        champ *tmp = get_champ(str);
+        queue_champ(&ptr_ch, tmp);
+        
+        free(str);
+        
+        ptr2 = ptr1;
+        str = separate_chunks(ptr2, &ptr1);
+    }
+    
+    ptr1 = NULL;
+    ptr2 = NULL;
+    ptr_ch = NULL;
+
+    return create_http(entete, first_champ);
+}
+
 champ *create_champ(char *entete, char *valeur) {
     champ *ptr = (champ *) calloc(1, sizeof(champ));
     ptr->entete = entete;
@@ -76,12 +130,12 @@ champ *create_champ(char *entete, char *valeur) {
     return ptr;
 }
 
-//champ *queue_champ (champ **ptr, champ* suiv)
-//{
-    //&ptr ou *ptr ou ptr->suiv new;
-    //&ptr ou *ptr ou ptr = ptr->suiv;
-    //return &ptr;
-//}
+champ *queue_champ (champ **ptr, champ* suiv)
+{
+    (*ptr)->suivant = suiv;
+    *ptr = (*ptr)->suivant;
+    return *ptr;
+}
 
 header *create_header(char *meth_ver, char *uri_stat, char *ver_msg)
 {
@@ -106,6 +160,7 @@ void print_header(header *entete)
     char *ent1 = hexToChar(entete->meth_ver);
     char *ent2 = hexToChar(entete->uri_stat);
     char *ent3 = hexToChar(entete->ver_msg);
+    if (ent1 == NULL || ent2 == NULL || ent3 == NULL) puts("nsm\n");
     if (strcmp("HTTP", ent1) == 0)
     {
         printf("Response Version : %s\nStatus code : %s\n, Response Phrase : %s\n", ent1, ent2, ent3);

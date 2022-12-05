@@ -103,6 +103,14 @@ void test_hexToChar()
     free(zebi);
 }
 
+void test_hex_to_ip()
+{
+    char *addr = "a2.9f.87.ea";
+    char *ip = hex_to_ip(addr);
+    printf("%s => %s\n", addr, ip);
+    free(ip);
+}
+
 /* ETHERNET.C */
 
 void test_get_mac_address() {
@@ -149,14 +157,6 @@ void test_tcp() {
     delete_tcp(tcp_test);
 }
 
-
-void test_flow_graph() {
-    static int frame_counter = 10;
-    char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
-    print_heading_row();
-    print_comm(bytes,&frame_counter);
-   
-}
 void test_http() {
     /* Test serarate_chunks */
     puts("____Test separate____");
@@ -172,14 +172,14 @@ void test_http() {
     printf("strchunk2 = %s\n", strchunk2);
 
 
-    // free(ptr);
-    free(strchunk2);
+    free(strchunk);
+    if (strchunk2 != NULL)
+        free(strchunk2);
 
     /* Test header */
     puts("____Test header____");
     char *bytes = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
     header *test = get_header(bytes);
-    //printf("uristat : %s\n", test->meth_ver);
     print_header(test);
 
     /* Test champ */
@@ -199,5 +199,38 @@ void test_http() {
     //delete_champ(test2);
     print_http(http);
     delete_http(http);
+}
 
+void test_get_http()
+{
+    char *bytes = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b 0d 0a 44 61 74 65 3a 20 46 72 69 2c 20 32 35 20 4e 6f 76 20 32 30 32 32 20 30 39 3a 35 31 3a 35 31 20 47 4d 54 0d 0a 53 65 72 76 65 72 3a 20 41 70 61 63 68 65 0d 0a 55 70 67 72 61 64 65 3a 20 68 32 0d 0a 43 6f 6e 6e 65 63 74 69 6f 6e 3a 20 55 70 67 72 61 64 65 2c 20 63 6c 6f 73 65 0d 0a 4c 61 73 74 2d 4d 6f 64 69 66 69 65 64 3a 20 57 65 64 2c 20 31 33 20 4d 61 79 20 32 30 32 30 20 32 30 3a 31 33 3a 33 35 20 47 4d 54 0d 0a 41 63 63 65 70 74 2d 52 61 6e 67 65 73 3a 20 62 79 74 65 73 0d 0a 43 6f 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 32 0d 0a 43 61 63 68 65 2d 43 6f 6e 74 72 6f 6c 3a 20 6d 75 73 74 2d 72 65 76 61 6c 69 64 61 74 65 0d 0a 45 78 70 69 72 65 73 3a 20 46 72 69 2c 20 32 35 20 4e 6f 76 20 32 30 32 32 20 30 39 3a 35 31 3a 35 31 20 47 4d 54 0d 0a 41 70 70 54 69 6d 65 3a 20 44 3d 38 33 0d 0a 58 2d 46 65 64 6f 72 61 2d 50 72 6f 78 79 53 65 72 76 65 72 3a 20 70 72 6f 78 79 30 31 2e 69 61 64 32 2e 66 65 64 6f 72 61 70 72 6f 6a 65 63 74 2e 6f 72 67 0d 0a 58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67 0d 0a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 74 65 78 74 2f 70 6c 61 69 6e 0d 0a 0d 0a";
+    e_http *http_frame = get_http(bytes);
+    print_http(http_frame);
+    delete_http(http_frame);
+}
+
+void test_flow_graph() {
+    static int frame_counter = 10;
+     char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
+     print_heading_row();
+    print_comm(bytes,&frame_counter);
+
+    char *header = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
+    struct _header *test = get_header(header);
+    
+    char *bytes3 = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67";
+    char *bytes2 = "58 2d 46 65 64 6f 72 61 2d 50 72 6f 78 79 53 65 72 76 65 72 3a 20 70 72 6f 78 79 30 31 2e 69 61 64 32 2e 66 65 64 6f 72 61 70 72 6f 6a 65 63 74 2e 6f 72 67";
+    champ *test2  = get_champ(bytes2);
+    champ *test3  = get_champ(bytes3);
+    test2->suivant = test3;
+    
+    e_http *http_frame = create_http(test, test2);
+
+    
+    char *bytes4 = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
+    tcp *tcp_test = create_tcp(bytes4,&frame_counter);
+    print_http_fg(tcp_test, http_frame);  
+    
+    delete_http(http_frame);
+    delete_tcp(tcp_test);
 }

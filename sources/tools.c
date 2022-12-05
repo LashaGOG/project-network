@@ -353,39 +353,42 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
 
 char *hexToChar(char *bytes)
 {
-    char *res =  calloc(((strlen(bytes)/2) + word_count(bytes) + 1), sizeof(char));
+    char *res = calloc(strlen(bytes), sizeof(char));
     char *str = strndup(&bytes[0], strlen(bytes));
     char *first = str;
-   
+    
     const char *separators = " ";
     char *tok = strtok(str, separators); //replaces all separators to '\0'
+
     char *tmp = (char *) calloc(2,sizeof(char));
     long a;
     
-    while(tok)
-    {
+    while(tok)              //BIG PROBLEMS WITH HEXTOCHAR WTF CRASHES RIGHT HERE (SEGFAULT)
+    {   
         a = strtol(tok, 0, 16);          //convert characters to long (base 16)
         sprintf(tmp, "%c", (int) a);     //convert long to ascii
         strcat(res, tmp);                //concatenate in res
         mem_reset(tmp, (size_t) 2);
         tok = strtok(NULL, separators);  //tok retrieves pointer of char right after next  separator
     }
+    
     free(first);
     free(tmp);
+    res = (char*) realloc(res, (strlen(res) + 1) * sizeof(char));
     return res;   
 }
 
 
-int word_count(char *s)
-{
-    int count;
-    for (int i = 0; s[i] != '\0'; i++)
-    {
-        if (s[i] == ' ' && s[i+1] != ' ')
-            count++;    
-    }
-    return count;
-}
+// int word_count(char *s)
+// {
+    // int count;
+    // for (int i = 0; s[i+1] != '\0'; i++)
+    // {
+        // if (s[i] == ' ' && s[i+1] != ' ')
+            // count++;    
+    // }
+    // return count;
+// }
 
 int calculate_nb_char_hex (char *bytes){
     /* returns nb of hexadecimal characters in bytes. */
@@ -397,4 +400,74 @@ int calculate_nb_char_hex (char *bytes){
         if (bytes[i]== ' ') nb_separators++; 
     }
     return (int)((length-nb_separators)); 
+}
+
+char *hex_to_ip(const char *hex_ip) {
+    char *ip = (char *) malloc(strlen(hex_ip) + 4);
+    int i = 0, k = 0;
+
+    if (ip == NULL)
+        return NULL;
+
+    for (i = 0; i < (int) strlen(hex_ip); i += 3) {
+        if (hex_ip[i] == '.') {
+           ip[k++] = '.';
+           continue;
+        }
+       
+        char hex_chars[3] = {hex_ip[i], hex_ip[i + 1], '\0'};
+        int dec = hexToDec(hex_chars); 
+        int len_dec = snprintf(NULL, 0, "%d", dec); 
+        sprintf(&ip[k], "%d", dec);
+        k += len_dec;   
+        
+        if (i < (int) strlen(hex_ip) - 3)
+            ip[k++] = '.';
+    }
+
+    ip[k] = '\0';
+    return ip;
+}
+
+
+char *hex_to_ascii(const char *hex_str) {
+    size_t hex_str_len = strlen(hex_str);
+    if (hex_str_len % 2 != 0) 
+        return NULL;  // return NULL if the input string has an odd number of characters
+    
+
+    char *result = (char *)malloc(hex_str_len / 2 + 1);
+    if (result == NULL) 
+        return NULL;  // return NULL if memory allocation failed
+    
+    size_t hex_str_index = 0;
+    size_t result_index = 0;
+
+    // loop over the input string and convert each pair of hexadecimal characters to an ASCII character
+    while (hex_str_index < hex_str_len) {
+        while (hex_str[hex_str_index] == ' ') {
+            hex_str_index++;
+        }
+
+        // convert the current pair of hexadecimal characters to an integer value
+        char ascii_char = strtol(&hex_str[hex_str_index], NULL, 16);
+
+        // check if the conversion was successful
+        if (ascii_char == 0 && hex_str[hex_str_index] != '0') {
+            return NULL;  // return NULL if the conversion failed
+        }
+
+        // store the ASCII character in the resulting string
+        result[result_index] = ascii_char;
+
+        // increment the indexes of the input and resulting strings
+        hex_str_index += 2;
+        result_index++;
+    }
+
+    // add a null terminator to the end of the resulting string
+    result[result_index] = '\0';
+
+    // return the resulting string
+    return result;
 }
