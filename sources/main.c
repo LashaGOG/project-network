@@ -39,10 +39,10 @@ int main(void)
     
     /* TEST DE HTTP.C */
     //test_http();
-    test_get_http();
+    //test_get_http();
 
     /* TEST DE FLOWGRAPH.C */
-    //test_flow_graph();
+    test_flow_graph();
 
     return 0;
 }
