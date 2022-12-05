@@ -239,3 +239,77 @@ void test_flow_graph() {
     delete_http(http_frame);
     delete_tcp(tcp_test);
 }
+
+
+/*Function to add in main :
+
+
+Open file
+Verify if file opened correctly
+
+char* buffer 
+size_t len
+ssize_t read
+
+while((read = getline(&buffer, &len, fd)) != -1)
+{
+
+    creates ethernet frame from getline(bytes)
+    if protocol = 0x0800
+        create ipv4 frame from ethernet payload
+        if create_ipv4 returns NULL pointer OR length does not match announced length
+            abort creation of ipv4 frame
+            free(ethernet)
+            new getline
+            continue
+        if protocol = 0x06
+            create tcp frame from ipv4 payload
+            SAME AS IF CREATE IPV4 RETURNS NULL
+                .
+                .
+                .
+                continue
+            if tcp->payload not NULL and contains information,
+                try reading payload with create_http
+                if NULL
+                    => last layer isn't http maybe set tcp layer to NULL (for print_flow to work confortably) ????
+            
+    add ethernet frame to the linked list if ethernet frame not NULL
+    frame_counter++
+
+}
+
+print_fg(linked list) (print 20 frames at a time ? or no limit ? if no limit might lose some frames in the printing)
+
+print entry options such has "filter" and "save flowgraph" by inputting a single char
+then call function that takes an input and switch cases;
+
+free allocations
+
+exit();
+}
+
+
+
+
+
+sscanf entry into a char
+char *case = lower(entry)
+switch (case)
+{
+    case 's' :      //save
+        function that fprintf into a file everything we printed
+    case 'f' :      //filter
+        sscanf entry
+        .
+        .
+        .
+        new linked list with filter to verify on each element of the original linked list (if matches condition, add in new linked list)
+        print(fg)
+    case 'q' :
+        exiting the switch, don't forget to free allocations
+    default :
+        loop back into the switch (HOW ?)
+}
+
+
