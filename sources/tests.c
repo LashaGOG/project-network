@@ -229,8 +229,13 @@ void test_flow_graph() {
     
     char *bytes4 = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
     tcp *tcp_test = create_tcp(bytes4,&frame_counter);
-    print_http_fg(tcp_test, http_frame);  
+    char *ipv4_frame = "45 00 00 28 95 11 40 00 80 06 00 00 c0 a8 00 0a a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
+    ipv4 *ip_frame = create_ipv4(ipv4_frame, &frame_counter);
+
+    print_http_fg(tcp_test, http_frame);
+    print_ipv4_fg(ip_frame);
     
+    delete_ipv4(ip_frame);
     delete_http(http_frame);
     delete_tcp(tcp_test);
 }

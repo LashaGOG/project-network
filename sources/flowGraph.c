@@ -116,11 +116,33 @@ void print_http_fg(tcp *tcp_frame, e_http *http_frame)
     strcat(entete, temp);
     free(temp);
     
-    char *http_header = center_string("                                   ", entete);
+    char *http_header = center_string("                                     ", entete);
     free(entete);
 
     printf("|      |%s%s%s|\n", port_src, http_header, port_dest);
     free(http_header);
     free(port_dest);
     free(port_src);
+}
+
+void print_ipv4_fg(ipv4 *ipv4_frame)
+{
+    char *ip = hex_to_ip(ipv4_frame->src_ip);
+    char *src_ip = center_string("                 ", ip);
+    free(ip);
+
+    ip = hex_to_ip(ipv4_frame->dest_ip);
+    char *dest_ip = center_string("                 ", ip);
+    free(ip);
+
+    char N[5] = {0};
+    sprintf(&(N[0]), "%d", ipv4_frame->num_frame);
+    char *number = center_string("      ", N);
+
+    char *arrow = "------------------------------------>";
+
+    printf("|%s|%s%s%s|\n", number, src_ip, arrow, dest_ip);
+    free(src_ip);
+    free(dest_ip);
+    free(number);
 }
