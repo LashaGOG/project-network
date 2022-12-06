@@ -32,7 +32,7 @@ frame *create_frame(char *bytes, int *num)
             }
         }
     }
-    fr->print = 0;
+    fr->print = 1;
     fr->suiv = NULL;
 
     return fr;
@@ -71,6 +71,55 @@ void print_frame(frame *ptr)
     if (ptr->http != NULL)
         print_http(ptr->http);
 }
+
+char *filter(frame *ptr)
+{
+    frame *tmp = ptr;
+    char *syntax = "Before typing your filter, here are few rules to respect the syntax :\n-for an ip address filter, follow these examples : 'ip_address == 192.126.0.12' or 'ip_address != 192.126.0.12'\n to choose if it's the source or destination, add '_src' or '_dst' like this : 'ip_address_src == 192.126.0.12'\n-for a TCP port, follow these examples : 'port == 2345' or 'port != 2345'\n to choose if it's the source or destination, add '_src' or '_dst' like this : 'port_src == 2345'";
+    printf("%s", syntax);
+    char str[256];
+    while (1) {
+        printf("Enter a filter (up to 33 characters) : ");
+        fgets(str, sizeof(str), stdin);
+        // Remove the newline character from the end of the string
+        str[strlen(str) - 1] = '\0';
+        
+        if (strcmp(str, "q") == 0)
+        {
+            return NULL;
+        }
+        
+        if (strlen(str) <= 33 && (strstr(str, "ip_address") != NULL || strstr(str, "port") != NULL || strstr(str, "none") != NULL)) {
+            printf("You entered: %s\n", str);
+            break;
+        }
+        else 
+        {
+            printf("Input must be up to 33 characters. Try again.\n");
+        }
+    }
+    
+    if (strcmp(str, "q") == 0)
+            return NULL;
+    if (strcmp(str, "none") == 0)
+    {
+        while (tmp)
+        {
+            tmp->print = 1;
+        }
+    }
+    else if (strstr(str, "ip_address") != NULL)
+    {
+        return filter_ip(ptr);
+    }
+
+    else if (strstr(str, "port"))
+    {
+        return filter_port(ptr);
+    }
+    return strdup(str);
+}
+
 
 void delete_frame(frame *fr)
 {
