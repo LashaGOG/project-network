@@ -24,6 +24,7 @@ int binToDec(char *bin);
 char *hexToChar(char *bytes);
 int word_count(char *s);
 char *hex_to_ip(const  char *hex_ip);
+char *spaceless(char* str);
 
 void change_separator_str (char *str, const char old_separator, const char new_separator);
 

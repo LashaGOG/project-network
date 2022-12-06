@@ -110,10 +110,12 @@ char *get_urg_pointer(char *bytes) {
     return urgp_raw;
 }
 
-tcp *create_tcp (char *bytes, int *num) {
+tcp *create_tcp (char *bytes, int num) {
     /* creates tcp segment from bytes */
+    if(strlen(bytes) < 59)
+        return NULL;
     tcp *tcp_seg = (tcp *) calloc(1,sizeof(tcp)); 
-    tcp_seg ->num_frame = *num ;
+    tcp_seg ->num_frame = num ;
     get_src_dest_port_raw(bytes, &(tcp_seg->src_port), &(tcp_seg->dst_port));
     tcp_seg ->seq_number = get_seq_number_raw(bytes);
     tcp_seg ->ack_number = get_ack_number_raw(bytes); 
@@ -122,6 +124,8 @@ tcp *create_tcp (char *bytes, int *num) {
     tcp_seg ->window = get_window(bytes); 
     tcp_seg ->checksum = get_checksum(bytes); 
     tcp_seg ->urg_pointer = get_urg_pointer(bytes);
+    if (strlen(bytes) > 60)
+        tcp_seg->Payload = strdup(&bytes[60]);
     return tcp_seg;
 }
 
@@ -159,6 +163,8 @@ void delete_tcp (tcp *tcp_seg) {
     free(tcp_seg ->window);
     free(tcp_seg ->checksum);
     free(tcp_seg ->urg_pointer);
+    if (tcp_seg->Payload != NULL)
+        free(tcp_seg->Payload);
     free(tcp_seg);
 }
 

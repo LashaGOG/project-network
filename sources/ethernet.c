@@ -29,13 +29,18 @@ char* get_eth_proto (char *bytes) {
     return proto;
 }
 
-eth_frame *create_eth_frame (char *bytes, int *num) {
+eth_frame *create_eth_frame (char *bytes, int num) {
     /* créer et initialiser trame ethernet */
+    if (strlen(bytes) < 41)
+        return NULL;
     eth_frame *ef = (eth_frame *) malloc (sizeof (eth_frame));
-    ef -> num_frame = *num;
+    ef -> num_frame = num;
     ef -> proto = get_eth_proto (bytes); 
     get_mac_dest_src(bytes, &(ef->src_mac), &(ef->dest_mac));
-    ef->Payload = strdup(&bytes[42]);
+    if (strcmp(ef->proto, "0800") == 0 && strlen(bytes) > 43)
+        ef->Payload = strdup(&bytes[42]);
+    else 
+        ef->Payload = NULL;
     return ef;
 } 
 
@@ -49,9 +54,12 @@ void print_eth_frame (eth_frame *ef) {
 
 void delete_eth_frame (eth_frame *ef) {
     /* supprimer trame ethernet */
-    free(ef->src_mac);
-    free(ef->dest_mac);
-    free(ef->proto);
-    free(ef->Payload);
-    free(ef);
+    if (ef != NULL){
+        free(ef->src_mac);
+        free(ef->dest_mac);
+        free(ef->proto);
+        if (ef->Payload != NULL)
+            free(ef->Payload);
+        free(ef);
+    }
 }

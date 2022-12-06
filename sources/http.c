@@ -114,7 +114,7 @@ e_http *get_http(char *bytes) {
         ptr2 = ptr1;
         str = separate_chunks(ptr2, &ptr1);
     }
-    
+
     ptr1 = NULL;
     ptr2 = NULL;
     ptr_ch = NULL;
@@ -130,7 +130,7 @@ champ *create_champ(char *entete, char *valeur) {
     return ptr;
 }
 
-champ *queue_champ (champ **ptr, champ* suiv)
+champ *queue_champ (champ **ptr, champ *suiv)
 {
     (*ptr)->suivant = suiv;
     *ptr = (*ptr)->suivant;

@@ -42,7 +42,10 @@ int main(void)
     //test_get_http();
 
     /* TEST DE FLOWGRAPH.C */
-    test_flow_graph();
+    //test_flow_graph();
+
+    /* TEST DE FRAME.C */
+    test_frame();
 
     return 0;
 }
