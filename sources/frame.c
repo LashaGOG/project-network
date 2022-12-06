@@ -51,11 +51,25 @@ void print_frame(frame *ptr)
         puts("The frame is NULL/empty.");
         return;
     }
+    if (ptr->print == 0) 
+        return;
+
     if (ptr->bytes == NULL || strcmp(ptr->bytes, "") == 0 || strlen(ptr->bytes) == 0) {
         puts("The frame is empty.");
         return;
     }
-    wprintf(L"Frame n°%d : %s\n", ptr->num_frame, ptr->bytes);
+    
+    if (ptr->eth != NULL)
+        print_eth_frame(ptr->eth);
+    
+    if (ptr->ip != NULL)
+        print_ipv4(ptr->ip);
+    
+    if (ptr->tcp_ != NULL)
+        print_tcp(ptr->tcp_, 1);
+
+    if (ptr->http != NULL)
+        print_http(ptr->http);
 }
 
 void delete_frame(frame *fr)

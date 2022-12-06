@@ -223,19 +223,21 @@ void print_tcp_flags (tcp_flags *tflags) {
 
 void print_tcp (tcp *tcp_seg,int print_details) {
     /* prints tcp segment */
-    printf ("Transmission Control Protocol, Src Port : %d, Dst port : %d, Seq : %s, Ack : %s \n",hexToDec(tcp_seg->src_port), hexToDec(tcp_seg->dst_port), tcp_seg->seq_number, tcp_seg ->ack_number); 
+    puts("\n__________ COUCHE TCP __________");
+    printf ("Transmission Control Protocol, Src Port : %d, Dst port : %d, Seq : %ld, Ack : %ld \n",hexToDec(tcp_seg->src_port), hexToDec(tcp_seg->dst_port), hexToUnsLong(tcp_seg->seq_number), hexToUnsLong(tcp_seg ->ack_number)); 
 
     if (print_details == 1) { // print TCP details if print_details is set to 1 
         printf ("TCP DETAILS : \n"); 
-        printf ("Source Port : %d (0x%s)\n", hexToDec(tcp_seg->src_port), tcp_seg->src_port);
-        printf ("Destination port : %d (0x%s)\n", hexToDec(tcp_seg->dst_port), tcp_seg->dst_port);
-        printf ("Sequence number: %lu (0x%s)\n", hexToUnsLong(tcp_seg->seq_number), tcp_seg->seq_number);
-        printf ("Acknowledgement number : %lu (0x%s)\n", hexToUnsLong(tcp_seg->ack_number), tcp_seg->ack_number);
-        printf ("Data offset (THL) : %d (0x%s)\n", hexToDec(tcp_seg->thl), tcp_seg->thl);
+        printf ("\tSource Port : %d (0x%s)\n", hexToDec(tcp_seg->src_port), tcp_seg->src_port);
+        printf ("\tDestination port : %d (0x%s)\n", hexToDec(tcp_seg->dst_port), tcp_seg->dst_port);
+        printf ("\tSequence number: %lu (0x%s)\n", hexToUnsLong(tcp_seg->seq_number), tcp_seg->seq_number);
+        printf ("\tAcknowledgement number : %lu (0x%s)\n", hexToUnsLong(tcp_seg->ack_number), tcp_seg->ack_number);
+        printf ("\tData offset (THL) : %d (0x%s)\n", hexToDec(tcp_seg->thl), tcp_seg->thl);
+        printf("TCP ");
         print_tcp_flags(tcp_seg->flags);
-        printf ("Window : %d (0x%s)\n", hexToDec(tcp_seg->window), tcp_seg->window);
-        printf ("Checksum : %d (0x%s)\n", hexToDec(tcp_seg->checksum), tcp_seg->checksum);
-        printf ("Urgent pointer : %d (0x%s)\n", hexToDec(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
+        printf ("\tWindow : %d (0x%s)\n", hexToDec(tcp_seg->window), tcp_seg->window);
+        printf ("\tChecksum : %d (0x%s)\n", hexToDec(tcp_seg->checksum), tcp_seg->checksum);
+        printf ("\tUrgent pointer : %d (0x%s)\n", hexToDec(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
         // OPTIONS + PADDING IS MISSING Hihi
     }
 }
