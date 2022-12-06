@@ -13,7 +13,7 @@
 
 void print_heading_row();
 void print_comm (char *bytes, int *frame_counter);
-void *print_flow(eth_frame *eFrame);
+void print_flow(eth_frame *eFrame);
 
 char *center_string(const char *str1, const char *str2);
 
