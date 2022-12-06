@@ -25,36 +25,48 @@ void print_comm (char *bytes, int *frame_counter)
     eFrame->num_frame = 1000;
     ipv4 *ipv4_frame = create_ipv4(eFrame->Payload, *frame_counter); 
     
-    printf("|      |                  TCP et Trucs ICI                                      |\n");
-    printf("| %d | %s      ---------------------------------->     %s |\n",eFrame ->num_frame, ipv4_frame->src_ip, ipv4_frame->dest_ip);
-    printf("|      |                  des trucs en plus?                                    |\n");
+    // printf("|      |                  TCP et Trucs ICI                                      |\n");
+    // printf("| %d | %s      ---------------------------------->     %s |\n",eFrame ->num_frame, ipv4_frame->src_ip, ipv4_frame->dest_ip);
+    // printf("|      |                  des trucs en plus?                                    |\n");
     
-    printf("+------------------------------------------------------------------------------+\n");
+    // printf("+------------------------------------------------------------------------------+\n");
 
     delete_ipv4(ipv4_frame);
     delete_eth_frame(eFrame);
 }
 
-// void *print_flow(eth_frame *eFrame){
-//    if (eFrame->Payload != NULL){
-//        ipv4 *ip_frame = create_ipv4(eFrame->Payload);
-//        if (ip_frame->Payload != NULL){
-//            tcp *tcp_frame = create_tcp(ip_frame->Payload);
-//            if (tcp_frame->Payload != NULL){
-//                http *http_frame =  create_http(tcp_frame->Payload);
-//                print_http_fg(tcp_frame, http_frame);
-//                delete_http(http_frame);
-//            }
-//            else{
-//                print_tcp_fg(tcp_frame);
-//            }
-//            delete_tcp(tcp_frame);
-//        }
-//        print_ip_fg(ip_frame);
-//        printf("|      |                                                                       |\n");
-//        delete_ipv4(ipv4_frame);
-//    }
-// }
+void print_flow(eth_frame *eFrame){
+    int tc = 0;
+
+   if (eFrame->Payload != NULL){
+       ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
+       if (ip_frame->Payload != NULL){
+           tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
+           if (tcp_frame != NULL)
+           {
+                if (tcp_frame->Payload != NULL)
+                {
+                    e_http *http_frame = get_http(tcp_frame->Payload);
+                    if (http_frame != NULL)
+                    {
+                        print_http_fg(tcp_frame, http_frame);
+                        delete_http(http_frame);
+                    }
+                    else
+                        tc = 1; 
+                }
+                if (tc == 1){
+                    print_tcp_fg(tcp_frame);
+                    delete_tcp(tcp_frame);
+                }
+            }
+            print_ipv4_fg(ip_frame);
+            printf("+------+-----------------------------------------------------------------------+\n");
+            delete_ipv4(ip_frame);
+        }
+    }
+    return;
+}
 
 char *center_string(const char *str1, const char *str2) {
     size_t str1_len = strlen(str1);
@@ -143,6 +155,7 @@ void print_ipv4_fg(ipv4 *ipv4_frame)
     char *arrow = "------------------------------------>";
 
     printf("|%s|%s%s%s|\n", number, src_ip, arrow, dest_ip);
+    printf("|      |                                                                       |\n");
     free(src_ip);
     free(dest_ip);
     free(number);
@@ -215,11 +228,11 @@ void print_tcp_fg(tcp* tcp_frame) {
 
     /* printing ports */
     char *port = hexToDec_c(tcp_frame->src_port);
-    char *port_src = center_string("                 ", port);
+    char *port_src = center_string("                  ", port);
     free(port);
 
     port = hexToDec_c(tcp_frame->dst_port);
-    char *port_dest = center_string("                 ", port);
+    char *port_dest = center_string("                  ", port);
     free(port);
 
     

@@ -213,37 +213,43 @@ void test_flow_graph() {
     static int frame_counter = 10;
     char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
     print_heading_row();
-    print_comm(bytes,&frame_counter);
+    // print_comm(bytes,&frame_counter);
 
-    char *header = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
-    struct _header *test = get_header(header);
+    // char *header = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
+    // struct _header *test = get_header(header);
     
-    char *bytes3 = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67";
-    char *bytes2 = "58 2d 46 65 64 6f 72 61 2d 50 72 6f 78 79 53 65 72 76 65 72 3a 20 70 72 6f 78 79 30 31 2e 69 61 64 32 2e 66 65 64 6f 72 61 70 72 6f 6a 65 63 74 2e 6f 72 67";
-    champ *test2  = get_champ(bytes2);
-    champ *test3  = get_champ(bytes3);
-    test2->suivant = test3;
+    // char *bytes3 = "58 2d 46 65 64 6f 72 61 2d 52 65 71 75 65 73 74 49 44 3a 20 59 34 43 51 4e 5f 34 73 41 72 43 57 56 37 76 68 30 61 32 57 33 51 41 41 44 5a 67";
+    // char *bytes2 = "58 2d 46 65 64 6f 72 61 2d 50 72 6f 78 79 53 65 72 76 65 72 3a 20 70 72 6f 78 79 30 31 2e 69 61 64 32 2e 66 65 64 6f 72 61 70 72 6f 6a 65 63 74 2e 6f 72 67";
+    // champ *test2  = get_champ(bytes2);
+    // champ *test3  = get_champ(bytes3);
+    // test2->suivant = test3;
     
-    e_http *http_frame = create_http(test, test2);
+    // e_http *http_frame = create_http(test, test2);
 
     
-    char *bytes4 = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
+    // char *bytes4 = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
 
-    tcp *tcp_test = create_tcp(bytes4,  frame_counter);
-    char *ipv4_frame = "45 00 00 28 95 11 40 00 80 06 00 00 c0 a8 00 0a a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
-    ipv4 *ip_frame = create_ipv4(ipv4_frame, frame_counter);
+    // tcp *tcp_test = create_tcp(bytes4,  frame_counter);
+    // char *ipv4_frame = "45 00 00 28 95 11 40 00 80 06 00 00 c0 a8 00 0a a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
+    // ipv4 *ip_frame = create_ipv4(ipv4_frame, frame_counter);
 
-    print_http_fg(tcp_test, http_frame);
-    print_ipv4_fg(ip_frame);
+    // print_tcp_fg(tcp_test);
+    // // print_http_fg(tcp_test, http_frame);
+    // print_ipv4_fg(ip_frame);
     
-    delete_ipv4(ip_frame);
+    // delete_ipv4(ip_frame);
 
-    print_http_fg(tcp_test, http_frame);  
 
-    delete_http(http_frame);
-    print_tcp_fg(tcp_test);
-    delete_tcp(tcp_test);
-}
+
+    // print_http_fg(tcp_test, http_frame);  
+
+    // delete_http(http_frame);
+    eth_frame *eFrame = create_eth_frame(bytes,frame_counter);
+    print_flow(eFrame);
+    delete_eth_frame(eFrame);
+    // delete_tcp(tcp_test);
+    
+}   
 
 /* TEST DE FRAME.C */
 void test_frame()

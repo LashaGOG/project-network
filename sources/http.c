@@ -74,6 +74,8 @@ champ *get_champ (char *bytes) {
 }
 
 e_http *get_http(char *bytes) {
+    if (strstr(bytes, "0d 0a 0d 0a") == NULL)
+        return NULL;
     char *ptr1 = bytes;
     char *ptr2;
     char *str = separate_chunks(bytes, &ptr1);
