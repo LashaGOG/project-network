@@ -125,6 +125,7 @@ void print_http_fg(tcp *tcp_frame, e_http *http_frame)
     free(port_src);
 }
 
+
 void print_ipv4_fg(ipv4 *ipv4_frame)
 {
     char *ip = hex_to_ip(ipv4_frame->src_ip);
@@ -147,3 +148,106 @@ void print_ipv4_fg(ipv4 *ipv4_frame)
     free(number);
 }
 
+char *printed_tcp_flags_fg(tcp *tcp_frame) {
+    /* return formatted set flags ex : [ACK] if ack is set */
+    int urg, ack, psh, rst, syn, fin ; 
+    tcp_flags *tflags = tcp_frame->flags;
+    
+    urg = tflags->urg;
+    ack = tflags->ack; 
+    psh = tflags->psh;
+    rst = tflags->rst; 
+    syn = tflags->syn;
+    fin = tflags->fin;
+
+    char *printed_flags = (char *)calloc(30,sizeof(char));
+
+    if (urg == 1) {
+        strcat(printed_flags,"[URG]");
+    }
+    if (ack == 1) {
+        strcat(printed_flags,"[ACK]");
+    }
+    if (psh == 1) {
+        strcat(printed_flags,"[PSH]");
+    }
+    if (rst == 1) {
+        strcat(printed_flags,"[RST]");
+    }
+    if (syn == 1) {
+        strcat(printed_flags,"[SYN]");
+    }
+    if (fin == 1) {
+        strcat(printed_flags,"[FIN]");
+    }
+    return printed_flags;
+}
+
+void cat_info(char *name, char *dst, char *src, int *space_left, int *bool) {
+    /**/
+    if (*(space_left) < 1) return ; 
+    int length_src = (int)strlen(src), length_name = (int)strlen(name);
+    
+    if (*(space_left) > length_name) {
+        strcat(dst,name);
+        *(space_left) -= length_name;
+    } else {
+        strncat(dst,name,*(space_left));
+        strcat(dst,"...");
+        *bool = 0; 
+        return;
+    }
+
+    if (*(space_left) > length_src) {
+        strcat(dst,src);
+        *(space_left) -= length_src;
+        return;
+    } else {
+        strncat(dst,src,*(space_left));
+        strcat(dst,"...");
+        *bool = 0;
+        return;
+    }
+}
+void print_tcp_fg(tcp* tcp_frame) {
+
+    char *flow_info = (char *) calloc (36, sizeof(char));
+
+    /* printing ports */
+    char *port = hexToDec_c(tcp_frame->src_port);
+    char *port_src = center_string("                 ", port);
+    free(port);
+
+    port = hexToDec_c(tcp_frame->dst_port);
+    char *port_dest = center_string("                 ", port);
+    free(port);
+
+    
+    char *flags = printed_tcp_flags_fg(tcp_frame);
+    char *seq = unsLongToStr(hexToUnsLong(tcp_frame->seq_number));
+    char *ack = unsLongToStr(hexToUnsLong(tcp_frame->ack_number));
+    char *window = unsLongToStr(hexToUnsLong(tcp_frame->window));
+
+    /* getting flow info */
+    
+    int space_left = 32 ;
+    int bool = 1; 
+    if (bool == 1) cat_info("",flow_info,flags,&space_left,&bool);
+    if (bool == 1) cat_info(" win=",flow_info,window,&space_left,&bool);
+    if (bool == 1) cat_info(" seq=",flow_info,seq,&space_left,&bool);
+    if (bool == 1) cat_info(" ack=",flow_info,ack,&space_left,&bool);
+
+    free(flags);
+    free(seq);
+    free(ack);
+    free(window);
+
+    char *centered_flow_info = center_string("                                   ",flow_info);
+    free(flow_info);
+    
+    printf("|      |%s%s%s|\n", port_src, centered_flow_info, port_dest);
+
+    free(port_dest);
+    free(port_src);
+    free(centered_flow_info);
+}

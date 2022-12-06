@@ -11,6 +11,7 @@
 #define TOOLS
 
 char *intToStr (int n);
+char *unsLongToStr (unsigned long n);
 void hexToBin(char *hex);
 char *hexToBinchar(char *hex);
 unsigned char binToHex (char *bin);
