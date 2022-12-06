@@ -211,8 +211,8 @@ void test_get_http()
 
 void test_flow_graph() {
     static int frame_counter = 10;
-     char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
-     print_heading_row();
+    char *bytes = "f0 18 98 54 9e 14 16 87 6a b7 3e 64 08 00 45 50 00 34 00 00 00 00 3d 06 9c d4 a2 9f 87 ea ac 14 0a 02 01 bb dd b5 fe 7b e2 97 44 c6 dc 93 80 10 00 31 c7 77 00 00 01 01 08 0a d8 34 b6 43 2e 25 2f f8";
+    print_heading_row();
     print_comm(bytes,&frame_counter);
 
     char *header = "48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b";
@@ -230,7 +230,7 @@ void test_flow_graph() {
     char *bytes4 = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
     tcp *tcp_test = create_tcp(bytes4,&frame_counter);
     print_http_fg(tcp_test, http_frame);  
-    
     delete_http(http_frame);
+    print_tcp_fg(tcp_test);
     delete_tcp(tcp_test);
 }

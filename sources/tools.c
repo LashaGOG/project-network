@@ -9,6 +9,15 @@ char *intToStr (int n) {
     return nb; 
 }
 
+char *unsLongToStr (unsigned long n) {
+    /* cast n to str */
+    int len = sizeof(unsigned long)*8+1; 
+    char* nb = (char*) calloc (len, sizeof(char)); 
+    snprintf(nb, len, "%lu", n);
+    // sprintf(nb, n);
+    return nb; 
+}
+
 void hexToBin(char *hex) {
     /* Convertir nombre hexadecimale au nombre Binaire */
     int i = 0; 
