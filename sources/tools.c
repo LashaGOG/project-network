@@ -200,10 +200,11 @@ unsigned char binToHex (char *bin) {
 
 int hexToDec (char *hex) {
     /* convertir nb hexadecimale au nb decimale */
-    int nbdec = 0 ; 
-    int length = strlen(hex);
+    int nbdec = 0 ;
+    char *str = spaceless(hex);
+    int length = strlen(str);
     for (int i = 0; i < length; i++) {
-        char digit = hex[length - 1 - i]; 
+        char digit = str[length - 1 - i]; 
 
         if (digit >= '0' && digit <= '9') {
             nbdec += (digit - '0') * pow(16,i); 
@@ -216,6 +217,25 @@ int hexToDec (char *hex) {
         }
     }
     return nbdec; 
+}
+
+char *spaceless(char* str)
+{
+    // Initialize a counter variable to store the new string length
+    int count = 0;
+
+    // Iterate over the input string and copy each non-space character to the
+    // new string
+    for (int i = 0; i < (int)strlen(str); i++) {
+        if (str[i] != ' ') {
+            str[count] = str[i];
+            count++;
+        }
+    }
+
+    // Terminate the new string with a null character
+    str[count] = '\0';
+    return str;
 }
 
 unsigned long hexToUnsLong (char *hex) {
@@ -379,16 +399,16 @@ char *hexToChar(char *bytes)
 }
 
 
-// int word_count(char *s)
-// {
-    // int count;
-    // for (int i = 0; s[i+1] != '\0'; i++)
-    // {
-        // if (s[i] == ' ' && s[i+1] != ' ')
-            // count++;    
-    // }
-    // return count;
-// }
+int word_count(char *s)
+{
+    int count;
+    for (int i = 0; s[i+1] != '\0'; i++)
+    {
+        if (s[i] == ' ' && s[i+1] != ' ')
+            count++;    
+    }
+    return count;
+}
 
 int calculate_nb_char_hex (char *bytes){
     /* returns nb of hexadecimal characters in bytes. */

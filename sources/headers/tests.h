@@ -10,6 +10,7 @@
 #include "tcp.h"
 #include "flowGraph.h"
 #include "http.h"
+#include "frame.h"
 
 #ifndef TESTS
 #define TESTS
@@ -44,5 +45,8 @@ void test_flow_graph();
 /* TESTS DE HTTP.C */
 void test_http();
 void test_get_http();
+
+/* TESTS DE FRAME.C */
+void test_frame();
 
 #endif

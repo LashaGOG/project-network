@@ -14,16 +14,16 @@ frame *create_frame(char *bytes, int *num)
         free(fr);
         return NULL;
     }
-    fr->num_frame = *num++;
-    fr->eth->num_frame++;
+    fr->num_frame = ++*num; 
+    int val = ++fr->eth->num_frame;
     if (fr->eth->Payload != NULL)
     {
-        fr->ip = create_ipv4(fr->eth->Payload, *num);
+        fr->ip = create_ipv4(fr->eth->Payload, val);
         if (fr->ip != NULL)
         {
             if (fr->ip->Payload != NULL)
             {
-                fr->tcp_ = create_tcp(fr->ip->Payload, *num);
+                fr->tcp_ = create_tcp(fr->ip->Payload, val);
                 if (fr->tcp_ != NULL)
                 {
                     if (fr->tcp_->Payload != NULL)
@@ -45,6 +45,19 @@ frame *queue_frame (frame **ptr, frame *suiv)
     return *ptr;
 }
 
+void print_frame(frame *ptr)
+{
+    if (ptr == NULL) {
+        puts("The frame is NULL/empty.");
+        return;
+    }
+    if (ptr->bytes == NULL || strcmp(ptr->bytes, "") == 0 || strlen(ptr->bytes) == 0) {
+        puts("The frame is empty.");
+        return;
+    }
+    wprintf(L"Frame n°%d : %s\n", ptr->num_frame, ptr->bytes);
+}
+
 void delete_frame(frame *fr)
 {
     if (fr != NULL)
@@ -59,6 +72,7 @@ void delete_frame(frame *fr)
         if (fr->http != NULL)
             delete_http(fr->http);
         fr->suiv = NULL;
+        free(fr);
     }
 }
 

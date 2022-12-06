@@ -5,6 +5,7 @@
 #include "tools.h"
 #include "flowGraph.h"
 #include "reader.h"
+#include <wchar.h>
 
 #ifndef _FRAME
 #define _FRAME
@@ -24,6 +25,7 @@ typedef struct _frame
 
 frame *create_frame(char *bytes, int *num);
 frame *queue_frame(frame **ptr, frame *suiv);
+void print_frame(frame *ptr);
 
 void filter(char *filter, frame *list);
 
