@@ -10,7 +10,7 @@ void print_heading_row() {
 
 void print_comm (char *bytes, int *frame_counter) 
 {
-    eth_frame *eFrame = create_eth_frame(bytes,frame_counter);
+    eth_frame *eFrame = create_eth_frame(bytes, *frame_counter);
     if (!eFrame) {
         printf("Error allocating memory\n");
         return; 
@@ -23,7 +23,7 @@ void print_comm (char *bytes, int *frame_counter)
         return; 
     } 
     eFrame->num_frame = 1000;
-    ipv4 *ipv4_frame = create_ipv4(eFrame->Payload,frame_counter); 
+    ipv4 *ipv4_frame = create_ipv4(eFrame->Payload, *frame_counter); 
     
     printf("|      |                  TCP et Trucs ICI                                      |\n");
     printf("| %d | %s      ---------------------------------->     %s |\n",eFrame ->num_frame, ipv4_frame->src_ip, ipv4_frame->dest_ip);

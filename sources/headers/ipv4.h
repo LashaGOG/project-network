@@ -48,7 +48,7 @@ char *get_header_checksum (char *bytes);
 char *get_ip (char *bytes);
 void get_src_dest_ip (char *bytes, char **ip_src, char **ip_dest);
 
-ipv4 *create_ipv4 (char *bytes, int *num);
+ipv4 *create_ipv4 (char *bytes, int num);
 fragmentation *create_fragmentation (int R, int DF, int MF, char *offset);
 tos *create_tos (char *precedence, int delay, int throughput, int reliability, int cost, int reserved);
 void delete_ipv4 (ipv4 *ip);

@@ -1,7 +1,7 @@
 #include "./headers/ipv4.h"
 
 char *get_ip_version (char *bytes){
-    char *ip =  strndup(&bytes[0], 1); //copy 4 bits
+    char *ip = strndup(&bytes[0], 1); //copy 4 bits
     return ip;
 }
 
@@ -124,7 +124,7 @@ void get_src_dest_ip (char *bytes, char **ip_src, char **ip_dest) {
     *(ip_dest) = get_ip(&bytes[48]);
 }
 
-ipv4 *create_ipv4(char* bytes, int *num) {
+ipv4 *create_ipv4(char* bytes, int num) {
     if ((int) strlen(bytes) < 59) {
         puts("WARNING : Frame's length is less than IP protocol's header length, function will return a NULL pointer");
         return NULL;
@@ -142,7 +142,7 @@ ipv4 *create_ipv4(char* bytes, int *num) {
         return NULL;
     }
 
-    ipf->num_frame = *num;
+    ipf->num_frame = num;
     ipf->version = get_ip_version(bytes);
     ipf->header_length =  get_header_length(bytes);
     ipf->typesos = get_TOS(bytes);
@@ -152,6 +152,8 @@ ipv4 *create_ipv4(char* bytes, int *num) {
     ipf->protocol = get_protocol(bytes);
     ipf->header_checksum = get_header_checksum(bytes);
     get_src_dest_ip(bytes, &(ipf->src_ip), &(ipf->dest_ip));
+    if (strcmp(ipf->protocol, "06") == 0 && strlen(bytes) > 60)
+        ipf->Payload = strdup(&bytes[60]);
     return ipf;
 }
 
@@ -187,6 +189,8 @@ void delete_ipv4 (ipv4 *ipf) {
     free(ipf->header_checksum);
     free(ipf->src_ip);
     free(ipf->dest_ip);
+    if (ipf->Payload != NULL)
+        free(ipf->Payload);
     free(ipf);
 }
 

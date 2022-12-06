@@ -18,7 +18,7 @@ char *get_mac_address(char *bytes);
 void get_mac_dest_src (char *bytes, char **mac_src, char **mac_dst);
 char* get_eth_proto (char *bytes);
 
-eth_frame *create_eth_frame (char *bytes, int *num);
+eth_frame *create_eth_frame (char *bytes, int num);
 void print_eth_frame (eth_frame *ef); 
 void delete_eth_frame (eth_frame *ef);
 

@@ -126,7 +126,7 @@ void test_get_mac_address() {
     // reads text until newline is encountered
     fscanf(fd, "%[^\n]", testBytes);
     char* testpointer = &testBytes[0];                                     //on devrait utiliser un pointer pour faciliter le parcours
-    eth_frame *test_frame = create_eth_frame(testpointer,&frame_counter);
+    eth_frame *test_frame = create_eth_frame(testpointer, frame_counter);
     print_eth_frame(test_frame);
     delete_eth_frame(test_frame);
     fclose(fd);
@@ -143,7 +143,7 @@ void test_ipv4() {
     static int frame_counter = 1;
     char *test = "45 00 00 28 95 11 40 00 80 06 00 00 c0 a8 00 0a a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
     char *testpointer = &test[0];
-    ipv4 *test_ipv4 = create_ipv4(testpointer, &frame_counter);
+    ipv4 *test_ipv4 = create_ipv4(testpointer, frame_counter);
     print_ipv4(test_ipv4);
     delete_ipv4(test_ipv4);
 }
@@ -151,7 +151,7 @@ void test_ipv4() {
 void test_tcp() {
     static int frame_counter = 1; 
     char *bytes = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
-    tcp *tcp_test = create_tcp(bytes,&frame_counter);
+    tcp *tcp_test = create_tcp(bytes, frame_counter);
     // printf("Length total of bytes : %d\n",(int)(0.5*calculate_nb_char_hex(bytes)));
     print_tcp(tcp_test,1);
     delete_tcp(tcp_test);
@@ -228,9 +228,9 @@ void test_flow_graph() {
 
     
     char *bytes4 = "01 bb fd 75 db be 39 ba de 4c f6 fc 80 18 05 4a b8 89 00 00 01 01 08 0a e7 fe 1f f2 fa 38 29 8f";
-    tcp *tcp_test = create_tcp(bytes4,&frame_counter);
+    tcp *tcp_test = create_tcp(bytes4,  frame_counter);
     char *ipv4_frame = "45 00 00 28 95 11 40 00 80 06 00 00 c0 a8 00 0a a2 9f 85 ea f2 47 01 bb 19 1c 70 16 62 6f 3f 36 50 10 02 02 e9 56 00 00";
-    ipv4 *ip_frame = create_ipv4(ipv4_frame, &frame_counter);
+    ipv4 *ip_frame = create_ipv4(ipv4_frame, frame_counter);
 
     print_http_fg(tcp_test, http_frame);
     print_ipv4_fg(ip_frame);
@@ -311,5 +311,4 @@ switch (case)
     default :
         loop back into the switch (HOW ?)
 }
-
-
+*/
