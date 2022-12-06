@@ -176,7 +176,6 @@ void print_header(header *entete)
 
 void print_champ(champ *first)
 {
-    int i = 0;
     champ* tmp = first;
     while (tmp)
     {
@@ -184,7 +183,7 @@ void print_champ(champ *first)
         {
             char *entete = hexToChar(tmp->entete);
             char *value =  hexToChar(tmp->valeur);
-            printf("Champ n°%d = %s : %s\n", ++i, entete, value);
+            printf("\t%s : %s\n", entete, value);
             free(entete);
             free(value);
         }
@@ -194,6 +193,8 @@ void print_champ(champ *first)
 
 void print_http(e_http *ptr)
 {
+    puts("\n_________ COUCHE  HTTP _________");
+    puts("   Hypertext transfer protocol  ");
     print_header(ptr->http_header);
     print_champ(ptr->champs);
     //print_corps(ptr->corps);

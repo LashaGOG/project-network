@@ -209,7 +209,7 @@ void delete_tos (tos *typesos) {
 void print_ipv4(ipv4 *ipf) {
     char temp[10];
     size_t len = 10;
-    puts("__________ COUCHE IP _________");
+    puts("\n__________ COUCHE  IP __________");
     printf("IP addresses :\n     -Source : %s\n     -Destination : %s\n", ipf->src_ip, ipf->dest_ip);
    
     hexToBin(ipf->header_length);
