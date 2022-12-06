@@ -18,7 +18,7 @@ typedef struct _frame
     tcp *tcp_;
     e_http *http;
     int print;
-    struct _fram *suiv;
+    struct _frame *suiv;
 } frame;
 
 
