@@ -7,19 +7,31 @@
 #include "./headers/flowGraph.h"
 #include "./headers/http.h"
 
+#define MAX_LINE_LENGTH 3500
+
 int main(void)
 {   
 
     printf("Hello, please type a name of file\n");
     /* format file */
     char rawFile[50];
-    scanf("%s",rawFile);
-    printf("Filename : %s\n",rawFile);
-    frametostr(rawFile,"temporary_File.txt"); 
-    verif("temporary_File.txt","Formatted_File.txt"); // we put 
+    scanf("%s",rawFile); // we ask user to put the name of his file
+    printf("Filename : %s\n",rawFile); 
+    frametostr(rawFile,"temporary_File.txt"); // we format file to "Formatted_file.txt"
+    verif("temporary_File.txt","Formatted_File.txt"); 
 
-    /* read Formatted_File */
-    
+    /* read Formatted_File and create frame */
+    static int frame_counter = 0 ;
+    char line[MAX_LINE_LENGTH] = {0}; // maybe 3500 is a bit too much? 
+    frame *frame;
+    FILE *fp = fopen("Formatted_file.txt", "r");
+    while (fgets(line, MAX_LINE_LENGTH, fp)) 
+    {
+        frame = create_frame(line,&frame_counter);
+        fgets(line, MAX_LINE_LENGTH, fp);
+    }
+    fclose(fp);
+
     /* main menu */
     int boolean = 1;
     int choice = -1; 
@@ -54,11 +66,13 @@ int main(void)
             system("clear");
             printf("=====================================\n");
             printf("Activate/Desactivate filters\n");
+            // fonction to activate/desactivate filters
             break;
             case 4:
             system("clear");
             printf("=====================================\n");
             printf("Print Frame details here\n");
+            // fonction to print frame N details
             break;
             case 5:
             printf("=====================================\n");
@@ -71,6 +85,7 @@ int main(void)
             break;
         }
     }
+    delete_frame(frame);
 
     return 0;
 }
