@@ -1,9 +1,12 @@
 #include "./headers/http.h"
 
 char *separate_chunks(char *bytes, char **ptr) {
+    if (strcmp(bytes, "0d 0a") == 0)
+        return NULL;
     *ptr = strstr(bytes,"0d 0a");
     if (*ptr == NULL || strcmp(bytes, "") == 0 || strlen(bytes) < 2)
         return NULL;
+
     if (*ptr[0] == bytes[0] && *ptr[1] == bytes[1])
     {
         if (*ptr[3]  == bytes[3] && *ptr[4] == bytes[4])
@@ -76,11 +79,12 @@ champ *get_champ (char *bytes) {
 e_http *get_http(char *bytes) {
     if (strstr(bytes, "0d 0a 0d 0a") == NULL)
         return NULL;
+
     char *ptr1 = bytes;
     char *ptr2;
     char *str = separate_chunks(bytes, &ptr1);
     int first = 0;
-    
+
     header *entete;
     champ *first_champ;
     champ *ptr_ch;
@@ -91,7 +95,7 @@ e_http *get_http(char *bytes) {
             first = 1;
             entete = get_header(str);
             free(str);
-            
+
             ptr2 = ptr1;
             str = separate_chunks(ptr2, &ptr1);
             continue;
@@ -99,7 +103,7 @@ e_http *get_http(char *bytes) {
         if  (first == 1)
         {
             first = 2;
-            
+
             first_champ = get_champ(str);
             ptr_ch = first_champ;
             free(str);
@@ -110,17 +114,14 @@ e_http *get_http(char *bytes) {
         }
         champ *tmp = get_champ(str);
         queue_champ(&ptr_ch, tmp);
-        
         free(str);
         
         ptr2 = ptr1;
-        str = separate_chunks(ptr2, &ptr1);
+        str = separate_chunks(ptr2, &ptr1);     
     }
-
     ptr1 = NULL;
     ptr2 = NULL;
     ptr_ch = NULL;
-
     return create_http(entete, first_champ);
 }
 
@@ -185,7 +186,7 @@ void print_champ(champ *first)
         {
             char *entete = hexToChar(tmp->entete);
             char *value =  hexToChar(tmp->valeur);
-            printf("\t%s : %s\n", entete, value);
+            printf("\t%s %s\n", entete, value);
             free(entete);
             free(value);
         }
@@ -212,7 +213,7 @@ void delete_header(header *ptr)
 
 void delete_champ(champ *ptr) 
 {
-    champ *tmp;
+    champ *tmp = ptr;
     while(ptr)
     {
         tmp = ptr;
