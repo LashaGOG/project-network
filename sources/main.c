@@ -71,40 +71,41 @@ int main(void)
 
         switch (choice) {
             case 1:
-            system("clear");
+                //system("clear");
                 print_flowgraph(ptr);
-            break; 
+                break; 
             case 2: 
-            system("clear");
-            printf("====================================\n");
-            // fonction to save flowgraph
-            printf(" Flowgraph exported as flowgraph.txt\n");
-            break;
+                //system("clear");
+                printf("====================================\n");
+                // fonction to save flowgraph
+                printf(" Flowgraph exported as flowgraph.txt\n");
+                break;
             case 3:
-            system("clear");
-            printf("=====================================\n");
-            printf("Activate/Desactivate filters\n");
-            // fonction to activate/desactivate filters
-            break;
+                //system("clear");
+                printf("=====================================\n");
+                printf("Activate/Desactivate filters\n");
+                // fonction to activate/desactivate filters
+                break;
             case 4:
-            system("clear");
-            int frame_number; 
-            printf("=====================================\n");
-            printf("Type frame number to print it's details\n");
-            scanf("%d",&frame_number);
-            printf("Printing details of Frame : %d\n",frame_number);
-            // print_specific_frame(fr,frame_number);
-            // fonction to print frame N details
-            break;
+                system("clear");
+                int frame_number; 
+                printf("=====================================\n");
+                printf("Type frame number to print it's details\n");
+                scanf("%d",&frame_number);
+                printf("Printing details of Frame : %d\n",frame_number);
+                print_specific_frame(ptr, frame_number);
+                puts("");
+                // fonction to print frame N details
+                break;
             case 5:
-            printf("=====================================\n");
-            printf("Goodbye!\n");
-            boolean = 0; 
-            break;
+                printf("=====================================\n");
+                printf("Goodbye!\n");
+                boolean = 0; 
+                break;
             default:
-            printf("=====================================\n");
-            printf("Invalid choice\n");
-            break;
+                printf("=====================================\n");
+                printf("Invalid choice\n");
+                break;
         }
     }
     delete_linked_frames(list_frames);

@@ -46,6 +46,7 @@ eth_frame *create_eth_frame (char *bytes, int num) {
 
 void print_eth_frame (eth_frame *ef) {
     /* afficher trame ethernet */
+    puts("\n________ COUCHE ETHERNET ________");
     printf("Frame %d :\n",ef->num_frame);
     printf("Mac destination : %s\n",ef->dest_mac);
     printf("Mac source : %s\n",ef->src_mac);
