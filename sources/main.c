@@ -22,15 +22,27 @@ int main(void)
 
     /* read Formatted_File and create frame */
     static int frame_counter = 0 ;
-    char line[MAX_LINE_LENGTH] = {0}; // maybe 3500 is a bit too much? 
-    frame *frame;
-    FILE *fp = fopen("Formatted_file.txt", "r");
-    while (fgets(line, MAX_LINE_LENGTH, fp)) 
+    // char line[MAX_LINE_LENGTH] = {0}; // maybe 3500 is a bit too much? 
+    FILE* fd = fopen("Formatted_File.txt", "r");
+    if (!fd)
     {
-        frame = create_frame(line,&frame_counter);
-        fgets(line, MAX_LINE_LENGTH, fp);
+        puts("Failed opening Formatted_File.txt (main.c)");
+        return;
     }
-    fclose(fp);
+    
+    char* line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    int i = 0; 
+    
+    
+    while ((read = getline(&line, &len, fd)) != -1)
+    {
+        frame_counter++;
+        
+    }
+    free(line);
+    fclose(fd);
 
     /* main menu */
     int boolean = 1;
@@ -53,8 +65,7 @@ int main(void)
         switch (choice) {
             case 1:
             system("clear");
-            printf("We print flowgraph here\n");
-            // fonction to print flowgraph
+            // print_flowgraph(frame *fr);
             break; 
             case 2: 
             system("clear");
@@ -70,8 +81,12 @@ int main(void)
             break;
             case 4:
             system("clear");
+            int frame_number; 
             printf("=====================================\n");
-            printf("Print Frame details here\n");
+            printf("Type frame number to print it's details\n");
+            scanf("%d",&frame_number);
+            printf("Printing details of Frame : %d\n",frame_number);
+            // print_specific_frame(fr,frame_number);
             // fonction to print frame N details
             break;
             case 5:
@@ -85,7 +100,7 @@ int main(void)
             break;
         }
     }
-    delete_frame(frame);
+    // delete_frame(frame);
 
     return 0;
 }

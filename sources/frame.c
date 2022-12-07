@@ -72,6 +72,17 @@ void print_frame(frame *ptr)
         print_http(ptr->http);
 }
 
+
+void print_specific_frame(frame *fr, int frame_number) {
+    /* print frame if it's number is frame_number */
+
+    frame *tmp = fr;
+    while (tmp) {
+        if (tmp ->num_frame == frame_number) {
+            print_frame(tmp);
+        }
+        tmp = tmp -> suiv;
+
 char *filter(frame *ptr)
 {
     puts("Before typing your filter, the syntax of the filter is the following : 'filter_expression == value'.");
@@ -345,6 +356,8 @@ void delete_frame(frame *fr)
         free(fr);
     }
 }
+
+
 
 void delete_linked_frames(frame *fr)
 {
