@@ -26,6 +26,7 @@ typedef struct _frame
 
 
 frame *create_frame(char *bytes, int *num);
+void addLast(frame **head_lst_frames, char *line, int *frame_counter);
 frame *queue_frame(frame **ptr, frame *suiv);
 void print_frame(frame *ptr);
 void print_specific_frame(frame *fr, int frame_number);

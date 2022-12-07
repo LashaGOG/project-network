@@ -38,6 +38,32 @@ frame *create_frame(char *bytes, int *num)
     return fr;
 }
 
+void addLast(frame **head_lst_frames, char *line, int *frame_counter)
+{
+    //create a new node
+    frame *newFrame = create_frame(line,frame_counter);
+    newFrame->suiv = NULL;
+
+    //if head is NULL, it is an empty list
+    if(*head_lst_frames == NULL)
+         *head_lst_frames = newFrame;
+    //Otherwise, find the last node and add the newNode
+    else
+    {
+        frame *lastFrame = *head_lst_frames;
+
+        //last node's next address will be NULL.
+        while(lastFrame->suiv != NULL)
+        {
+            lastFrame = lastFrame->suiv;
+        }
+
+        //add the newNode at the end of the linked list
+        lastFrame->suiv = newFrame;
+    }
+
+}
+
 frame *queue_frame (frame **ptr, frame *suiv)
 {
     (*ptr)->suiv = suiv;
@@ -80,9 +106,11 @@ void print_specific_frame(frame *fr, int frame_number) {
     while (tmp) {
         if (tmp ->num_frame == frame_number) {
             print_frame(tmp);
+            return;
         }
         tmp = tmp -> suiv;
-
+    }
+}
 char *filter(frame *ptr)
 {
     puts("Before typing your filter, the syntax of the filter is the following : 'filter_expression == value'.");

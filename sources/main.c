@@ -7,7 +7,7 @@
 #include "./headers/flowGraph.h"
 #include "./headers/http.h"
 
-#define MAX_LINE_LENGTH 3500
+#define MAX_LINE_LENGTH 5000
 
 int main(void)
 {   
@@ -21,28 +21,29 @@ int main(void)
     verif("temporary_File.txt","Formatted_File.txt"); 
 
     /* read Formatted_File and create frame */
-    static int frame_counter = 0 ;
-    // char line[MAX_LINE_LENGTH] = {0}; // maybe 3500 is a bit too much? 
-    FILE* fd = fopen("Formatted_File.txt", "r");
-    if (!fd)
+    FILE* file = fopen("Formatted_File.txt", "r");
+    if (!file)
     {
         puts("Failed opening Formatted_File.txt (main.c)");
-        return;
     }
     
-    char* line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    int i = 0; 
-    
-    
-    while ((read = getline(&line, &len, fd)) != -1)
+    static int frame_counter = 0 ;
+    frame *list_frames = NULL; 
+    char line[MAX_LINE_LENGTH];
+    while (fgets(line, sizeof(line), file))
     {
-        frame_counter++;
-        
+        // remove newline character from the line
+        line[strcspn(line, "\n")] = 0;
+
+        // create a new node with the line as data
+        // frame* newFrame = createNode(line);
+
+        // // add the node to the linked list
+        addLast(&list_frames,line,&frame_counter);
     }
-    free(line);
-    fclose(fd);
+
+fclose(file); // close file
+    
 
     /* main menu */
     int boolean = 1;
@@ -100,7 +101,7 @@ int main(void)
             break;
         }
     }
-    // delete_frame(frame);
+    delete_linked_frames(list_frames);
 
     return 0;
 }
