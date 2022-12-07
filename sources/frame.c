@@ -104,6 +104,12 @@ char *filter(frame *ptr)
             tmp = tmp->suiv;
         }
     }
+
+    else if (strstr(input, "mac_address") != NULL)
+    {
+        filter_mac(input, ptr);
+    }
+
     else if (strstr(input, "ip_address") != NULL)
     {
         filter_ip(input, ptr);
@@ -112,6 +118,11 @@ char *filter(frame *ptr)
     else if (strstr(input, "port"))
     {
         filter_port(input, ptr);
+    }
+
+    else
+    {
+        filter_protocol(input, ptr);
     }
 
     return input;
@@ -125,23 +136,184 @@ char *verif_input(char *prompt) {
         fgets(input, 256, stdin);
         input[strcspn(input, "\n")] = 0;    
 
-        regex_t ip_port_regex, q_none_regex;
-        regcomp(&ip_port_regex, "^(ip_address|port)(_src|_dst)? (==|!=) .*$", REG_EXTENDED);
+        regex_t protocol_regex, ip_port_mac_regex, q_none_regex;
+        regcomp(&protocol_regex, "^(ethernet|eth|ipv4|ip|tcp|http) (==|!=) .*$", REG_EXTENDED);
+        regcomp(&ip_port_mac_regex, "^(ip_address|port|mac_address)(_src|_dst)? (==|!=) .*$", REG_EXTENDED);
         regcomp(&q_none_regex, "^(q|none)$", REG_EXTENDED);
 
-        if (!regexec(&ip_port_regex, input, 0, NULL, 0)) {
-            regfree(&ip_port_regex);
+        if (!regexec(&protocol_regex, input, 0, NULL, 0)) {
+            regfree(&protocol_regex);
+            regfree(&ip_port_mac_regex);
+            regfree(&q_none_regex);
+            return strdup(input);
+        }
+
+        if (!regexec(&ip_port_mac_regex, input, 0, NULL, 0)) {
+            regfree(&protocol_regex);
+            regfree(&ip_port_mac_regex);
             regfree(&q_none_regex);
             return strdup(input);
         }
 
         if (!regexec(&q_none_regex, input, 0, NULL, 0)) {
-            regfree(&ip_port_regex);
+            regfree(&protocol_regex);
+            regfree(&ip_port_mac_regex);
             regfree(&q_none_regex);
             return strdup(input);
         } 
-        puts("Input doesn't respect the syntax.");
+        puts("Input does not respect the syntax.");
     }
+}
+
+void filter_protocol(char *str, frame *ptr)
+{
+    frame *tmp = ptr;
+    while (tmp)
+    {
+        if (strncmp("eth", str, 3) == 0)
+        {
+            if (tmp->eth != NULL)
+            {
+                tmp->print = 1;
+            }
+            else
+            {
+                tmp->print = 0;
+            }
+        }
+        else if (strncmp("ip", str, 2) == 0)
+        {
+            if (tmp->ip != NULL)
+            {
+                tmp->print = 1;
+            }
+            else
+            {
+                tmp->print = 0;
+            }
+        }
+        else if (strncmp("tcp", str, 3) == 0)
+        {
+            if (tmp->tcp_ != NULL && tmp->http == NULL)
+            {
+                tmp->print = 1;
+            }
+            else 
+            {
+                tmp->print = 0;
+            }
+        }
+        else if (strncmp("http", str, 4) == 0)
+        {
+            if  (tmp->http != NULL)
+            {
+                tmp->print = 1;
+            }
+            else
+            {
+                tmp->print = 0;
+            }
+        }
+        tmp = tmp->suiv;
+    }
+    
+}
+
+void filter_mac(char *str, frame *ptr)
+{
+    frame *tmp = ptr;
+    char *eq = strstr(str, "==");
+    char *neq = strstr(str, "!=");
+    char *mac =  NULL;
+    if (eq != NULL)
+    {
+        mac = strdup(&eq[3]);
+    }
+    else{
+        mac = strdup(&neq[3]);
+    }
+
+    while (tmp)
+    {
+        if (tmp->eth != NULL)
+        {
+            char *temp1 = tmp->eth->src_mac;
+            char *temp2 = tmp->eth->dest_mac;
+            if (eq != NULL)
+            {
+                if (strstr(str, "src"))   //ip_address_src  == ...
+                {  
+                    if (strcmp(mac, temp1) != 0)
+                    {
+                        tmp->print = 0;
+                    }
+                    else
+                    {
+                        tmp->print = 1;
+                    }
+                }
+                else if (strstr(str, "dst"))  //ip_address_dst  == ...
+                {
+                    if (strcmp(mac, temp2) != 0)
+                    {
+                        tmp->print = 0;
+                    }
+                    else
+                    {
+                        tmp->print = 1;
+                    }
+                }
+                else    //ip_address  == ...
+                {
+                    if (strcmp(mac, temp1) != 0 && strcmp(mac, temp2) != 0)
+                    {
+                        tmp->print = 0;
+                    }
+                    else
+                    {
+                        tmp->print = 1;
+                    }
+                }
+            }
+            else    //ip_address... != ...
+            {
+                if (strstr(str, "src"))   //ip_address_src != ...
+                {
+                    if (strcmp(mac, temp1) == 0)
+                    {
+                        tmp->print = 0;
+                    }
+                    else
+                    {
+                        tmp->print = 1;
+                    }
+                }
+                else if (strstr(str, "dst"))  //ip_address_src != ...
+                {
+                    if (strcmp(mac, temp2) == 0)
+                    {
+                        tmp->print = 0;
+                    }
+                    else
+                    {
+                        tmp->print = 1;
+                    }
+                }
+                else{
+                    if (strcmp(mac, temp1) == 0 || strcmp(mac, temp2) == 0)
+                    {
+                        tmp->print = 0;
+                    }
+                    else
+                    {
+                        tmp->print = 1;
+                    }
+                }
+            }
+        }
+        tmp = tmp->suiv; 
+    }
+    free(mac);
 }
 
 void filter_ip(char *str, frame *ptr)
@@ -149,7 +321,7 @@ void filter_ip(char *str, frame *ptr)
     frame *tmp = ptr;
     char *eq = strstr(str, "==");
     char *neq = strstr(str, "!=");
-    char *ip;
+    char *ip = NULL;
     if (eq != NULL)
     {
         ip = strdup(&eq[3]);
@@ -240,6 +412,7 @@ void filter_ip(char *str, frame *ptr)
         }
         tmp = tmp->suiv; 
     }
+    free(ip);
 }
            
 void filter_port(char* str, frame *ptr)
@@ -247,7 +420,7 @@ void filter_port(char* str, frame *ptr)
     frame *tmp = ptr;
     char *eq = strstr(str, "==");
     char *neq = strstr(str, "!=");
-    char *tcpport;
+    char *tcpport = NULL;
     if (eq != NULL)
     {
         tcpport = strdup(&eq[3]);
@@ -337,6 +510,7 @@ void filter_port(char* str, frame *ptr)
         }
         tmp = tmp->suiv; 
     }
+    free(tcpport);
 }
 
 void delete_frame(frame *fr)

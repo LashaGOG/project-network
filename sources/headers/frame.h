@@ -32,6 +32,8 @@ void print_specific_frame(frame *fr, int frame_number);
 
 char *filter(frame *list);
 char *verif_input(char *prompt);
+void filter_protocol(char *str, frame *ptr);
+void filter_mac(char *str, frame *ptr);
 void filter_ip(char *str, frame *ptr);
 void filter_port(char *str, frame *ptr);
 
