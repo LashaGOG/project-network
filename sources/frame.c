@@ -80,8 +80,11 @@ void print_specific_frame(frame *fr, int frame_number) {
     while (tmp) {
         if (tmp ->num_frame == frame_number) {
             print_frame(tmp);
+            break;
         }
         tmp = tmp -> suiv;
+    }
+}
 
 char *filter(frame *ptr)
 {

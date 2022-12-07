@@ -10,6 +10,11 @@ void print_heading_row() {
     printf("|  N   |    IP SOURCE    |                                   | IP  DESTINATION |\n");
     printf("+------+-----------------+-----------------------------------+-----------------+\n");
 }
+void fprint_heading_row(FILE *fd) {
+    fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
+    fprintf(fd, "|  N   |    IP SOURCE    |                                   | IP  DESTINATION |\n");
+    fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
+}
 
 void print_comm (char *bytes, int *frame_counter) 
 {
@@ -140,7 +145,6 @@ void print_http_fg(tcp *tcp_frame, e_http *http_frame)
     free(port_src);
 }
 
-
 void print_ipv4_fg(ipv4 *ipv4_frame)
 {
     char *ip = hex_to_ip(ipv4_frame->src_ip);
@@ -225,6 +229,7 @@ void cat_info(char *name, char *dst, char *src, int *space_left, int *bool) {
         return;
     }
 }
+
 void print_tcp_fg(tcp* tcp_frame) {
 
     char *flow_info = (char *) calloc (36, sizeof(char));
@@ -262,6 +267,139 @@ void print_tcp_fg(tcp* tcp_frame) {
     free(flow_info);
     
     printf("|      |%s%s%s|\n", port_src, centered_flow_info, port_dest);
+
+    free(port_dest);
+    free(port_src);
+    free(centered_flow_info);
+}
+
+void fprint_flow(FILE *fd, eth_frame *eFrame){
+    int tc = 0;
+
+   if (eFrame->Payload != NULL){
+       ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
+       if (ip_frame->Payload != NULL){
+           tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
+           if (tcp_frame != NULL)
+           {
+                if (tcp_frame->Payload != NULL)
+                {
+                    e_http *http_frame = get_http(tcp_frame->Payload);
+                    if (http_frame != NULL)
+                    {
+                        fprint_http_fg(fd, tcp_frame, http_frame);
+                        delete_http(http_frame);
+                    }
+                    else
+                        tc = 1; 
+                }
+                if (tc == 1){
+                    fprint_tcp_fg(fd, tcp_frame);
+                    delete_tcp(tcp_frame);
+                }
+            }
+            fprint_ipv4_fg(fd, ip_frame);
+            fprintf(fd, "+------+-----------------------------------------------------------------------+\n");
+            delete_ipv4(ip_frame);
+        }
+    }
+    return;
+}
+
+void fprint_http_fg(FILE *fd, tcp *tcp_frame, e_http *http_frame)
+{
+    char *port = hexToDec_c(tcp_frame->src_port);
+    char *port_src = center_string("                 ", port);
+    free(port);
+
+    port = hexToDec_c(tcp_frame->dst_port);
+    char *port_dest = center_string("                 ", port);
+    free(port);
+
+    int len = strlen(http_frame->http_header->meth_ver) + strlen(http_frame->http_header->uri_stat) + strlen(http_frame->http_header->ver_msg) + 1;
+    char *entete = (char *)  calloc(len, sizeof(char));
+    
+    char *temp = hexToChar(http_frame->http_header->meth_ver);
+    strcat(entete, temp);
+    free(temp);
+    
+    temp = hexToChar(http_frame->http_header->uri_stat);
+    strcat(entete, temp);
+    free(temp);
+
+    temp = hexToChar(http_frame->http_header->ver_msg);
+    strcat(entete, temp);
+    free(temp);
+    
+    char *http_header = center_string("                                     ", entete);
+    free(entete);
+
+    fprintf(fd, "|      |%s%s%s|\n", port_src, http_header, port_dest);
+    free(http_header);
+    free(port_dest);
+    free(port_src);
+}
+
+void fprint_ipv4_fg(FILE *fd, ipv4 *ipv4_frame)
+{
+    char *ip = hex_to_ip(ipv4_frame->src_ip);
+    char *src_ip = center_string("                 ", ip);
+    free(ip);
+
+    ip = hex_to_ip(ipv4_frame->dest_ip);
+    char *dest_ip = center_string("                 ", ip);
+    free(ip);
+
+    char N[5] = {0};
+    sprintf(&(N[0]), "%d", ipv4_frame->num_frame);
+    char *number = center_string("      ", N);
+
+    char *arrow = "------------------------------------>";
+
+    fprintf(fd, "|%s|%s%s%s|\n", number, src_ip, arrow, dest_ip);
+    fprintf(fd, "|      |                                                                       |\n");
+    free(src_ip);
+    free(dest_ip);
+    free(number);
+}
+
+void fprint_tcp_fg(FILE *fd, tcp* tcp_frame) {
+
+    char *flow_info = (char *) calloc (36, sizeof(char));
+
+    /* printing ports */
+    char *port = hexToDec_c(tcp_frame->src_port);
+    char *port_src = center_string("                  ", port);
+    free(port);
+
+    port = hexToDec_c(tcp_frame->dst_port);
+    char *port_dest = center_string("                  ", port);
+    free(port);
+
+    
+    char *flags = printed_tcp_flags_fg(tcp_frame);
+    char *seq = unsLongToStr(hexToUnsLong(tcp_frame->seq_number));
+    char *ack = unsLongToStr(hexToUnsLong(tcp_frame->ack_number));
+    char *window = unsLongToStr(hexToUnsLong(tcp_frame->window));
+
+    /* getting flow info */
+    
+    int space_left = 32 ;
+    int bool = 1; 
+    if (bool == 1) cat_info("",flow_info,flags,&space_left,&bool);
+    if (bool == 1) cat_info(" win=",flow_info,window,&space_left,&bool);
+    if (bool == 1) cat_info(" seq=",flow_info,seq,&space_left,&bool);
+    if (bool == 1) cat_info(" ack=",flow_info,ack,&space_left,&bool);
+
+    free(flags);
+    free(seq);
+    free(ack);
+    free(window);
+
+    char *centered_flow_info = center_string("                                   ",flow_info);
+    free(flow_info);
+    
+    fprintf(fd, "|      |%s%s%s|\n", port_src, centered_flow_info, port_dest);
 
     free(port_dest);
     free(port_src);

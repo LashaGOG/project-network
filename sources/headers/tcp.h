@@ -48,4 +48,8 @@ void delete_tcp (tcp *tcp_seg);
 void print_tcp_flags (tcp_flags *tflags);
 void print_tcp (tcp *tcp_seg,int print_details);
 
+void fprint_tcp_flags (FILE *fd, tcp_flags *tflags);
+void fprint_tcp (FILE *fd, tcp *tcp_seg, int print_details);
+
+
 #endif // TCP

@@ -12,6 +12,7 @@
 #define FLOW_GRAPH
 
 void print_heading_row();
+void fprint_heading_row(FILE *fd);
 void print_comm (char *bytes, int *frame_counter);
 void print_flow(eth_frame *eFrame);
 
@@ -23,5 +24,10 @@ void print_ipv4_fg(ipv4 *ipv4_frame);
 char *printed_tcp_flags_fg(tcp *tcp_frame);
 void cat_info(char *name, char *dst, char *src, int *space_left, int *bool);
 void print_tcp_fg(tcp* tcp_frame);
+
+void fprint_flow(FILE *fd, eth_frame *eFrame);
+void fprint_ipv4_fg(FILE *fd, ipv4 *ipv4_frame);
+void fprint_tcp_fg(FILE *fd, tcp* tcp_frame);
+void fprint_http_fg(FILE *fd, tcp *tcp_frame, e_http *http_frame);
 
 #endif // FLOW_GRAPH

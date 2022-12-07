@@ -193,12 +193,12 @@ void test_http() {
 
     /* Test http */
     puts("____Test http____");
-    e_http *http = create_http(test, test2);
+    //e_http *http = create_http(test, test2);
 
     //delete_header(test);
     //delete_champ(test2);
-    print_http(http);
-    delete_http(http);
+    //print_http(http);
+    //delete_http(http);
 }
 
 void test_get_http()

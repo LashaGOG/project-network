@@ -56,5 +56,6 @@ void delete_fragmentation (fragmentation *fragment);
 void delete_tos (tos *typesos);
 
 void print_ipv4(ipv4 *ipf);
+void fprint_ipv4(FILE *fd, ipv4 *ipf);
 
 #endif //IPV4_H

@@ -30,7 +30,7 @@ char *get_corps(char *bytes);
 champ *create_champ(char *entete, char *valeur);
 champ *queue_champ (champ **ptr, champ* suiv);
 header *create_header(char *meth_ver, char *url_stat, char *ver_msg);
-e_http *create_http (header *he, champ *ch);
+e_http *create_http (header *he, champ *ch, char *corps);
 
 champ *queue_champ (champ **ptr, champ* suiv);
 void print_header(header *entete);
@@ -40,5 +40,9 @@ void print_http(e_http *ptr);
 void delete_header(header *ptr);
 void delete_champ(champ *ptr);
 void delete_http(e_http *ptr);
+
+void fprint_header(FILE *fd, header *entete);
+void fprint_champ(FILE *fd, champ *first);
+void fprint_http(FILE *fd,  e_http *ptr);
 
 #endif //_HTTP

@@ -242,3 +242,76 @@ void print_tcp (tcp *tcp_seg,int print_details) {
     }
 }
 
+void fprint_tcp_flags (FILE *fd, tcp_flags *tflags) {
+        printf ("Flags : 0x%s \n",tflags->val_hexa);
+
+        if (strncmp(tflags->reserved,"000",3) == 0) {
+            fprintf (fd, "\t%s...... = reserved (Not Set) \n", tflags->reserved);
+        }
+        else if (strncmp(tflags->reserved,"111",3) == 0){
+            fprintf (fd, "\t%s...... = reserved (Set) \n", tflags->reserved);
+        }
+        
+        if (tflags->urg == 1) {
+            fprintf (fd, "\t......%d..... = Urgent (Set) \n", tflags->urg);
+        } 
+        else {
+            fprintf (fd, "\t......%d..... = Urgent (Not Set) \n", tflags->urg);
+        }
+        if (tflags->ack == 1) {
+            fprintf (fd, "\t.......%d.... = Acknowledgement (Set) \n", tflags->ack);
+        } 
+        else {
+            fprintf (fd, "\t.......%d.... = Acknowledgement (Not Set) \n", tflags->ack);
+        }
+        
+        if (tflags->psh == 1) {
+            fprintf (fd, "\t........%d... = Push (Set) \n", tflags->psh);
+        } 
+        else {
+            fprintf (fd, "\t........%d... = Push (Not Set) \n", tflags->psh);
+        }
+
+        if (tflags->rst == 1) {
+            fprintf (fd, "\t.........%d.. = Reset (Set) \n", tflags->rst);
+        } 
+        else {
+            fprintf (fd, "\t.........%d.. = Reset (Not Set) \n", tflags->rst);
+        }
+
+        if (tflags->syn == 1) {
+            fprintf (fd, "\t..........%d. = Syn (Set) \n", tflags->syn);
+        } 
+        else {
+            fprintf (fd, "\t..........%d. = Syn (Not Set) \n", tflags->syn);
+        }
+
+        if (tflags->fin == 1) {
+            fprintf (fd, "\t...........%d = Fin (Set) \n", tflags->fin);
+        } 
+        else {
+            fprintf (fd, "\t...........%d = Fin (Not Set) \n", tflags->fin);
+        }
+
+}
+
+void fprint_tcp (FILE *fd, tcp *tcp_seg, int print_details) {
+    /* prints tcp segment */
+    fputs("\n__________ COUCHE TCP __________", fd);
+    fprintf (fd, "Transmission Control Protocol, Src Port : %d, Dst port : %d, Seq : %ld, Ack : %ld \n",hexToDec(tcp_seg->src_port), hexToDec(tcp_seg->dst_port), hexToUnsLong(tcp_seg->seq_number), hexToUnsLong(tcp_seg ->ack_number)); 
+
+    if (print_details == 1) { // print TCP details if print_details is set to 1 
+        fprintf (fd, "TCP DETAILS : \n"); 
+        fprintf (fd, "\tSource Port : %d (0x%s)\n", hexToDec(tcp_seg->src_port), tcp_seg->src_port);
+        fprintf (fd, "\tDestination port : %d (0x%s)\n", hexToDec(tcp_seg->dst_port), tcp_seg->dst_port);
+        fprintf (fd, "\tSequence number: %lu (0x%s)\n", hexToUnsLong(tcp_seg->seq_number), tcp_seg->seq_number);
+        fprintf (fd, "\tAcknowledgement number : %lu (0x%s)\n", hexToUnsLong(tcp_seg->ack_number), tcp_seg->ack_number);
+        fprintf (fd, "\tData offset (THL) : %d (0x%s)\n", hexToDec(tcp_seg->thl), tcp_seg->thl);
+        fprintf(fd, "TCP ");
+        fprint_tcp_flags(fd, tcp_seg->flags);
+        fprintf (fd, "\tWindow : %d (0x%s)\n", hexToDec(tcp_seg->window), tcp_seg->window);
+        fprintf (fd, "\tChecksum : %d (0x%s)\n", hexToDec(tcp_seg->checksum), tcp_seg->checksum);
+        fprintf (fd, "\tUrgent pointer : %d (0x%s)\n", hexToDec(tcp_seg->urg_pointer), tcp_seg->urg_pointer);
+        // OPTIONS + PADDING IS MISSING Hihi
+    }
+}
