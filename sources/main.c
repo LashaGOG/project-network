@@ -27,13 +27,13 @@ int main(void)
     if (!fd)
     {
         puts("Failed opening Formatted_File.txt (main.c)");
-        return;
+        return 0;
     }
     
     char* line = NULL;
     size_t len = 0;
     ssize_t read;
-    int i = 0; 
+    //int i = 0; 
     
     
     while ((read = getline(&line, &len, fd)) != -1)

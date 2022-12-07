@@ -1,8 +1,3 @@
-#include <stdlib.h> 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
 #include "tools.h"
 #include "reader.h"
 #include "ethernet.h"

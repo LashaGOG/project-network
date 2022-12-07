@@ -26,7 +26,7 @@ frame *create_frame(char *bytes, int *num)
                 fr->tcp_ = create_tcp(fr->ip->Payload, val);
                 if (fr->tcp_ != NULL)
                 {
-                    if (fr->tcp_->Payload != NULL)
+                    if (fr->tcp_->Payload != NULL && (hexToDec(fr->tcp_->src_port) == 80 || hexToDec(fr->tcp_->dst_port) == 80))
                         fr->http = get_http(fr->tcp_->Payload);
                 }
             }

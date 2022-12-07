@@ -3,11 +3,6 @@
 #include "tcp.h"
 #include "http.h"
 #include "tools.h"
-#include "flowGraph.h"
-#include "reader.h"
-#include <wchar.h>
-#include <regex.h>
-#include <stdbool.h>
 
 #ifndef _FRAME
 #define _FRAME

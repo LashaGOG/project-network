@@ -1,18 +1,38 @@
 #include "./headers/flowGraph.h"
 #define MAX 80
 
-// void print_flowgraph(frame *frame_list) {
-//     print_heading_row();
-// }
+void print_flowgraph(frame *ptr)
+{
+    print_heading_row();
+    frame *tmp = ptr;
+    while (tmp)
+    {
+        if (tmp->print == 1)
+        {
+            print_flow(tmp);
+        }
+        tmp = tmp->suiv;
+    }
+    print_final_row();
+}
 
 void print_heading_row() {
     printf("+------+-----------------+-----------------------------------+-----------------+\n");
     printf("|  N   |    IP SOURCE    |                                   | IP  DESTINATION |\n");
     printf("+------+-----------------+-----------------------------------+-----------------+\n");
 }
+void print_final_row()
+{
+    printf("+------+-----------------+-----------------------------------+-----------------+\n");
+}
+
 void fprint_heading_row(FILE *fd) {
     fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
     fprintf(fd, "|  N   |    IP SOURCE    |                                   | IP  DESTINATION |\n");
+    fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
+}
+void fprint_final_row(FILE *fd)
+{
     fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
 }
 
@@ -43,38 +63,59 @@ void print_comm (char *bytes, int *frame_counter)
     delete_eth_frame(eFrame);
 }
 
-void print_flow(eth_frame *eFrame){
-    int tc = 0;
-
-   if (eFrame->Payload != NULL){
-       ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
-       if (ip_frame->Payload != NULL){
-           tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
-           if (tcp_frame != NULL)
-           {
-                if (tcp_frame->Payload != NULL)
+void print_flow(frame *Frame)
+{
+    if (Frame->eth != NULL)
+    {
+        if (Frame->ip != NULL)
+        {
+            if (Frame->tcp_ != NULL)
+            {
+                if (Frame->http != NULL)
                 {
-                    e_http *http_frame = get_http(tcp_frame->Payload);
-                    if (http_frame != NULL)
-                    {
-                        print_http_fg(tcp_frame, http_frame);
-                        delete_http(http_frame);
-                    }
-                    else
-                        tc = 1; 
+                    print_http_fg(Frame->tcp_, Frame->http);
                 }
-                if (tc == 1){
-                    print_tcp_fg(tcp_frame);
-                    delete_tcp(tcp_frame);
+                else
+                {
+                    print_tcp_fg(Frame->tcp_);
                 }
             }
-            print_ipv4_fg(ip_frame);
-            printf("+------+-----------------------------------------------------------------------+\n");
-            delete_ipv4(ip_frame);
+            print_ipv4_fg(Frame->ip);
+            puts("|      |                                                                       |");
         }
     }
     return;
 }
+
+
+//    if (eFrame->Payload != NULL){
+//        ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
+//        if (ip_frame->Payload != NULL){
+//            tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
+//            if (tcp_frame != NULL)
+//            {
+//                 if (tcp_frame->Payload != NULL)
+//                 {
+//                     e_http *http_frame = get_http(tcp_frame->Payload);
+//                     if (http_frame != NULL)
+//                     {
+//                         print_http_fg(tcp_frame, http_frame);
+//                         delete_http(http_frame);
+//                     }
+//                     else
+//                         tc = 1; 
+//                 }
+//                 if (tc == 1){
+//                     print_tcp_fg(tcp_frame);
+//                     delete_tcp(tcp_frame);
+//                 }
+//             }
+//             print_ipv4_fg(ip_frame);
+//             printf("+------+-----------------------------------------------------------------------+\n");
+//             delete_ipv4(ip_frame);
+//         }
+//     }
+//     return;
 
 char *center_string(const char *str1, const char *str2) {
     size_t str1_len = strlen(str1);
@@ -203,7 +244,7 @@ char *printed_tcp_flags_fg(tcp *tcp_frame) {
     return printed_flags;
 }
 
-void cat_info(char *name, char *dst, char *src, int *space_left, int *bool) {
+void cat_info(char *name, char *dst, char *src, int *space_left, int *boolean) {
     /**/
     if (*(space_left) < 1) return ; 
     int length_src = (int)strlen(src), length_name = (int)strlen(name);
@@ -214,7 +255,7 @@ void cat_info(char *name, char *dst, char *src, int *space_left, int *bool) {
     } else {
         strncat(dst,name,*(space_left));
         strcat(dst,"...");
-        *bool = 0; 
+        *boolean = 0; 
         return;
     }
 
@@ -225,7 +266,7 @@ void cat_info(char *name, char *dst, char *src, int *space_left, int *bool) {
     } else {
         strncat(dst,src,*(space_left));
         strcat(dst,"...");
-        *bool = 0;
+        *boolean = 0;
         return;
     }
 }
@@ -252,11 +293,11 @@ void print_tcp_fg(tcp* tcp_frame) {
     /* getting flow info */
     
     int space_left = 32 ;
-    int bool = 1; 
-    if (bool == 1) cat_info("",flow_info,flags,&space_left,&bool);
-    if (bool == 1) cat_info(" win=",flow_info,window,&space_left,&bool);
-    if (bool == 1) cat_info(" seq=",flow_info,seq,&space_left,&bool);
-    if (bool == 1) cat_info(" ack=",flow_info,ack,&space_left,&bool);
+    int boolean = 1; 
+    if (boolean == 1) cat_info("",flow_info,flags,&space_left,&boolean);
+    if (boolean == 1) cat_info(" win=",flow_info,window,&space_left,&boolean);
+    if (boolean == 1) cat_info(" seq=",flow_info,seq,&space_left,&boolean);
+    if (boolean == 1) cat_info(" ack=",flow_info,ack,&space_left,&boolean);
 
     free(flags);
     free(seq);
@@ -273,34 +314,58 @@ void print_tcp_fg(tcp* tcp_frame) {
     free(centered_flow_info);
 }
 
-void fprint_flow(FILE *fd, eth_frame *eFrame){
-    int tc = 0;
+// void fprint_flow(FILE *fd, eth_frame *eFrame){
+//     int tc = 0;
 
-   if (eFrame->Payload != NULL){
-       ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
-       if (ip_frame->Payload != NULL){
-           tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
-           if (tcp_frame != NULL)
-           {
-                if (tcp_frame->Payload != NULL)
+//    if (eFrame->Payload != NULL){
+//        ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
+//        if (ip_frame->Payload != NULL){
+//            tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
+//            if (tcp_frame != NULL)
+//            {
+//                 if (tcp_frame->Payload != NULL)
+//                 {
+//                     e_http *http_frame = get_http(tcp_frame->Payload);
+//                     if (http_frame != NULL)
+//                     {
+//                         fprint_http_fg(fd, tcp_frame, http_frame);
+//                         delete_http(http_frame);
+//                     }
+//                     else
+//                         tc = 1; 
+//                 }
+//                 if (tc == 1){
+//                     fprint_tcp_fg(fd, tcp_frame);
+//                     delete_tcp(tcp_frame);
+//                 }
+//             }
+//             fprint_ipv4_fg(fd, ip_frame);
+//             fprintf(fd, "+------+-----------------------------------------------------------------------+\n");
+//             delete_ipv4(ip_frame);
+//         }
+//     }
+//     return;
+// }
+
+void fprint_flow(FILE *fd, frame *Frame)
+{
+    if (Frame->eth != NULL)
+    {
+        if (Frame->ip != NULL)
+        {
+            if (Frame->tcp_ != NULL)
+            {
+                if (Frame->http != NULL)
                 {
-                    e_http *http_frame = get_http(tcp_frame->Payload);
-                    if (http_frame != NULL)
-                    {
-                        fprint_http_fg(fd, tcp_frame, http_frame);
-                        delete_http(http_frame);
-                    }
-                    else
-                        tc = 1; 
+                    fprint_http_fg(fd, Frame->tcp_, Frame->http);
                 }
-                if (tc == 1){
-                    fprint_tcp_fg(fd, tcp_frame);
-                    delete_tcp(tcp_frame);
+                else
+                {
+                    fprint_tcp_fg(fd, Frame->tcp_);
                 }
             }
-            fprint_ipv4_fg(fd, ip_frame);
-            fprintf(fd, "+------+-----------------------------------------------------------------------+\n");
-            delete_ipv4(ip_frame);
+            fprint_ipv4_fg(fd, Frame->ip);
+            fputs("|      |                                                                       |", fd);
         }
     }
     return;
@@ -385,11 +450,11 @@ void fprint_tcp_fg(FILE *fd, tcp* tcp_frame) {
     /* getting flow info */
     
     int space_left = 32 ;
-    int bool = 1; 
-    if (bool == 1) cat_info("",flow_info,flags,&space_left,&bool);
-    if (bool == 1) cat_info(" win=",flow_info,window,&space_left,&bool);
-    if (bool == 1) cat_info(" seq=",flow_info,seq,&space_left,&bool);
-    if (bool == 1) cat_info(" ack=",flow_info,ack,&space_left,&bool);
+    int boolean = 1; 
+    if (boolean == 1) cat_info("",flow_info,flags,&space_left,&boolean);
+    if (boolean == 1) cat_info(" win=",flow_info,window,&space_left,&boolean);
+    if (boolean == 1) cat_info(" seq=",flow_info,seq,&space_left,&boolean);
+    if (boolean == 1) cat_info(" ack=",flow_info,ack,&space_left,&boolean);
 
     free(flags);
     free(seq);
