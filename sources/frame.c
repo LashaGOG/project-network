@@ -82,9 +82,9 @@ char *filter(frame *ptr)
 
     char* input = verif_input("Enter your filter : ");
 
-    if (strcmp(str, "q") == 0)
+    if (strcmp(input, "q") == 0)
             return NULL;
-    if (strcmp(str, "none") == 0)
+    if (strcmp(input, "none") == 0)
     {
         while (tmp)
         {
@@ -92,12 +92,12 @@ char *filter(frame *ptr)
             tmp = tmp->suiv;
         }
     }
-    else if (strstr(str, "ip_address") != NULL)
+    else if (strstr(input, "ip_address") != NULL)
     {
         filter_ip(input, ptr);
     }
 
-    else if (strstr(str, "port"))
+    else if (strstr(input, "port"))
     {
         filter_port(input, ptr);
     }
@@ -105,7 +105,7 @@ char *filter(frame *ptr)
     return input;
 }
 
-void verif_input(char *prompt) {
+char *verif_input(char *prompt) {
     while (1) {
         char input[256];
         printf("%s", prompt);
@@ -123,7 +123,7 @@ void verif_input(char *prompt) {
             return strdup(input);
         }
 
-        if (!regexec(&q_none_regex, user_input, 0, NULL, 0)) {
+        if (!regexec(&q_none_regex, input, 0, NULL, 0)) {
             regfree(&ip_port_regex);
             regfree(&q_none_regex);
             return strdup(input);
@@ -221,9 +221,7 @@ void filter_ip(char *str, frame *ptr)
         tmp = tmp->suiv; 
     }
 }
-
-
-            
+           
 void filter_port(char* str, frame *ptr)
 {
     frame *tmp = ptr;
@@ -232,7 +230,7 @@ void filter_port(char* str, frame *ptr)
 
     while (tmp)
     {
-        if (tmp->tcp != NULL)
+        if (tmp->tcp_ != NULL)
         {
             char *temp1 = hexToDec_c(tmp->tcp_->src_port);
             char *temp2 = hexToDec_c(tmp->tcp_->dst_port);
