@@ -52,6 +52,14 @@ void print_eth_frame (eth_frame *ef) {
     printf("Protocole : Ox%s\n",ef->proto);
 }
 
+void fprint_eth_frame (FILE *fd, eth_frame *ef) {
+    /* afficher trame ethernet */
+    fprintf(fd, "Frame %d :\n",ef->num_frame);
+    fprintf(fd, "Mac destination : %s\n",ef->dest_mac);
+    fprintf(fd, "Mac source : %s\n",ef->src_mac);
+    fprintf(fd, "Protocole : Ox%s\n",ef->proto);
+}
+
 void delete_eth_frame (eth_frame *ef) {
     /* supprimer trame ethernet */
     if (ef != NULL){

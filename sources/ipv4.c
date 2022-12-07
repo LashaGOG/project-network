@@ -256,3 +256,54 @@ void print_ipv4(ipv4 *ipf) {
     remove_spaces(temp, ipf->header_checksum);
     printf("Header Checksum : 0x%s\n", temp);
 }
+
+void fprint_ipv4(FILE *fd, ipv4 *ipf) {
+    char temp[10];
+    size_t len = 10;
+    fputs("\n__________ COUCHE  IP __________", fd);
+    fprintf(fd, "IP addresses :\n     -Source : %s\n     -Destination : %s\n", ipf->src_ip, ipf->dest_ip);
+   
+    hexToBin(ipf->header_length);
+    fprintf(fd, " = Header length : %d bytes (%d)\n", (hexToDec(ipf->header_length) * 4) , hexToDec(ipf->header_length));
+   
+    fprintf(fd, "Type of Service (TOS) :\n     -Precedence : %s\n     -Delay, throughput, reliability, cost, reserved : %d, %d, %d, %d, %d\n", ipf->typesos->precedence, ipf->typesos->delay, ipf->typesos->throughput, ipf->typesos->reliability,  ipf->typesos->cost, ipf->typesos->reserved);
+    if (ipf->typesos->reserved != 0)
+        puts("The reserved bit should always be set to zero. Here, reserved != 0, the reading of the frame might contain errors.");
+    
+    remove_spaces(temp, ipf->total_length);
+    fprintf(fd, "Total length : %d\n", hexToDec(temp));
+    
+    mem_reset(temp, len);
+    remove_spaces(temp, ipf->identifier);
+    fprintf(fd, "Identification : 0x%s (%d)\n", temp, hexToDec(temp));
+    
+    char *str1 = intToStr(ipf->fragment->R);
+    char *str2 = intToStr(ipf->fragment->DF);
+    char *str3 = intToStr(ipf->fragment->MF);
+    strcat(str1, str2);
+    strcat(str1, str3);
+
+    fprintf(fd, "Fragmentation :\n    -%s = Flags : 0x%d", str1, binToHex(str1));
+    if (str1[1] == '1')
+        fprintf(fd, ", Don't fragment");
+    if (str1[2] == '1')
+        fprintf(fd, ", More fragments");
+    if (str1[0] != '0')
+        fputs("The reserved bit should always be set to zero. Here, reserved != 0, the reading of the frame might contain errors.", fd);
+    fprintf(fd, "\n    -%s = Fragment offset : %d\n", ipf->fragment->offset, binToDec(ipf->fragment->offset)); 
+    free(str2);
+    free(str3);
+    free(str1);
+
+    fprintf(fd, "Time to Live (TTL) : %d\n", hexToDec(ipf->ttl));
+    
+    if (strcmp("06", ipf->protocol) != 0) {
+        fprintf(fd, "Protocol not supported (0x%s).\n", ipf->protocol);
+    }
+    else {
+        fprintf(fd, "Protocol : TCP (6)\n");
+    }
+    
+    remove_spaces(temp, ipf->header_checksum);
+    fprintf(fd, "Header Checksum : 0x%s\n", temp);
+}

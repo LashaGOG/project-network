@@ -14,7 +14,7 @@ all : $(PROGRAMS)
 
 # règle pour compiler le main
 # il faut mettre tous les noms des fichiers .o dans les dépendances
-main : main.o tests.o reader.o tools.o ethernet.o ipv4.o tcp.o http.o flowGraph.o frame.o
+main : main.o  reader.o tools.o ethernet.o ipv4.o tcp.o http.o flowGraph.o frame.o
 	$(CC) $(COFLAGS) main sources/bin/*.o -lm
 main.o :   sources/main.c sources/headers/*.h
 	$(CC) $(CCFLAGS) sources/main.c -o sources/bin/main.o

@@ -1,10 +1,14 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+// #include <stdlib.h>
+// #include <stdio.h>
+// #include <string.h>
 #include <math.h>
-#include <ctype.h>
-#include <time.h>
-#include <unistd.h>
+// #include <ctype.h>
+// #include <time.h>
+// #include <unistd.h> 
+#include <strings.h>
+#include <wchar.h>
+#include <regex.h>
+#include <stdbool.h>
 #include "reader.h"
 
 #ifndef TOOLS 

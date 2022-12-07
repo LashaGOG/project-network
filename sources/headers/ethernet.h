@@ -20,6 +20,7 @@ char* get_eth_proto (char *bytes);
 
 eth_frame *create_eth_frame (char *bytes, int num);
 void print_eth_frame (eth_frame *ef); 
+void fprint_eth_frame (FILE *fd, eth_frame *ef); 
 void delete_eth_frame (eth_frame *ef);
 
 #endif //ETHERNET_H

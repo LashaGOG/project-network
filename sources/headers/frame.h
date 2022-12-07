@@ -3,11 +3,6 @@
 #include "tcp.h"
 #include "http.h"
 #include "tools.h"
-#include "flowGraph.h"
-#include "reader.h"
-#include <wchar.h>
-#include <regex.h>
-#include <stdbool.h>
 
 #ifndef _FRAME
 #define _FRAME
@@ -33,6 +28,8 @@ void print_specific_frame(frame *fr, int frame_number);
 
 char *filter(frame *list);
 char *verif_input(char *prompt);
+void filter_protocol(char *str, frame *ptr);
+void filter_mac(char *str, frame *ptr);
 void filter_ip(char *str, frame *ptr);
 void filter_port(char *str, frame *ptr);
 

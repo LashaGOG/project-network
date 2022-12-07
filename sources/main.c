@@ -22,6 +22,8 @@ int main(void)
 
     /* read Formatted_File and create frame */
     FILE* file = fopen("Formatted_File.txt", "r");
+
+    FILE* file = fopen("Formatted_File.txt", "r");
     if (!file)
     {
         puts("Failed opening Formatted_File.txt (main.c)");
@@ -38,11 +40,11 @@ int main(void)
         // create a new node with the line as data
         // frame* newFrame = createNode(line);
 
-        // // add the node to the linked list
+        // // add the node to the end of linked list
         addLast(&list_frames,line,&frame_counter);
     }
-
-fclose(file); // close file
+    
+    fclose(file); // close file
     
 
     /* main menu */

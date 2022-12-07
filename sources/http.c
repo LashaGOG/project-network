@@ -76,9 +76,19 @@ champ *get_champ (char *bytes) {
     return create_champ(entete, valeur);
 }
 
+char *get_corps(char* bytes)
+{
+    char *str = strstr(bytes, "0d 0a 0d 0a");
+    if (strlen(str) < 13)
+        return NULL;
+    return strdup(&str[12]);
+}
+
 e_http *get_http(char *bytes) {
     if (strstr(bytes, "0d 0a 0d 0a") == NULL)
         return NULL;
+
+    char *corps = get_corps(bytes);
 
     char *ptr1 = bytes;
     char *ptr2;
@@ -122,7 +132,7 @@ e_http *get_http(char *bytes) {
     ptr1 = NULL;
     ptr2 = NULL;
     ptr_ch = NULL;
-    return create_http(entete, first_champ);
+    return create_http(entete, first_champ, corps);
 }
 
 champ *create_champ(char *entete, char *valeur) {
@@ -149,12 +159,12 @@ header *create_header(char *meth_ver, char *uri_stat, char *ver_msg)
     return ptr;
 }
 
-e_http *create_http (header *he, champ *ch)
+e_http *create_http (header *he, champ *ch, char *corps)
 {
     e_http *ptr = (e_http *) calloc(1, sizeof(e_http));
     ptr->http_header = he;
     ptr->champs = ch;
-    //ptr->corps = ??;
+    ptr->corps = corps;
     return ptr;
 }
 
@@ -200,7 +210,9 @@ void print_http(e_http *ptr)
     puts("   Hypertext transfer protocol  ");
     print_header(ptr->http_header);
     print_champ(ptr->champs);
-    //print_corps(ptr->corps);
+    char *corps = hexToChar(ptr->corps);
+    printf("%s\n", corps);
+    free(corps);
 }
 
 void delete_header(header *ptr)
@@ -228,5 +240,52 @@ void delete_http(e_http *ptr)
 {
     delete_champ(ptr->champs);
     delete_header(ptr->http_header);
+    free(ptr->corps);
     free(ptr);
+}
+
+void fprint_header(FILE *fd, header *entete)
+{
+    char *ent1 = hexToChar(entete->meth_ver);
+    char *ent2 = hexToChar(entete->uri_stat);
+    char *ent3 = hexToChar(entete->ver_msg);
+    if (strcmp("HTTP", ent1) == 0)
+    {
+        fprintf(fd, "Response Version : %s\nStatus code : %s\n, Response Phrase : %s\n", ent1, ent2, ent3);
+    }
+    else
+    {
+        fprintf(fd, "Request Method : %s\nRequest URI : %s\nRequest Version : %s\n", ent1, ent2, ent3);
+    }
+    free(ent1);
+    free(ent2);
+    free(ent3);
+}
+
+void fprint_champ(FILE *fd, champ *first)
+{
+    champ* tmp = first;
+    while (tmp)
+    {
+        if (tmp->entete && tmp->valeur)
+        {
+            char *entete = hexToChar(tmp->entete);
+            char *value =  hexToChar(tmp->valeur);
+            fprintf(fd, "\t%s %s\n", entete, value);
+            free(entete);
+            free(value);
+        }
+        tmp = tmp->suivant;
+    }
+}
+
+void fprint_http(FILE *fd, e_http *ptr)
+{
+    fputs("\n_________ COUCHE  HTTP _________", fd);
+    fputs("   Hypertext transfer protocol  ", fd);
+    fprint_header(fd, ptr->http_header);
+    fprint_champ(fd, ptr->champs);
+    char *corps = hexToChar(ptr->corps);
+    fprintf(fd, "%s\n", corps);
+    free(corps);
 }
