@@ -29,7 +29,7 @@ void frametostr (char* nomfic, char* save)
     char ligne[256] = {0};
     char* buff = ligne;
     char* prefix = "0000";
-    char* str = calloc(1000, sizeof(char));
+    char* str = calloc(3500, sizeof(char));
     int i = 0, n = 47, pos = 7, k;
     size_t len = 256;
 
@@ -61,8 +61,7 @@ void frametostr (char* nomfic, char* save)
         mem_reset(buff, len);
     }
     writedown(str, save); 
-    
-    //puts("");
+
     free(str);
     fclose(fd);
 }

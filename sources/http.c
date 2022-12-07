@@ -1,7 +1,8 @@
 #include "./headers/http.h"
 
 char *separate_chunks(char *bytes, char **ptr) {
-    if (strcmp(bytes, "0d 0a") == 0)
+    printf("*ptr  = %s\n", *ptr);
+    if (strncmp("0d 0a", bytes, 5) == 0)
         return NULL;
     *ptr = strstr(bytes,"0d 0a");
     if (*ptr == NULL || strcmp(bytes, "") == 0 || strlen(bytes) < 2)
@@ -225,15 +226,10 @@ void delete_header(header *ptr)
 
 void delete_champ(champ *ptr) 
 {
-    champ *tmp = ptr;
-    while(ptr)
-    {
-        tmp = ptr;
-        ptr = ptr->suivant;
-        free(tmp->entete);
-        free(tmp->valeur);
-        free(tmp);
-    }
+    delete_champ(ptr->suivant);
+    free(ptr->entete);
+    free(ptr->valeur);
+    free(ptr);
 }
 
 void delete_http(e_http *ptr)
