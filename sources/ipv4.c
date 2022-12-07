@@ -134,9 +134,14 @@ ipv4 *create_ipv4(char* bytes, int num) {
 
     ipf->total_length = get_total_length(bytes);
 
-    if ((long)strlen(bytes) != (long)(hexToDec(ipf->total_length) * 3 - 1))
+    long len = (long) strlen(bytes);
+    long total_len = (long) hexToDec(ipf->total_length) * 3;  
+
+    if (len != total_len)
     {   
         puts("WARNING : Frame's total length isn't matching the announced length, the frame might contain an error or our reader doesn't support its size.\nThis frame will be ignored.");
+        printf("bytes = %send\n", bytes);
+        printf("Length (characters) of bytes = %ld and announced length = %ld\n", len, total_len);
         free(ipf->total_length);
         free(ipf);
         return NULL;

@@ -42,6 +42,7 @@ void addLast(frame **head_lst_frames, char *line, int *frame_counter)
 {
     //create a new node
     frame *newFrame = create_frame(line,frame_counter);
+
     newFrame->suiv = NULL;
 
     //if head is NULL, it is an empty list
@@ -112,6 +113,7 @@ void print_specific_frame(frame *fr, int frame_number) {
         }
         tmp = tmp -> suiv;
     }
+}
 
 char *filter(frame *ptr)
 {

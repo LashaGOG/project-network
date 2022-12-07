@@ -11,6 +11,9 @@
 
 int main(void)
 {   
+    FILE *reset = fopen("temporary_File.txt", "w");
+    fclose(reset);
+    reset = fopen("Formatted_File.txt", "w");
 
     printf("Hello, please type a name of file\n");
     /* format file */
@@ -21,8 +24,6 @@ int main(void)
     verif("temporary_File.txt","Formatted_File.txt"); 
 
     /* read Formatted_File and create frame */
-    FILE* file = fopen("Formatted_File.txt", "r");
-
     FILE* file = fopen("Formatted_File.txt", "r");
     if (!file)
     {
@@ -36,16 +37,19 @@ int main(void)
     {
         // remove newline character from the line
         line[strcspn(line, "\n")] = 0;
+        char* str = strdup(line);
+        str[strlen(str)] = '\0';
 
         // create a new node with the line as data
         // frame* newFrame = createNode(line);
 
         // // add the node to the end of linked list
-        addLast(&list_frames,line,&frame_counter);
+        addLast(&list_frames, str, &frame_counter);
+        free(str);
     }
-    
     fclose(file); // close file
     
+    frame* ptr = list_frames;
 
     /* main menu */
     int boolean = 1;
@@ -68,7 +72,7 @@ int main(void)
         switch (choice) {
             case 1:
             system("clear");
-            // print_flowgraph(frame *fr);
+                print_flowgraph(ptr);
             break; 
             case 2: 
             system("clear");
