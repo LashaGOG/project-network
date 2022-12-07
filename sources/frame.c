@@ -74,7 +74,6 @@ void print_frame(frame *ptr)
 
 char *filter(frame *ptr)
 {
-    frame *tmp = ptr;
     puts("Before typing your filter, the syntax of the filter is the following : 'filter_expression == value'.");
     puts("Unfortunately, only a very limited choice of filter_expression is available ('ip_address' and 'port' to which you can add '_src' or '_dst' depending on the filter you want to apply).");
     puts("Examples :\n-for an ip address filter : 'ip_address != 192.126.0.12' or 'ip_address_src == 192.126.0.12'");
@@ -84,6 +83,8 @@ char *filter(frame *ptr)
 
     if (strcmp(input, "q") == 0)
             return NULL;
+
+    frame *tmp = ptr;
     if (strcmp(input, "none") == 0)
     {
         while (tmp)
@@ -135,8 +136,16 @@ char *verif_input(char *prompt) {
 void filter_ip(char *str, frame *ptr)
 {
     frame *tmp = ptr;
-    char *ip = strdup(&str[3]);
     char *eq = strstr(str, "==");
+    char *neq = strstr(str, "!=");
+    char *ip;
+    if (eq != NULL)
+    {
+        ip = strdup(&eq[3]);
+    }
+    else{
+        ip = strdup(&neq[3]);
+    }
 
     while (tmp)
     {
@@ -225,9 +234,16 @@ void filter_ip(char *str, frame *ptr)
 void filter_port(char* str, frame *ptr)
 {
     frame *tmp = ptr;
-    char *tcpport = strdup(&str[3]);
     char *eq = strstr(str, "==");
-
+    char *neq = strstr(str, "!=");
+    char *tcpport;
+    if (eq != NULL)
+    {
+        tcpport = strdup(&eq[3]);
+    }
+    else{
+        tcpport = strdup(&neq[3]);
+    }
     while (tmp)
     {
         if (tmp->tcp_ != NULL)
