@@ -16,6 +16,21 @@ void print_flowgraph(frame *ptr)
     print_final_row();
 }
 
+void fprint_flowgraph(FILE *fd, frame *ptr) {
+    fprint_heading_row(fd);
+    frame *tmp = ptr;
+    while (tmp)
+    {
+        if (tmp->print == 1)
+        {
+            fprint_flow(fd,tmp);
+            fprintf(fd,"\n");
+        }
+        tmp = tmp->suiv;
+    }
+    fprint_final_row(fd);
+}
+
 void print_heading_row() {
     printf("+------+-----------------+-----------------------------------+-----------------+\n");
     printf("|  N   |    IP SOURCE    |                                   | IP  DESTINATION |\n");

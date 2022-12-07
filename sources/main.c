@@ -16,11 +16,25 @@ int main(void)
     reset = fopen("Formatted_File.txt", "w");
     fclose(reset);
 
-    printf("Hello, please type a name of file\n");
+    // printf("Hello, please type a name of file\n");
     /* format file */
     char rawFile[50];
-    scanf("%s",rawFile); // we ask user to put the name of his file
-    printf("Filename : %s\n",rawFile); 
+    int file_exists = 0 ; 
+    FILE *rFile; 
+    while (file_exists == 0) { // user rests in this boucle till he does not enter a name of existing file
+        printf("Hello, please type a name of file\n");
+        printf("Type Quit/quit to end the exuction of program\n");
+        scanf("%s",rawFile); // we ask user to put the name of his file
+        if (strcmp("Quit",rawFile) == 0 || strcmp("quit",rawFile) == 0) return 0 ; // end the program
+        rFile = fopen(rawFile,"r");
+        if (rFile) {
+            printf("Analyzing %s :\n",rawFile);
+            fclose(rFile);
+            break;
+        }
+        printf("The file named %s does not exist\n",rawFile);
+
+    }
     frametostr(rawFile,"temporary_File.txt"); // we format file to "Formatted_file.txt"
     verif("temporary_File.txt","Formatted_File.txt"); 
 
@@ -71,30 +85,31 @@ int main(void)
         switch (choice) {
             case 1:
                 //system("clear");
-                print_flowgraph(list_frames);
+                print_flowgraph(list_frames); // fonction to print flowgraph in terminal
                 break; 
             case 2: 
                 //system("clear");
                 printf("====================================\n");
-                // fonction to save flowgraph
-                printf(" Flowgraph exported as flowgraph.txt\n");
+                FILE *flowGrap_out = fopen("flowGraph.txt","w");
+                fprint_flowgraph(flowGrap_out, list_frames); // fonction export flowgraph
+                printf(" Flowgraph exported as flowGraph.txt\n");
+                fclose(flowGrap_out);
                 break;
             case 3:
                 //system("clear");
                 printf("=====================================\n");
                 printf("Activate/Desactivate filters\n");
-                // fonction to activate/desactivate filters
+                filter(list_frames);  // fonction to activate/desactivate filters
                 break;
             case 4:
-                system("clear");
+                // system("clear");
                 int frame_number; 
                 printf("=====================================\n");
                 printf("Type frame number to print it's details\n");
                 scanf("%d",&frame_number);
                 printf("Printing details of Frame : %d\n",frame_number);
-                print_specific_frame(list_frames, frame_number);
+                print_specific_frame(list_frames, frame_number); // fonction to print frame N details
                 puts("");
-                // fonction to print frame N details
                 break;
             case 5:
                 printf("=====================================\n");
@@ -108,7 +123,9 @@ int main(void)
                 break;
         }
     }
-    //delete_linked_frames(list_frames);
+    
     delete_frame(list_frames);
+    remove("temporary_file.txt");
+    remove("Formatted_File.txt");
     return 0;
 }
