@@ -8,44 +8,69 @@
 #include "./headers/http.h"
 
 int main(void)
-{
-    // static int frame_count = 0; 
+{   
+
+    printf("Hello, please type a name of file\n");
+    /* format file */
+    char rawFile[50];
+    scanf("%s",rawFile);
+    printf("Filename : %s\n",rawFile);
+    frametostr(rawFile,"temporary_File.txt"); 
+    verif("temporary_File.txt","Formatted_File.txt"); // we put 
+
+    /* read Formatted_File */
     
-    /* TEST DE TOOLS.C */
-    // test_hexToBin();
-    // test_binToHex(); 
-    // test_hexToDec(); 
-    // test_hexToDec_c();
-    // test_decToHex();
-    // test_decToBin(); 
-    // test_binToDec(); 
-    // test_hexToBinchar();
-    //test_hexToChar();
-    //test_hex_to_ip();
-    /* END TEST */
+    /* main menu */
+    int boolean = 1;
+    int choice = -1; 
 
-    /* TEST DE READER.C */
-    // test_frametostr_verif();
-    /* END TEST */
 
-    /* TEST DE ETHERNET.C */
-    //test_get_mac_address();
+    while (boolean == 1) {
+        printf("+====================================+\n");
+        printf("|               MAIN MENU            |\n");
+        printf("+====================================+\n");
+        printf("| 1. Print flowgraph on termial      |\n");
+        printf("| 2. Export flowgraph as .txt file   |\n");
+        printf("| 3. Activate/Desactivate filters    |\n");
+        printf("| 4. See frame details               |\n");
+        printf("| 5. Quit                            |\n");
+        printf("+====================================+\n");
+        printf(" Enter your choice: ");
+        scanf("%d", &choice);
 
-    /* TEST DE IPV4.C */
-    // test_ipv4();
-
-    /* TEST DE TCP.C */
-    //test_tcp();
-    
-    /* TEST DE HTTP.C */
-    //test_http();
-    test_get_http();
-
-    /* TEST DE FLOWGRAPH.C */
-    //test_flow_graph();
-
-    /* TEST DE FRAME.C */
-    // test_frame();
+        switch (choice) {
+            case 1:
+            system("clear");
+            printf("We print flowgraph here\n");
+            // fonction to print flowgraph
+            break; 
+            case 2: 
+            system("clear");
+            printf("====================================\n");
+            // fonction to save flowgraph
+            printf(" Flowgraph exported as flowgraph.txt\n");
+            break;
+            case 3:
+            system("clear");
+            printf("=====================================\n");
+            printf("Activate/Desactivate filters\n");
+            break;
+            case 4:
+            system("clear");
+            printf("=====================================\n");
+            printf("Print Frame details here\n");
+            break;
+            case 5:
+            printf("=====================================\n");
+            printf("Goodbye!\n");
+            boolean = 0; 
+            break;
+            default:
+            printf("=====================================\n");
+            printf("Invalid choice\n");
+            break;
+        }
+    }
 
     return 0;
 }
