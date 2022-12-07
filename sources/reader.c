@@ -35,7 +35,7 @@ void frametostr (char* nomfic, char* save)
 
     while (getline(&buff, &len, fd) != -1)
     {
-        printf("buff : %s", buff);
+        //printf("buff : %s", buff);
         if (strncmp(prefix, buff, strlen(prefix)) == 0)
         {
             if (str[0] != '\0')
@@ -62,7 +62,7 @@ void frametostr (char* nomfic, char* save)
     }
     writedown(str, save); 
     
-    puts("");
+    //puts("");
     free(str);
     fclose(fd);
 }
