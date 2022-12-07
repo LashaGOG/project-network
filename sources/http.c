@@ -1,7 +1,6 @@
 #include "./headers/http.h"
 
 char *separate_chunks(char *bytes, char **ptr) {
-    printf("*ptr  = %s\n", *ptr);
     if (strncmp("0d 0a", bytes, 5) == 0)
         return NULL;
     *ptr = strstr(bytes,"0d 0a");
@@ -65,11 +64,10 @@ champ *get_champ (char *bytes) {
     {
         if (bytes[i] == '2' && bytes[j] == '0')
         {
-            entete = (char *) calloc(i, sizeof(char));
-            strncpy(entete, &bytes[pos], (i - 1));
+            entete = strndup(&bytes[pos], (i - 1));
             
-            valeur = calloc(strlen(bytes) - (j + 1), sizeof(char));
-            strncpy(valeur, &bytes[j+2], (strlen(bytes) - (j + 2)));
+            valeur = strndup(&bytes[j+2], (strlen(bytes) - (j + 2)));
+            break;
         }
         i++;
         j++;
@@ -98,7 +96,6 @@ e_http *get_http(char *bytes) {
 
     header *entete;
     champ *first_champ;
-    champ *ptr_ch;
     
     while (str != NULL &&  strcmp(str, "") != 0)
     {
@@ -116,7 +113,6 @@ e_http *get_http(char *bytes) {
             first = 2;
 
             first_champ = get_champ(str);
-            ptr_ch = first_champ;
             free(str);
             
             ptr2 = ptr1;
@@ -124,7 +120,7 @@ e_http *get_http(char *bytes) {
             continue;
         }
         champ *tmp = get_champ(str);
-        queue_champ(&ptr_ch, tmp);
+        queue_champ(first_champ, tmp);
         free(str);
         
         ptr2 = ptr1;
@@ -132,7 +128,6 @@ e_http *get_http(char *bytes) {
     }
     ptr1 = NULL;
     ptr2 = NULL;
-    ptr_ch = NULL;
     return create_http(entete, first_champ, corps);
 }
 
@@ -144,11 +139,14 @@ champ *create_champ(char *entete, char *valeur) {
     return ptr;
 }
 
-champ *queue_champ (champ **ptr, champ *suiv)
+void queue_champ (champ *ptr, champ *suiv)
 {
-    (*ptr)->suivant = suiv;
-    *ptr = (*ptr)->suivant;
-    return *ptr;
+    if (!ptr->suivant)
+    {
+        ptr->suivant = suiv;
+        return;
+    }
+    queue_champ(ptr->suivant, suiv);
 }
 
 header *create_header(char *meth_ver, char *uri_stat, char *ver_msg)
@@ -226,6 +224,8 @@ void delete_header(header *ptr)
 
 void delete_champ(champ *ptr) 
 {
+    if (!ptr)
+        return;
     delete_champ(ptr->suivant);
     free(ptr->entete);
     free(ptr->valeur);

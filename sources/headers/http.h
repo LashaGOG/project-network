@@ -28,11 +28,10 @@ e_http *get_http(char *bytes);
 char *get_corps(char *bytes);
 
 champ *create_champ(char *entete, char *valeur);
-champ *queue_champ (champ **ptr, champ* suiv);
 header *create_header(char *meth_ver, char *url_stat, char *ver_msg);
 e_http *create_http (header *he, champ *ch, char *corps);
 
-champ *queue_champ (champ **ptr, champ* suiv);
+void queue_champ (champ *ptr, champ* suiv);
 void print_header(header *entete);
 void print_champ(champ *first);
 void print_http(e_http *ptr);

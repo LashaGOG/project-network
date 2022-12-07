@@ -549,6 +549,7 @@ void delete_frame(frame *fr)
 {
     if (fr != NULL)
     {
+        delete_frame(fr->suiv);
         free(fr->bytes);
         if (fr->eth != NULL)
             delete_eth_frame(fr->eth);
@@ -561,17 +562,14 @@ void delete_frame(frame *fr)
         fr->suiv = NULL;
         free(fr);
     }
+    else
+    {
+        return;
+    }
 }
-
-
 
 void delete_linked_frames(frame *fr)
 {
-    frame *tmp;
-    while (fr)
-    {
-        tmp = fr;
-        fr = fr->suiv;
-        delete_frame(tmp);
-    }
+    delete_linked_frames(fr->suiv);
+    delete_frame(fr);
 }

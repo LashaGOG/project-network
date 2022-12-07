@@ -14,6 +14,7 @@ int main(void)
     FILE *reset = fopen("temporary_File.txt", "w");
     fclose(reset);
     reset = fopen("Formatted_File.txt", "w");
+    fclose(reset);
 
     printf("Hello, please type a name of file\n");
     /* format file */
@@ -49,8 +50,6 @@ int main(void)
     }
     fclose(file); // close file
     
-    frame* ptr = list_frames;
-
     /* main menu */
     int boolean = 1;
     int choice = -1; 
@@ -72,7 +71,7 @@ int main(void)
         switch (choice) {
             case 1:
                 //system("clear");
-                print_flowgraph(ptr);
+                print_flowgraph(list_frames);
                 break; 
             case 2: 
                 //system("clear");
@@ -93,7 +92,7 @@ int main(void)
                 printf("Type frame number to print it's details\n");
                 scanf("%d",&frame_number);
                 printf("Printing details of Frame : %d\n",frame_number);
-                print_specific_frame(ptr, frame_number);
+                print_specific_frame(list_frames, frame_number);
                 puts("");
                 // fonction to print frame N details
                 break;
@@ -101,6 +100,7 @@ int main(void)
                 printf("=====================================\n");
                 printf("Goodbye!\n");
                 boolean = 0; 
+                system("clear");
                 break;
             default:
                 printf("=====================================\n");
@@ -108,7 +108,7 @@ int main(void)
                 break;
         }
     }
-    delete_linked_frames(list_frames);
-
+    //delete_linked_frames(list_frames);
+    delete_frame(list_frames);
     return 0;
 }
