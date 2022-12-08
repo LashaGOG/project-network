@@ -63,6 +63,7 @@ int main(void)
     int boolean = 1;
     int choice = -1; 
 
+    char *f = NULL;
 
     while (boolean == 1) {
         printf("+====================================+\n");
@@ -80,21 +81,21 @@ int main(void)
         switch (choice) {
             case 1:
                 system("clear");
-                print_flowgraph(list_frames); // fonction to print flowgraph in terminal
+                print_flowgraph(list_frames, f); // fonction to print flowgraph in terminal
                 break; 
             case 2: 
-                system("clear");
+                //system("clear");
                 printf("====================================\n");
                 FILE *flowGrap_out = fopen("flowGraph.txt","w");
-                fprint_flowgraph(flowGrap_out, list_frames); // fonction export flowgraph
+                fprint_flowgraph(flowGrap_out, list_frames, f); // fonction export flowgraph
                 printf(" Flowgraph exported as flowGraph.txt\n");
                 fclose(flowGrap_out);
                 break;
             case 3:
-                system("clear");
+                //system("clear");
                 printf("=====================================\n");
                 printf("Activate/Desactivate filters\n");
-                filter(list_frames);  // fonction to activate/desactivate filters
+                f = filter(list_frames);  // fonction to activate/desactivate filters
                 break;
             case 4:
                 system("clear");
@@ -119,6 +120,8 @@ int main(void)
         }
     }
     
+    if (f)
+        free(f);
     delete_frame(list_frames);
     remove("temporary_file.txt");
     remove("Formatted_File.txt");

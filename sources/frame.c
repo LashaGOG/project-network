@@ -78,8 +78,8 @@ void print_frame(frame *ptr)
         puts("The frame is NULL/empty.");
         return;
     }
-    if (ptr->print == 0) 
-        return;
+    // if (ptr->print == 0) 
+        // return;
 
     if (ptr->bytes == NULL || strcmp(ptr->bytes, "") == 0 || strlen(ptr->bytes) == 0) {
         puts("The frame is empty.");
@@ -97,6 +97,8 @@ void print_frame(frame *ptr)
 
     if (ptr->http != NULL)
         print_http(ptr->http);
+
+    printf("frame->print = %d\n", ptr->print);
 }
 
 
@@ -115,7 +117,7 @@ void print_specific_frame(frame *fr, int frame_number) {
     }
 }
 
-void filter(frame *ptr)
+char* filter(frame *ptr)
 {
     puts("Before typing your filter, the syntax of the filter is the following : 'filter_expression == value'.");
     puts("Unfortunately, only a very limited choice of filter_expression is available ('ip_address' and 'port' to which you can add '_src' or '_dst' depending on the filter you want to apply).");
@@ -127,7 +129,7 @@ void filter(frame *ptr)
     if (strcmp(input, "q") == 0)
     {
         free(input);   
-        return;
+        return NULL;
     }
 
     frame *tmp = ptr;
@@ -142,24 +144,64 @@ void filter(frame *ptr)
 
     else if (strstr(input, "mac_address") != NULL)
     {
+        while (tmp)
+        {
+            tmp->print = 0;
+            tmp = tmp->suiv;
+        }
         filter_mac(input, ptr);
     }
 
     else if (strstr(input, "ip_address") != NULL)
     {
+        while (tmp)
+        {
+            tmp->print = 0;
+            tmp = tmp->suiv;
+        }
         filter_ip(input, ptr);
     }
 
     else if (strstr(input, "port"))
     {
+        while (tmp)
+        {
+            tmp->print = 0;
+            tmp = tmp->suiv;
+        }
         filter_port(input, ptr);
+    }
+
+    else if (strstr(input, "double"))
+    {
+        while (tmp)
+        {
+            tmp->print = 0;
+            tmp = tmp->suiv;
+        }
+        char *first = verif_input("Enter the first filter : ");
+        char *cond = verif_cond("Enter the condition (either && or ||) : ");
+        char *second = verif_input("Enter the second filter : ");
+
+        filter_double(first, second, ptr);
+
+        free(first);
+        free(second);
+        free(input);
+        return cond;
     }
 
     else
     {
+        while (tmp)
+        {
+            tmp->print = 0;
+            tmp = tmp->suiv;
+        }
         filter_protocol(input, ptr);
     }
     free(input);
+    return NULL;
 }
 
 char *verif_input(char *prompt) {
@@ -173,7 +215,7 @@ char *verif_input(char *prompt) {
         regex_t protocol_regex, ip_port_mac_regex, q_none_regex;
         regcomp(&protocol_regex, "^(ethernet|eth|ipv4|ip|tcp|http)$", REG_EXTENDED);
         regcomp(&ip_port_mac_regex, "^(ip_address|port|mac_address)(_src|_dst)? (==|!=) .*$", REG_EXTENDED);
-        regcomp(&q_none_regex, "^(q|none)$", REG_EXTENDED);
+        regcomp(&q_none_regex, "^(q|none|double)$", REG_EXTENDED);
 
         if (!regexec(&protocol_regex, input, 0, NULL, 0)) {
             regfree(&protocol_regex);
@@ -202,6 +244,60 @@ char *verif_input(char *prompt) {
     }
 }
 
+char *verif_cond(char *prompt)
+{
+    while (1)
+    {
+        char input[3];
+        printf("%s", prompt);
+
+        fgets(input, 3, stdin);
+        input[strcspn(input, "\n")] = 0;
+
+        if (strcmp(input, "&&") == 0 || strcmp(input, "||") == 0)
+            return strdup(input);
+
+        puts("Value can be either '&&' or '||'. Please, try again.");
+    }
+}
+
+void filter_double(char* first, char* second, frame* ptr)
+{
+    if (strstr(first, "mac_address") != NULL)
+    {
+        filter_mac(first, ptr);
+    }
+    else if (strstr(first, "ip_address") != NULL)
+    {
+        filter_ip(first, ptr);
+    }
+    else if (strstr(first, "port"))
+    {
+        filter_port(first, ptr);
+    }
+    else 
+    {
+        filter_protocol(first, ptr);
+    }
+
+    if (strstr(second, "mac_address") != NULL)
+    {
+        filter_mac(second, ptr);
+    }
+    else if (strstr(second, "ip_address") != NULL)
+    {
+        filter_ip(second, ptr);
+    }
+    else if (strstr(second, "port"))
+    {
+        filter_port(second, ptr);
+    }
+    else 
+    {
+        filter_protocol(second, ptr);
+    }
+}
+
 void filter_protocol(char *str, frame *ptr)
 {
     frame *tmp = ptr;
@@ -211,49 +307,48 @@ void filter_protocol(char *str, frame *ptr)
         {
             if (tmp->eth != NULL)
             {
-                tmp->print = 1;
+                tmp->print += 1;
             }
-            else
-            {
-                tmp->print = 0;
-            }
+            // else
+            // {
+            //     tmp->print = 0;
+            // }
         }
         else if (strncmp("ip", str, 2) == 0)
         {
             if (tmp->ip != NULL)
             {
-                tmp->print = 1;
+                tmp->print += 1;
             }
-            else
-            {
-                tmp->print = 0;
-            }
+            // else
+            // {
+            //     tmp->print = 0;
+            // }
         }
         else if (strncmp("tcp", str, 3) == 0)
         {
             if (tmp->tcp_ != NULL && tmp->http == NULL)
             {
-                tmp->print = 1;
+                tmp->print += 1;
             }
-            else 
-            {
-                tmp->print = 0;
-            }
+            // else 
+            // {
+            //     tmp->print = 0;
+            // }
         }
         else if (strncmp("http", str, 4) == 0)
         {
             if  (tmp->http != NULL)
             {
-                tmp->print = 1;
+                tmp->print += 1;
             }
-            else
-            {
-                tmp->print = 0;
-            }
+            // else
+            // {
+            //     tmp->print = 0;
+            // }
         }
         tmp = tmp->suiv;
-    }
-    
+    }   
 }
 
 void filter_mac(char *str, frame *ptr)
@@ -280,71 +375,71 @@ void filter_mac(char *str, frame *ptr)
             {
                 if (strstr(str, "src"))   //ip_address_src  == ...
                 {  
-                    if (strcmp(mac, temp1) != 0)
+                    if (strcmp(mac, temp1) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 0;
+                    // }
                 }
                 else if (strstr(str, "dst"))  //ip_address_dst  == ...
                 {
-                    if (strcmp(mac, temp2) != 0)
+                    if (strcmp(mac, temp2) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 0;
+                    // }
                 }
                 else    //ip_address  == ...
                 {
-                    if (strcmp(mac, temp1) != 0 && strcmp(mac, temp2) != 0)
+                    if (strcmp(mac, temp1) == 0 || strcmp(mac, temp2) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
             }
             else    //ip_address... != ...
             {
                 if (strstr(str, "src"))   //ip_address_src != ...
                 {
-                    if (strcmp(mac, temp1) == 0)
+                    if (strcmp(mac, temp1) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else if (strstr(str, "dst"))  //ip_address_src != ...
                 {
-                    if (strcmp(mac, temp2) == 0)
+                    if (strcmp(mac, temp2) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else{
-                    if (strcmp(mac, temp1) == 0 || strcmp(mac, temp2) == 0)
+                    if (strcmp(mac, temp1) != 0 && strcmp(mac, temp2) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
             }
         }
@@ -377,71 +472,71 @@ void filter_ip(char *str, frame *ptr)
             {
                 if (strstr(str, "src"))   //ip_address_src  == ...
                 {  
-                    if (strcmp(ip, temp1) != 0)
+                    if (strcmp(ip, temp1) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else if (strstr(str, "dst"))  //ip_address_dst  == ...
                 {
-                    if (strcmp(ip, temp2) != 0)
+                    if (strcmp(ip, temp2) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else    //ip_address  == ...
                 {
-                    if (strcmp(ip, temp1) != 0 && strcmp(ip, temp2) != 0)
+                    if (strcmp(ip, temp1) == 0 || strcmp(ip, temp2) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
             }
             else    //ip_address... != ...
             {
                 if (strstr(str, "src"))   //ip_address_src != ...
                 {
-                    if (strcmp(ip, temp1) == 0)
+                    if (strcmp(ip, temp1) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else if (strstr(str, "dst"))  //ip_address_src != ...
                 {
-                    if (strcmp(ip, temp2) == 0)
+                    if (strcmp(ip, temp2) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else{
-                    if (strcmp(ip, temp1) == 0 || strcmp(ip, temp2) == 0)
+                    if (strcmp(ip, temp1) != 0 && strcmp(ip, temp2) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
             }
             free(temp1);
@@ -475,71 +570,71 @@ void filter_port(char* str, frame *ptr)
             {
                 if (strstr(str, "src"))   //ip_address_src  == ...
                 {  
-                    if (strcmp(tcpport, temp1) != 0)
+                    if (strcmp(tcpport, temp1) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else if (strstr(str, "dst"))  //ip_address_dst  == ...
                 {
-                    if (strcmp(tcpport, temp2) != 0)
+                    if (strcmp(tcpport, temp2) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else    //ip_address  == ...
                 {
-                    if (strcmp(tcpport, temp1) != 0 && strcmp(tcpport, temp2) != 0)
+                    if (strcmp(tcpport, temp1) == 0 || strcmp(tcpport, temp2) == 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
             }
             else    //port... != ...
             {
                 if (strstr(str, "src"))   //port_src != ...
                 {
-                    if (strcmp(tcpport, temp1) == 0)
+                    if (strcmp(tcpport, temp1) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
-                else if (strstr(str, "dst"))  //port_src != ...
+                else if (strstr(str, "dst"))  //port_dst != ...
                 {
-                    if (strcmp(tcpport, temp2) == 0)
+                    if (strcmp(tcpport, temp2) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
                 else{       //port != ...
-                    if (strcmp(tcpport, temp1) == 0 || strcmp(tcpport, temp2) == 0)
+                    if (strcmp(tcpport, temp1) != 0 && strcmp(tcpport, temp2) != 0)
                     {
-                        tmp->print = 0;
+                        tmp->print += 1;
                     }
-                    else
-                    {
-                        tmp->print = 1;
-                    }
+                    // else
+                    // {
+                    //     tmp->print = 1;
+                    // }
                 }
             }
             free(temp1);

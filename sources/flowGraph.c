@@ -1,32 +1,72 @@
 #include "./headers/flowGraph.h"
 #define MAX 80
 
-void print_flowgraph(frame *ptr)
+void print_flowgraph(frame *ptr, char *filter)
 {
     print_heading_row();
     frame *tmp = ptr;
-    while (tmp)
+    int i = 0;
+    if (filter)
     {
-        if (tmp->print == 1)
+        if (strcmp(filter, "&&") == 0)
+            i++;
+    }
+    if (i == 1)
+    {
+        while (tmp)
         {
-            print_flow(tmp);
+            if (tmp->print == 2)
+            {
+                print_flow(tmp);
+                //fprintf(fd,"\n");
+            }
+            tmp = tmp->suiv;
         }
-        tmp = tmp->suiv;
+    }
+    else
+    {
+        while (tmp)
+        {
+            if (tmp->print > 0)
+            {
+                print_flow(tmp);
+                //fprintf(fd,"\n");
+            }
+            tmp = tmp->suiv;
+        }
     }
     print_final_row();
 }
 
-void fprint_flowgraph(FILE *fd, frame *ptr) {
+void fprint_flowgraph(FILE *fd, frame *ptr, char *filter) {
     fprint_heading_row(fd);
     frame *tmp = ptr;
-    while (tmp)
+    if (filter)
     {
-        if (tmp->print == 1)
+        if (strcmp(filter, "&&") == 0)
         {
-            fprint_flow(fd,tmp);
-            //fprintf(fd,"\n");
+            while (tmp)
+            {
+                if (tmp->print == 2)
+                {
+                    fprint_flow(fd,tmp);
+                    //fprintf(fd,"\n");
+                }
+                tmp = tmp->suiv;
+            }
         }
-        tmp = tmp->suiv;
+    }
+    else
+    {
+        while (tmp)
+        {
+            if (tmp->print >= 1)
+            {
+                fprint_flow(fd,tmp);
+                //fprintf(fd,"\n");
+            }
+            tmp = tmp->suiv;
+        }
     }
     fprint_final_row(fd);
 }

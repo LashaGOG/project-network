@@ -26,8 +26,10 @@ frame *queue_frame(frame **ptr, frame *suiv);
 void print_frame(frame *ptr);
 void print_specific_frame(frame *fr, int frame_number);
 
-void filter(frame *list);
+char *filter(frame *list);
 char *verif_input(char *prompt);
+char *verif_cond(char *prompt);
+void filter_double(char* first, char* second, frame *ptr);
 void filter_protocol(char *str, frame *ptr);
 void filter_mac(char *str, frame *ptr);
 void filter_ip(char *str, frame *ptr);
