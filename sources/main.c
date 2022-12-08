@@ -1,5 +1,5 @@
 #include "./headers/reader.h"
-#include "./headers/tests.h"
+//#include "./headers/tests.h"
 #include "./headers/tools.h"
 #include "./headers/ethernet.h"
 #include "./headers/tcp.h"
@@ -11,11 +11,6 @@
 
 int main(void)
 {   
-    FILE *reset = fopen("temporary_File.txt", "w");
-    fclose(reset);
-    reset = fopen("Formatted_File.txt", "w");
-    fclose(reset);
-
     // printf("Hello, please type a name of file\n");
     /* format file */
     char rawFile[50];
@@ -84,11 +79,11 @@ int main(void)
 
         switch (choice) {
             case 1:
-                //system("clear");
+                system("clear");
                 print_flowgraph(list_frames); // fonction to print flowgraph in terminal
                 break; 
             case 2: 
-                //system("clear");
+                system("clear");
                 printf("====================================\n");
                 FILE *flowGrap_out = fopen("flowGraph.txt","w");
                 fprint_flowgraph(flowGrap_out, list_frames); // fonction export flowgraph
@@ -96,13 +91,13 @@ int main(void)
                 fclose(flowGrap_out);
                 break;
             case 3:
-                //system("clear");
+                system("clear");
                 printf("=====================================\n");
                 printf("Activate/Desactivate filters\n");
                 filter(list_frames);  // fonction to activate/desactivate filters
                 break;
             case 4:
-                // system("clear");
+                system("clear");
                 int frame_number; 
                 printf("=====================================\n");
                 printf("Type frame number to print it's details\n");

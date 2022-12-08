@@ -24,7 +24,7 @@ void fprint_flowgraph(FILE *fd, frame *ptr) {
         if (tmp->print == 1)
         {
             fprint_flow(fd,tmp);
-            fprintf(fd,"\n");
+            //fprintf(fd,"\n");
         }
         tmp = tmp->suiv;
     }
@@ -380,7 +380,7 @@ void fprint_flow(FILE *fd, frame *Frame)
                 }
             }
             fprint_ipv4_fg(fd, Frame->ip);
-            fputs("|      |                                                                       |", fd);
+            fputs("|      |                                                                       |\n", fd);
         }
     }
     return;

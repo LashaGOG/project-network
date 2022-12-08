@@ -169,7 +169,7 @@ char *verif_input(char *prompt) {
         input[strcspn(input, "\n")] = 0;    
 
         regex_t protocol_regex, ip_port_mac_regex, q_none_regex;
-        regcomp(&protocol_regex, "^(ethernet|eth|ipv4|ip|tcp|http) (==|!=) .*$", REG_EXTENDED);
+        regcomp(&protocol_regex, "^(ethernet|eth|ipv4|ip|tcp|http)$", REG_EXTENDED);
         regcomp(&ip_port_mac_regex, "^(ip_address|port|mac_address)(_src|_dst)? (==|!=) .*$", REG_EXTENDED);
         regcomp(&q_none_regex, "^(q|none)$", REG_EXTENDED);
 
