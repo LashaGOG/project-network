@@ -115,7 +115,7 @@ void print_specific_frame(frame *fr, int frame_number) {
     }
 }
 
-char *filter(frame *ptr)
+void filter(frame *ptr)
 {
     puts("Before typing your filter, the syntax of the filter is the following : 'filter_expression == value'.");
     puts("Unfortunately, only a very limited choice of filter_expression is available ('ip_address' and 'port' to which you can add '_src' or '_dst' depending on the filter you want to apply).");
@@ -125,7 +125,10 @@ char *filter(frame *ptr)
     char* input = verif_input("Enter your filter : ");
 
     if (strcmp(input, "q") == 0)
-            return NULL;
+    {
+        free(input);   
+        return;
+    }
 
     frame *tmp = ptr;
     if (strcmp(input, "none") == 0)
@@ -156,8 +159,7 @@ char *filter(frame *ptr)
     {
         filter_protocol(input, ptr);
     }
-
-    return input;
+    free(input);
 }
 
 char *verif_input(char *prompt) {
@@ -194,6 +196,9 @@ char *verif_input(char *prompt) {
             return strdup(input);
         } 
         puts("Input does not respect the syntax.");
+        regfree(&protocol_regex);
+        regfree(&ip_port_mac_regex);
+        regfree(&q_none_regex);
     }
 }
 
