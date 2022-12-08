@@ -95,6 +95,11 @@ int main(void)
                 //system("clear");
                 printf("=====================================\n");
                 printf("Activate/Desactivate filters\n");
+                if (f != NULL)
+                {
+                    if (strlen(f) != 0)
+                        free(f);
+                }
                 f = filter(list_frames);  // fonction to activate/desactivate filters
                 break;
             case 4:
@@ -120,8 +125,11 @@ int main(void)
         }
     }
     
-    if (f)
-        free(f);
+    if (f != NULL)
+    {
+        if (strlen(f) != 0)
+            free(f);
+    }
     delete_frame(list_frames);
     remove("temporary_file.txt");
     remove("Formatted_File.txt");
