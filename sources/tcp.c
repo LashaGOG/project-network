@@ -1,8 +1,8 @@
 #include "./headers/tcp.h"
 
 char *get_port(char *bytes) {
-    char *ch1 = strndup(&bytes[0],2); // copy 2 bites
-    char *ch2 = strndup(&bytes[3],2); // copy 2 bites
+    char *ch1 = h_strndup(&bytes[0],2); // copy 2 bites
+    char *ch2 = h_strndup(&bytes[3],2); // copy 2 bites
 
     int length = strlen(ch1) + strlen(ch2);  
 
@@ -25,7 +25,7 @@ void get_src_dest_port_raw (char *bytes, char **src_port, char **dst_port) {
 
 char *get_seq_number_raw(char *bytes) {
     /* return raw sequence number value in hexadecimal */
-    char *seq_number_untrimmed = strndup(&bytes[12],11); // copy 4 bytes of sequence number
+    char *seq_number_untrimmed = h_strndup(&bytes[12],11); // copy 4 bytes of sequence number
     int length = strlen(seq_number_untrimmed) + 1; 
     char *seq_number_raw = (char *) malloc (length * sizeof(char)); 
     remove_spaces(seq_number_raw,seq_number_untrimmed);
@@ -35,7 +35,7 @@ char *get_seq_number_raw(char *bytes) {
 
 char *get_ack_number_raw(char *bytes) {
     /* return raw acknowledgment number in hexadecimal */
-    char *ack_untrimmed = strndup(&bytes[24],11); // copy 4 bytes
+    char *ack_untrimmed = h_strndup(&bytes[24],11); // copy 4 bytes
     int length = strlen(ack_untrimmed) + 1; 
     char *ack_raw = (char *) malloc (length * sizeof(char)); 
     remove_spaces(ack_raw,ack_untrimmed);
@@ -45,15 +45,15 @@ char *get_ack_number_raw(char *bytes) {
 
 char *get_thl(char *bytes) {
     /* return thl */
-    char *thl = strndup(&bytes[36],1);
+    char *thl = h_strndup(&bytes[36],1);
     return thl; 
 }
 
 tcp_flags *get_tcp_flags(char *bytes) {
-    char *val_hexa_flags = strndup(&bytes[37], 4); // copy 12 bits
+    char *val_hexa_flags = h_strndup(&bytes[37], 4); // copy 12 bits
     char *flags_bits = hexToBinchar(val_hexa_flags); // read as bin
 
-    char *reserved = strndup(&flags_bits[0], 6);
+    char *reserved = h_strndup(&flags_bits[0], 6);
     int length = strlen(val_hexa_flags) + 1;
     char *val_hexa_without_space = (char *) calloc (length,sizeof(char));
     remove_spaces(val_hexa_without_space,val_hexa_flags);
@@ -83,7 +83,7 @@ tcp_flags *get_tcp_flags(char *bytes) {
 
 char *get_window(char *bytes) {
     /* return raw window value in hexadecimal */
-    char *window_untrimmed = strndup(&bytes[42],5); // copy 4 bytes of window value
+    char *window_untrimmed = h_strndup(&bytes[42],5); // copy 4 bytes of window value
     int length = strlen(window_untrimmed) + 1; 
     char *window_raw = (char *) malloc (length * sizeof(char)); 
     remove_spaces(window_raw,window_untrimmed);
@@ -92,7 +92,7 @@ char *get_window(char *bytes) {
 }
 char *get_checksum(char *bytes) {
     /* return unverified checksum value in hexadecimal */
-    char *checksum_untrimmed = strndup(&bytes[48],5); // copy 4 bytes of checksum value
+    char *checksum_untrimmed = h_strndup(&bytes[48],5); // copy 4 bytes of checksum value
     int length = strlen(checksum_untrimmed) + 1; 
     char *checksum_raw = (char *) malloc (length * sizeof(char)); 
     remove_spaces(checksum_raw,checksum_untrimmed);
@@ -102,7 +102,7 @@ char *get_checksum(char *bytes) {
 
 char *get_urg_pointer(char *bytes) {
     /* return unverified checksum value in hexadecimal */
-    char *urgp_untrimmed = strndup(&bytes[54],5); // copy 4 bytes of urgent pointer
+    char *urgp_untrimmed = h_strndup(&bytes[54],5); // copy 4 bytes of urgent pointer
     int length = strlen(urgp_untrimmed) + 1; 
     char *urgp_raw = (char *) malloc (length * sizeof(char)); 
     remove_spaces(urgp_raw,urgp_untrimmed);

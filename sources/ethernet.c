@@ -3,7 +3,7 @@
 char* get_mac_address(char *bytes) {
     /* Returns properly formatted MAC address (6 bytes extracted from bytes) */
     
-    char *adress_mac = strndup(bytes,17); // copy 6 bytes 
+    char *adress_mac = h_strndup(bytes,17); // copy 6 bytes 
     change_separator_str(adress_mac,' ',':'); // change ' ' to ':'
     return adress_mac;
 }
@@ -16,8 +16,8 @@ void get_mac_dest_src (char *bytes, char **mac_src, char **mac_dst) {
 
 char* get_eth_proto (char *bytes) {
     /* return ethernet protocl type from ethernet frame*/
-    char *ch1 = strndup(&bytes[36],2); // copy 2 bites 
-    char *ch2 = strndup(&bytes[39],2); // copy 2 bites 
+    char *ch1 = h_strndup(&bytes[36],2); // copy 2 bites 
+    char *ch2 = h_strndup(&bytes[39],2); // copy 2 bites 
 
     int length = strlen(ch1) + strlen(ch2);  
 

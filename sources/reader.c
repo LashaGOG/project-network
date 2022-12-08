@@ -11,7 +11,7 @@ void writedown(char* str, char* nomfic)
     FILE* fd = fopen(nomfic, "a");
     if (!fd)
     {
-        puts("Problème d'ouverture du fichier (reader.c, writedown).");
+        puts("Failed to open file (reader.c, writedown).");
         return;
     }
     fprintf(fd, "%s\n", str);
@@ -23,7 +23,7 @@ void frametostr (char* nomfic, char* save)
     FILE* fd = fopen(nomfic, "r");
     if (!fd)
     {
-        puts("Problème d'ouverture du fichier (reader.c, frametostr).");
+        puts("Faild to open file (reader.c, frametostr).");
         return;
     }
     char ligne[256] = {0};
@@ -71,7 +71,7 @@ void verif (char* nomfic, char* save)
     FILE* fd = fopen(nomfic, "r");
     if (!fd)
     {
-         puts("Problème d'ouverture du fichier (reader.c, verif).");
+         puts("Failed to open file (reader.c, verif).");
         return;
     }
     
@@ -92,7 +92,7 @@ void verif (char* nomfic, char* save)
                 if (ligne[i] != ' ' && ligne[i] != '\n' && ligne[i] != '\0')
                 {
                     k = 0;
-                    printf("Trame n°%d ignorée, caractère non hexadécimal detecté\n", nbtrame);
+                    printf("Frame n %d ignored, a non hexadecimal character has been found.\n", nbtrame);
                 }
             }
         }

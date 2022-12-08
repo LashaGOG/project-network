@@ -1,17 +1,17 @@
 #include "./headers/ipv4.h"
 
 char *get_ip_version (char *bytes){
-    char *ip = strndup(&bytes[0], 1); //copy 4 bits
+    char *ip = h_strndup(&bytes[0], 1); //copy 4 bits
     return ip;
 }
 
 char *get_header_length (char *bytes){
-    char *header_length = strndup(&bytes[1], 1);  //copy 4 bits
+    char *header_length = h_strndup(&bytes[1], 1);  //copy 4 bits
     return header_length;
 }
 
 tos *get_TOS (char *bytes){
-    char *TOS = strndup(&bytes[3], 2);  //copy 1 byte
+    char *TOS = h_strndup(&bytes[3], 2);  //copy 1 byte
     char *TOS_bits = hexToBinchar(TOS);
     char *Precedence;
     int delay = 0, throughput = 0, reliability = 0, cost = 0, reserved = 0;
@@ -70,17 +70,17 @@ tos *get_TOS (char *bytes){
 }
 
 char* get_total_length (char* bytes) {
-    char* tot_length = strndup(&bytes[6], 5);
+    char* tot_length = h_strndup(&bytes[6], 5);
     return tot_length;
 }
 
 char* get_identifier (char* bytes) {
-    char* identifier = strndup(&bytes[12], 5);
+    char* identifier = h_strndup(&bytes[12], 5);
     return identifier;
 }
 
 fragmentation *get_fragmentation (char *bytes) {
-    char *fragment = strndup(&bytes[18], 5);
+    char *fragment = h_strndup(&bytes[18], 5);
     char *fragment_bits = hexToBinchar(fragment);
     free(fragment);
     
@@ -92,29 +92,29 @@ fragmentation *get_fragmentation (char *bytes) {
     if (fragment_bits[2] == '1')
         MF = 1;
     
-    char *offset = strndup(&fragment_bits[3], 13);
+    char *offset = h_strndup(&fragment_bits[3], 13);
 
     free(fragment_bits);
     return create_fragmentation(R, DF, MF, offset);
 }
 
 char *get_ttl (char *bytes) {
-    char* ttl = strndup(&bytes[24], 2);
+    char* ttl = h_strndup(&bytes[24], 2);
     return ttl;
 }
 
 char *get_protocol (char *bytes) {
-    char *protocol = strndup(&bytes[27], 2);
+    char *protocol = h_strndup(&bytes[27], 2);
     return protocol;
 }
 
 char *get_header_checksum (char *bytes) {
-    char *checksum = strndup(&bytes[30], 5);
+    char *checksum = h_strndup(&bytes[30], 5);
     return checksum;
 }
 
 char *get_ip (char* bytes) {
-    char *ip_add = strndup(bytes, 11);
+    char *ip_add = h_strndup(bytes, 11);
     change_separator_str(ip_add,' ','.');
     return ip_add;
 }

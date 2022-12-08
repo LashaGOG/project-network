@@ -1,25 +1,31 @@
 #include "./headers/http.h"
 
+/*separate_chunks takes as arguments a string of characters and pointer that we move
+within this string. This is a function that is called several times to get all the fields
+in Hypertext Transfer Protocol (HTTP)*/
 char *separate_chunks(char *bytes, char **ptr) {
-    if (strncmp("0d 0a", bytes, 5) == 0)
+    //if the first characters of our string is "0d 0a", then we reached the end of the fields in HTTP
+    if (strncmp("0d 0a", bytes, 5) == 0) 
         return NULL;
-    *ptr = strstr(bytes,"0d 0a");
+    *ptr = strstr(bytes,"0d 0a"); //we look for the first incoming occurrence of "0d 0a"
     if (*ptr == NULL || strcmp(bytes, "") == 0 || strlen(bytes) < 2)
         return NULL;
 
+    //we verify once again if it's the end of HTTP fields
     if (*ptr[0] == bytes[0] && *ptr[1] == bytes[1])
     {
         if (*ptr[3]  == bytes[3] && *ptr[4] == bytes[4])
             return NULL;
     }
+    //if it's not the end of HTTP fields, we copy all the characters before "0d 0a"
     int length = strlen(bytes) - strlen(*ptr); 
+    char *rep = h_strndup(bytes,length);
+    //and we move our pointer to the character after "0d 0a"
     *ptr += 6; 
-    char *rep = strndup(bytes,length);
     return rep; 
 }
 
 header *get_header (char *bytes) {
-    //printf("bytes : %s\n", bytes);
     int i = 0, j = 1, k = 0;
     int pos = 0;
     char *meth_ver;
@@ -30,20 +36,19 @@ header *get_header (char *bytes) {
     {
         if (bytes[i] == '2' && bytes[j] == '0')
         {               
-            if (k == 1) {
+            if (k == 1) { //if it's the second time we meet "20", then we cut the string in half
                 uri_stat = (char *) calloc(i - pos, sizeof(char));
                 strncpy(uri_stat, &bytes[pos], (i - pos - 1));
-                //printf("uri_stat = %s\n", uri_stat);
 
                 ver_msg = calloc(strlen(bytes) - (j + 1), sizeof(char));
                 strncpy(ver_msg, &bytes[j+2], (strlen(bytes) - (j + 2)));
-                //printf("ver_msg = %s\n", ver_msg);
+
                 break;
             }
-            if (k == 0) {
+            if (k == 0) { //if it's the first time we meet "20", then we copy all the characters before "20"
                 meth_ver = (char  *) calloc(i, sizeof(char));
                 strncpy(meth_ver, &bytes[0], (i - 1));
-                //printf("meth_ver = %s\n", meth_ver);
+
                 pos = j+2;
                 k++;
             }
@@ -64,9 +69,9 @@ champ *get_champ (char *bytes) {
     {
         if (bytes[i] == '2' && bytes[j] == '0')
         {
-            entete = strndup(&bytes[pos], (i - 1));
+            entete = h_strndup(&bytes[pos], (i - 1));
             
-            valeur = strndup(&bytes[j+2], (strlen(bytes) - (j + 2)));
+            valeur = h_strndup(&bytes[j+2], (strlen(bytes) - (j + 2)));
             break;
         }
         i++;

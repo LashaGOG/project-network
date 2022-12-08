@@ -204,43 +204,72 @@ char* filter(frame *ptr)
     return NULL;
 }
 
+//char *verif_input(char *prompt) {
+//    while (1) {
+//        char input[256];
+//        printf("%s", prompt);
+//        
+//        fgets(input, 256, stdin);
+//        input[strcspn(input, "\n")] = 0;    
+//
+//        regex_t protocol_regex, ip_port_mac_regex, q_none_regex;
+//        regcomp(&protocol_regex, "^(ethernet|eth|ipv4|ip|tcp|http)$", REG_EXTENDED);
+//        regcomp(&ip_port_mac_regex, "^(ip_address|port|mac_address)(_src|_dst)? (==|!=) .*$", REG_EXTENDED);
+//        regcomp(&q_none_regex, "^(q|none|double)$", REG_EXTENDED);
+//
+//        if (!regexec(&protocol_regex, input, 0, NULL, 0)) {
+//            regfree(&protocol_regex);
+//            regfree(&ip_port_mac_regex);
+//            regfree(&q_none_regex);
+//            return strdup(input);
+//        }
+//
+//        if (!regexec(&ip_port_mac_regex, input, 0, NULL, 0)) {
+//            regfree(&protocol_regex);
+//            regfree(&ip_port_mac_regex);
+//            regfree(&q_none_regex);
+//            return strdup(input);
+//        }
+//
+//        if (!regexec(&q_none_regex, input, 0, NULL, 0)) {
+//            regfree(&protocol_regex);
+//            regfree(&ip_port_mac_regex);
+//            regfree(&q_none_regex);
+//            return strdup(input);
+//        } 
+//        puts("Input does not respect the syntax.");
+//        regfree(&protocol_regex);
+//        regfree(&ip_port_mac_regex);
+//        regfree(&q_none_regex);
+//    }
+//}
 char *verif_input(char *prompt) {
     while (1) {
         char input[256];
         printf("%s", prompt);
         
+        fflush(stdin);
+
         fgets(input, 256, stdin);
-        input[strcspn(input, "\n")] = 0;    
+        input[strcspn(input, "\n")] = 0;
 
-        regex_t protocol_regex, ip_port_mac_regex, q_none_regex;
-        regcomp(&protocol_regex, "^(ethernet|eth|ipv4|ip|tcp|http)$", REG_EXTENDED);
-        regcomp(&ip_port_mac_regex, "^(ip_address|port|mac_address)(_src|_dst)? (==|!=) .*$", REG_EXTENDED);
-        regcomp(&q_none_regex, "^(q|none|double)$", REG_EXTENDED);
-
-        if (!regexec(&protocol_regex, input, 0, NULL, 0)) {
-            regfree(&protocol_regex);
-            regfree(&ip_port_mac_regex);
-            regfree(&q_none_regex);
+        if (strcmp(input, "ethernet") == 0 || strcmp(input, "eth") == 0 ||
+            strcmp(input, "ipv4") == 0 || strcmp(input, "ip") == 0 ||
+            strcmp(input, "tcp") == 0 || strcmp(input, "http") == 0) {
             return strdup(input);
         }
 
-        if (!regexec(&ip_port_mac_regex, input, 0, NULL, 0)) {
-            regfree(&protocol_regex);
-            regfree(&ip_port_mac_regex);
-            regfree(&q_none_regex);
+        if (strstr(input, "ip_address") || strstr(input, "port") || strstr(input, "mac_address")) {
+            if (strstr(input, "==") || strstr(input, "!=")) {
+                return strdup(input);
+            }
+        }
+
+        if (strcmp(input, "q") == 0 || strcmp(input, "none") == 0 || strcmp(input, "double") == 0) {
             return strdup(input);
         }
 
-        if (!regexec(&q_none_regex, input, 0, NULL, 0)) {
-            regfree(&protocol_regex);
-            regfree(&ip_port_mac_regex);
-            regfree(&q_none_regex);
-            return strdup(input);
-        } 
         puts("Input does not respect the syntax.");
-        regfree(&protocol_regex);
-        regfree(&ip_port_mac_regex);
-        regfree(&q_none_regex);
     }
 }
 
@@ -250,6 +279,8 @@ char *verif_cond(char *prompt)
     {
         char input[3];
         printf("%s", prompt);
+
+        fflush(stdin);
 
         fgets(input, 3, stdin);
         input[strcspn(input, "\n")] = 0;

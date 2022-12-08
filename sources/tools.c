@@ -383,7 +383,7 @@ void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimm
 char *hexToChar(char *bytes)
 {
     char *res = calloc(strlen(bytes), sizeof(char));
-    char *str = strndup(&bytes[0], strlen(bytes));
+    char *str = h_strndup(&bytes[0], strlen(bytes));
     char *first = str;
     
     const char *separators = " ";
@@ -460,4 +460,25 @@ char *hex_to_ip(const char *hex_ip) {
     }
     ip[k] = '\0';
     return ip;
+}
+
+char* h_strndup(const char*  s, size_t n)
+{
+    size_t slen = (size_t)strlen(s);
+    char* copy;
+ 
+    if (slen < n)
+    {
+        n = slen;
+    }
+ 
+    copy = malloc(n+1);
+ 
+    if (copy)
+    {
+        memcpy(copy, s, n);
+        copy[n] = 0;
+    }
+ 
+    return copy;
 }

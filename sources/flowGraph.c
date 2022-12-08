@@ -18,7 +18,6 @@ void print_flowgraph(frame *ptr, char *filter)
             if (tmp->print == 2)
             {
                 print_flow(tmp);
-                //fprintf(fd,"\n");
             }
             tmp = tmp->suiv;
         }
@@ -30,7 +29,6 @@ void print_flowgraph(frame *ptr, char *filter)
             if (tmp->print > 0)
             {
                 print_flow(tmp);
-                //fprintf(fd,"\n");
             }
             tmp = tmp->suiv;
         }
@@ -50,7 +48,6 @@ void fprint_flowgraph(FILE *fd, frame *ptr, char *filter) {
                 if (tmp->print == 2)
                 {
                     fprint_flow(fd,tmp);
-                    //fprintf(fd,"\n");
                 }
                 tmp = tmp->suiv;
             }
@@ -63,7 +60,6 @@ void fprint_flowgraph(FILE *fd, frame *ptr, char *filter) {
             if (tmp->print >= 1)
             {
                 fprint_flow(fd,tmp);
-                //fprintf(fd,"\n");
             }
             tmp = tmp->suiv;
         }
@@ -82,13 +78,13 @@ void print_final_row()
 }
 
 void fprint_heading_row(FILE *fd) {
-    fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
-    fprintf(fd, "|  N   |    IP SOURCE    |                                   | IP  DESTINATION |\n");
-    fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
+    fprintf(fd, "+------+-----------------+---------------------------------------------------------------------+-----------------+\n");
+    fprintf(fd, "|  N   |    IP SOURCE    |                                                                     | IP  DESTINATION |\n");
+    fprintf(fd, "+------+-----------------+---------------------------------------------------------------------+-----------------+\n");
 }
 void fprint_final_row(FILE *fd)
 {
-    fprintf(fd, "+------+-----------------+-----------------------------------+-----------------+\n");
+    fprintf(fd, "+------+-----------------+---------------------------------------------------------------------+-----------------+\n");
 }
 
 void print_comm (char *bytes, int *frame_counter) 
@@ -98,7 +94,7 @@ void print_comm (char *bytes, int *frame_counter)
         printf("Error allocating memory\n");
         return; 
     }
-    // print_eth_frame(eFrame);
+
     if (strcmp(eFrame->proto,"0800") == 1) 
     {
         printf ("Invalid input, Type != IPV4\n");
@@ -107,12 +103,6 @@ void print_comm (char *bytes, int *frame_counter)
     } 
     eFrame->num_frame = 1000;
     ipv4 *ipv4_frame = create_ipv4(eFrame->Payload, *frame_counter); 
-    
-    // printf("|      |                  TCP et Trucs ICI                                      |\n");
-    // printf("| %d | %s      ---------------------------------->     %s |\n",eFrame ->num_frame, ipv4_frame->src_ip, ipv4_frame->dest_ip);
-    // printf("|      |                  des trucs en plus?                                    |\n");
-    
-    // printf("+------------------------------------------------------------------------------+\n");
 
     delete_ipv4(ipv4_frame);
     delete_eth_frame(eFrame);
@@ -142,41 +132,12 @@ void print_flow(frame *Frame)
     return;
 }
 
-
-//    if (eFrame->Payload != NULL){
-//        ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
-//        if (ip_frame->Payload != NULL){
-//            tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
-//            if (tcp_frame != NULL)
-//            {
-//                 if (tcp_frame->Payload != NULL)
-//                 {
-//                     e_http *http_frame = get_http(tcp_frame->Payload);
-//                     if (http_frame != NULL)
-//                     {
-//                         print_http_fg(tcp_frame, http_frame);
-//                         delete_http(http_frame);
-//                     }
-//                     else
-//                         tc = 1; 
-//                 }
-//                 if (tc == 1){
-//                     print_tcp_fg(tcp_frame);
-//                     delete_tcp(tcp_frame);
-//                 }
-//             }
-//             print_ipv4_fg(ip_frame);
-//             printf("+------+-----------------------------------------------------------------------+\n");
-//             delete_ipv4(ip_frame);
-//         }
-//     }
-//     return;
-
+//center_string is a function that takes a first string  and adds the second string in the middle
 char *center_string(const char *str1, const char *str2) {
     size_t str1_len = strlen(str1);
     size_t str2_len = strlen(str2);
 
-    if (str2_len > str1_len)
+    if (str2_len > str1_len) //if the second string is longer than the first, then it returns the second one
         return strdup(str2);
     
     size_t leading_spaces = 0;
@@ -185,7 +146,7 @@ char *center_string(const char *str1, const char *str2) {
     for (size_t i = 0; i < str2_len; i++) {
         if (str2[i] == ' ') {
             if (i < str2_len - 1) {
-                trailing_spaces++;
+                trailing_spaces++; //the function counts the number of spaces it should have on both sides
             }
         } else {
             break;
@@ -369,39 +330,6 @@ void print_tcp_fg(tcp* tcp_frame) {
     free(centered_flow_info);
 }
 
-// void fprint_flow(FILE *fd, eth_frame *eFrame){
-//     int tc = 0;
-
-//    if (eFrame->Payload != NULL){
-//        ipv4 *ip_frame = create_ipv4(eFrame->Payload,eFrame->num_frame);
-//        if (ip_frame->Payload != NULL){
-//            tcp *tcp_frame = create_tcp(ip_frame->Payload,eFrame->num_frame);
-//            if (tcp_frame != NULL)
-//            {
-//                 if (tcp_frame->Payload != NULL)
-//                 {
-//                     e_http *http_frame = get_http(tcp_frame->Payload);
-//                     if (http_frame != NULL)
-//                     {
-//                         fprint_http_fg(fd, tcp_frame, http_frame);
-//                         delete_http(http_frame);
-//                     }
-//                     else
-//                         tc = 1; 
-//                 }
-//                 if (tc == 1){
-//                     fprint_tcp_fg(fd, tcp_frame);
-//                     delete_tcp(tcp_frame);
-//                 }
-//             }
-//             fprint_ipv4_fg(fd, ip_frame);
-//             fprintf(fd, "+------+-----------------------------------------------------------------------+\n");
-//             delete_ipv4(ip_frame);
-//         }
-//     }
-//     return;
-// }
-
 void fprint_flow(FILE *fd, frame *Frame)
 {
     if (Frame->eth != NULL)
@@ -420,7 +348,7 @@ void fprint_flow(FILE *fd, frame *Frame)
                 }
             }
             fprint_ipv4_fg(fd, Frame->ip);
-            fputs("|      |                                                                       |\n", fd);
+            fputs("|      |                                                                                                         |\n", fd);
         }
     }
     return;
@@ -451,7 +379,7 @@ void fprint_http_fg(FILE *fd, tcp *tcp_frame, e_http *http_frame)
     strcat(entete, temp);
     free(temp);
     
-    char *http_header = center_string("                                     ", entete);
+    char *http_header = center_string("                                                                       ", entete);
     free(entete);
 
     fprintf(fd, "|      |%s%s%s|\n", port_src, http_header, port_dest);
@@ -474,10 +402,10 @@ void fprint_ipv4_fg(FILE *fd, ipv4 *ipv4_frame)
     sprintf(&(N[0]), "%d", ipv4_frame->num_frame);
     char *number = center_string("      ", N);
 
-    char *arrow = "------------------------------------>";
+    char *arrow = "---------------------------------------------------------------------->";
 
     fprintf(fd, "|%s|%s%s%s|\n", number, src_ip, arrow, dest_ip);
-    fprintf(fd, "|      |                                                                       |\n");
+    //fprintf(fd, "|      |                                                                                                         |\n");
     free(src_ip);
     free(dest_ip);
     free(number);
@@ -485,7 +413,7 @@ void fprint_ipv4_fg(FILE *fd, ipv4 *ipv4_frame)
 
 void fprint_tcp_fg(FILE *fd, tcp* tcp_frame) {
 
-    char *flow_info = (char *) calloc (36, sizeof(char));
+    char *flow_info = (char *) calloc (70, sizeof(char));
 
     /* printing ports */
     char *port = hexToDec_c(tcp_frame->src_port);
@@ -504,7 +432,7 @@ void fprint_tcp_fg(FILE *fd, tcp* tcp_frame) {
 
     /* getting flow info */
     
-    int space_left = 32 ;
+    int space_left = 66 ;
     int boolean = 1; 
     if (boolean == 1) cat_info("",flow_info,flags,&space_left,&boolean);
     if (boolean == 1) cat_info(" win=",flow_info,window,&space_left,&boolean);
@@ -516,7 +444,7 @@ void fprint_tcp_fg(FILE *fd, tcp* tcp_frame) {
     free(ack);
     free(window);
 
-    char *centered_flow_info = center_string("                                   ",flow_info);
+    char *centered_flow_info = center_string("                                                                     ",flow_info);
     free(flow_info);
     
     fprintf(fd, "|      |%s%s%s|\n", port_src, centered_flow_info, port_dest);

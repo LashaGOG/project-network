@@ -11,7 +11,7 @@
 
 int main(void)
 {   
-    // printf("Hello, please type a name of file\n");
+    
     /* format file */
     char rawFile[50];
     int file_exists = 0 ; 
@@ -65,9 +65,12 @@ int main(void)
 
     char *f = NULL;
 
+    
+    
     while (boolean == 1) {
+
         printf("+====================================+\n");
-        printf("|               MAIN MENU            |\n");
+        printf("|             MAIN  MENU             |\n");
         printf("+====================================+\n");
         printf("| 1. Print flowgraph on termial      |\n");
         printf("| 2. Export flowgraph as .txt file   |\n");
@@ -76,53 +79,56 @@ int main(void)
         printf("| 5. Quit                            |\n");
         printf("+====================================+\n");
         printf(" Enter your choice: ");
-        scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                system("clear");
-                print_flowgraph(list_frames, f); // fonction to print flowgraph in terminal
-                break; 
-            case 2: 
-                //system("clear");
-                printf("====================================\n");
-                FILE *flowGrap_out = fopen("flowGraph.txt","w");
-                fprint_flowgraph(flowGrap_out, list_frames, f); // fonction export flowgraph
-                printf(" Flowgraph exported as flowGraph.txt\n");
-                fclose(flowGrap_out);
-                break;
-            case 3:
-                //system("clear");
-                printf("=====================================\n");
-                printf("Activate/Desactivate filters\n");
-                if (f != NULL)
-                {
-                    if (strlen(f) != 0)
-                        free(f);
-                }
-                f = filter(list_frames);  // fonction to activate/desactivate filters
-                break;
-            case 4:
-                system("clear");
-                int frame_number; 
-                printf("=====================================\n");
-                printf("Type frame number to print it's details\n");
-                scanf("%d",&frame_number);
-                printf("Printing details of Frame : %d\n",frame_number);
-                print_specific_frame(list_frames, frame_number); // fonction to print frame N details
-                puts("");
-                break;
-            case 5:
-                printf("=====================================\n");
-                printf("Goodbye!\n");
-                boolean = 0; 
-                system("clear");
-                break;
-            default:
-                printf("=====================================\n");
-                printf("Invalid choice\n");
-                break;
+        if (scanf("%d", &choice) == 1 && choice >= 1 && choice <= 5)
+        {
+            switch (choice) {
+                case 1:
+                    system("clear");
+                    print_flowgraph(list_frames, f); // fonction to print flowgraph in terminal
+                    break; 
+                case 2: 
+                    //system("clear");
+                    printf("====================================\n");
+                    FILE *flowGrap_out = fopen("Flopgraph.txt","w");
+                    fprint_flowgraph(flowGrap_out, list_frames, f); // fonction export flowgraph
+                    printf(" Flowgraph exported as Flopgraph.txt\n");
+                    fclose(flowGrap_out);
+                    break;
+                case 3:
+                    //system("clear");
+                    printf("=====================================\n");
+                    printf("Activate/Desactivate filters\n");
+                    if (f != NULL)
+                    {
+                        if (strlen(f) != 0)  //if f isn't empty, free it to avoid leaks
+                            free(f);
+                    }
+                    f = filter(list_frames);  // fonction to activate/desactivate filters
+                    break;
+                case 4:
+                    system("clear");
+                    int frame_number; 
+                    printf("=====================================\n");
+                    printf("Type frame number to print it's details\n");
+                    scanf("%d",&frame_number);
+                    printf("Printing details of Frame : %d\n",frame_number);
+                    print_specific_frame(list_frames, frame_number); // fonction to print frame N details
+                    puts("");
+                    break;
+                case 5:
+                    printf("=====================================\n");
+                    printf("Goodbye!\n");
+                    boolean = 0; 
+                    system("clear");
+                    break;
+                default:
+                    printf("=====================================\n");
+                    printf("Invalid choice\n");
+                    break;
+            }
         }
+        fflush(stdin); //reset 
     }
     
     if (f != NULL)

@@ -7,7 +7,7 @@
 // #include <unistd.h> 
 #include <strings.h>
 #include <wchar.h>
-#include <regex.h>
+//#include <regex.h>
 #include <stdbool.h>
 #include "reader.h"
 
@@ -34,6 +34,8 @@ void change_separator_str (char *str, const char old_separator, const char new_s
 
 void remove_spaces (char* restrict str_trimmed, const char* restrict str_untrimmed);
 int calculate_nb_char_hex (char *bytes);
+
+char* h_strndup(const char*  s, size_t n);
 
 
 #endif // TOOLS
