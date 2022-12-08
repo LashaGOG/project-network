@@ -178,21 +178,23 @@ void print_http_fg(tcp *tcp_frame, e_http *http_frame)
     char *port_dest = center_string("                 ", port);
     free(port);
 
-    int len = strlen(http_frame->http_header->meth_ver) + strlen(http_frame->http_header->uri_stat) + strlen(http_frame->http_header->ver_msg) + 1;
-    char *entete = (char *)  calloc(len, sizeof(char));
+    char *entete = (char *)  calloc(36, sizeof(char));
+    
+    int space_left = 32 ;
+    int boolean = 1; 
     
     char *temp = hexToChar(http_frame->http_header->meth_ver);
-    strcat(entete, temp);
+    if (boolean == 1) cat_info("",entete,temp,&space_left,&boolean);
     free(temp);
     
     temp = hexToChar(http_frame->http_header->uri_stat);
-    strcat(entete, temp);
+    if (boolean == 1) cat_info(" ",entete,temp,&space_left,&boolean);
     free(temp);
 
     temp = hexToChar(http_frame->http_header->ver_msg);
-    strcat(entete, temp);
+    if (boolean == 1) cat_info(" ",entete,temp,&space_left,&boolean);
     free(temp);
-    
+
     char *http_header = center_string("                                     ", entete);
     free(entete);
 
@@ -364,19 +366,21 @@ void fprint_http_fg(FILE *fd, tcp *tcp_frame, e_http *http_frame)
     char *port_dest = center_string("                 ", port);
     free(port);
 
-    int len = strlen(http_frame->http_header->meth_ver) + strlen(http_frame->http_header->uri_stat) + strlen(http_frame->http_header->ver_msg) + 1;
-    char *entete = (char *)  calloc(len, sizeof(char));
+    char *entete = (char *)  calloc(70, sizeof(char));
+    
+    int space_left = 66 ;
+    int boolean = 1; 
     
     char *temp = hexToChar(http_frame->http_header->meth_ver);
-    strcat(entete, temp);
+    if (boolean == 1) cat_info("",entete,temp,&space_left,&boolean);
     free(temp);
     
     temp = hexToChar(http_frame->http_header->uri_stat);
-    strcat(entete, temp);
+    if (boolean == 1) cat_info(" ",entete,temp,&space_left,&boolean);
     free(temp);
 
     temp = hexToChar(http_frame->http_header->ver_msg);
-    strcat(entete, temp);
+    if (boolean == 1) cat_info(" ",entete,temp,&space_left,&boolean);
     free(temp);
     
     char *http_header = center_string("                                                                       ", entete);
