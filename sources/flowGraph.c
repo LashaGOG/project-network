@@ -8,7 +8,7 @@ void print_flowgraph(frame *ptr, char *filter)
     int i = 0;
     if (filter)
     {
-        if (strcmp(filter, "&&") == 0)
+        if (strncmp(filter, "&&", 2) == 0)
             i++;
     }
     if (i == 1)
