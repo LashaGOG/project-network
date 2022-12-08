@@ -23,4 +23,4 @@ Before you start the program make sure to put your text file containing captured
 
 #### Export flow graph
 
-If you choose option to export flowgraph as .txt file, it will be exported as "flowGraph.txt". 
+If you choose option to export flowgraph as .txt file, it will be exported as "Flopgraph.txt". 
