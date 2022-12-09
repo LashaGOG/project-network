@@ -183,8 +183,11 @@ char* filter(frame *ptr)
             tmp->print = 0;
             tmp = tmp->suiv;
         }
+        fflush(stdin);
         char *first = verif_input("Enter the first filter : ");
+        fflush(stdin);
         char *cond = verif_cond("Enter the condition (either && or ||) : ");
+        fflush(stdin);
         char *second = verif_input("Enter the second filter : ");
 
         filter_double(first, second, ptr);

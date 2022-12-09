@@ -39,27 +39,30 @@ void print_flowgraph(frame *ptr, char *filter)
 void fprint_flowgraph(FILE *fd, frame *ptr, char *filter) {
     fprint_heading_row(fd);
     frame *tmp = ptr;
+    int i = 0;
     if (filter)
     {
-        if (strcmp(filter, "&&") == 0)
+        if (strncmp(filter, "&&", 2) == 0)
+            i++;
+    }
+    if (i == 1)
+    {
+        while (tmp)
         {
-            while (tmp)
+            if (tmp->print == 2)
             {
-                if (tmp->print == 2)
-                {
-                    fprint_flow(fd,tmp);
-                }
-                tmp = tmp->suiv;
+                fprint_flow(fd,tmp);
             }
+            tmp = tmp->suiv;
         }
     }
     else
     {
         while (tmp)
         {
-            if (tmp->print >= 1)
+            if (tmp->print > 0)
             {
-                fprint_flow(fd,tmp);
+                fprint_flow(fd, tmp);
             }
             tmp = tmp->suiv;
         }
