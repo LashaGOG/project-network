@@ -56,7 +56,6 @@ int main(void)
     while (fgets(line, sizeof(line), file))
     {
         // remove newline character from the line
-        printf("Indice dernier caractère line = %ld\n", strcspn(line, "\n"));
         line[strcspn(line, "\n")] = 0;
         char* str = strdup(line);
         str[strlen(str)] = '\0';
