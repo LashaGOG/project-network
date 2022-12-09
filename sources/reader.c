@@ -41,7 +41,7 @@ void frametostr (char* nomfic, char* save)
             if (str[0] != '\0')
             {
                 writedown(str, save);
-                mem_reset(str, len);
+                mem_reset(str, 3500);
                 i = 0;
             }
         }
@@ -102,6 +102,7 @@ void verif (char* nomfic, char* save)
             ligne[strlen(ligne) - 1] = '\0';
             writedown(ligne, save);
         }
+        mem_reset(ligne, strlen(ligne));
     }
     free(ligne);
     fclose(fd);

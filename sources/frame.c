@@ -98,7 +98,7 @@ void print_frame(frame *ptr)
     if (ptr->http != NULL)
         print_http(ptr->http);
 
-    printf("frame->print = %d\n", ptr->print);
+    //printf("frame->print = %d\n", ptr->print);
 }
 
 
@@ -120,10 +120,14 @@ void print_specific_frame(frame *fr, int frame_number) {
 char* filter(frame *ptr)
 {
     puts("Before typing your filter, the syntax of the filter is the following : 'filter_expression == value'.");
-    puts("Unfortunately, only a very limited choice of filter_expression is available ('ip_address' and 'port' to which you can add '_src' or '_dst' depending on the filter you want to apply).");
+    puts("You can filter by protocol : [ethernet, eth, ipv4, ip, tcp, http].");
+    puts("You can search for : [ip_address, port, mac_address] and specify if it's the source (_src) or the destination (_dst).");
+    puts("To apply a double filter, type double. Then you input the first filter, followed by either && or || and finally the second filter.");
     puts("Examples :\n-for an ip address filter : 'ip_address != 192.126.0.12' or 'ip_address_src == 192.126.0.12'");
-    puts("-for a TCP port filter : 'port != 2345' or 'port_dst == 2345'\n");
+    puts("-for a TCP port filter : 'port != 2345' or 'port_dst == 2345'");
+    puts("-for a mac address : 'mac_address_src != ae:ae:ae:ae:ae:ae'\n");
 
+    fflush(stdin);
     char* input = verif_input("Enter your filter : ");
 
     if (strcmp(input, "q") == 0)
@@ -243,6 +247,7 @@ char* filter(frame *ptr)
 //        regfree(&q_none_regex);
 //    }
 //}
+
 char *verif_input(char *prompt) {
     while (1) {
         char input[256];

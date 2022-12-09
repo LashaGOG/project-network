@@ -12,13 +12,23 @@
 int main(void)
 {   
     
+    puts(" _    _ _                      _____ _                _    ");
+    puts("| |  | (_)                    / ____| |              | |   ");
+    puts("| |__| |_  ___ ___ _   _ _ __| (___ | |__   __ _ _ __| | __");
+    puts("|  __  | |/ __/ __| | | | '_ \\___  \\| '_ \\ / _` | '__| |/ /");
+    puts("| |  | | | (_| (__| |_| | |_) |___) | | | | (_| | |  |   < ");
+    puts("|_|  |_|_|\\___\\___|\\__,_| .__/_____/|_| |_|\\__,_|_|  |_|\\_\\");
+    puts("                        | |                                ");
+    puts("                        |_|                                \n");
+
+    
     /* format file */
     char rawFile[50];
     int file_exists = 0 ; 
     FILE *rFile; 
     while (file_exists == 0) { // user rests in this boucle till he does not enter a name of existing file
-        printf("Hello, please type a name of file\n");
-        printf("Type Quit/quit to end the exuction of program\n");
+        printf("Please type the of your file\n");
+        printf("Type Quit/quit to end the execution of program\n");
         scanf("%s",rawFile); // we ask user to put the name of his file
         if (strcmp("Quit",rawFile) == 0 || strcmp("quit",rawFile) == 0) return 0 ; // end the program
         rFile = fopen(rawFile,"r");
@@ -46,6 +56,7 @@ int main(void)
     while (fgets(line, sizeof(line), file))
     {
         // remove newline character from the line
+        printf("Indice dernier caractère line = %ld\n", strcspn(line, "\n"));
         line[strcspn(line, "\n")] = 0;
         char* str = strdup(line);
         str[strlen(str)] = '\0';
@@ -56,6 +67,8 @@ int main(void)
         // // add the node to the end of linked list
         addLast(&list_frames, str, &frame_counter);
         free(str);
+
+        mem_reset(line, MAX_LINE_LENGTH);
     }
     fclose(file); // close file
     
@@ -65,16 +78,14 @@ int main(void)
 
     char *f = NULL;
 
-    
-    
     while (boolean == 1) {
 
         printf("+====================================+\n");
         printf("|             MAIN  MENU             |\n");
         printf("+====================================+\n");
-        printf("| 1. Print flowgraph on termial      |\n");
+        printf("| 1. Print flowgraph on terminal     |\n");
         printf("| 2. Export flowgraph as .txt file   |\n");
-        printf("| 3. Activate/Desactivate filters    |\n");
+        printf("| 3. Activate/Deactivate filters     |\n");
         printf("| 4. See frame details               |\n");
         printf("| 5. Quit                            |\n");
         printf("+====================================+\n");
@@ -92,13 +103,13 @@ int main(void)
                     printf("====================================\n");
                     FILE *flowGrap_out = fopen("Flopgraph.txt","w");
                     fprint_flowgraph(flowGrap_out, list_frames, f); // fonction export flowgraph
-                    printf(" Flowgraph exported as Flopgraph.txt\n");
+                    printf("Flowgraph exported as Flopgraph.txt\n");
                     fclose(flowGrap_out);
                     break;
                 case 3:
                     //system("clear");
                     printf("=====================================\n");
-                    printf("Activate/Desactivate filters\n");
+                    printf("Activate/Deactivate filters\n");
                     if (f != NULL)
                     {
                         if (strlen(f) != 0)  //if f isn't empty, free it to avoid leaks
@@ -110,7 +121,7 @@ int main(void)
                     system("clear");
                     int frame_number; 
                     printf("=====================================\n");
-                    printf("Type frame number to print it's details\n");
+                    printf("Type frame number to print its details\n");
                     scanf("%d",&frame_number);
                     printf("Printing details of Frame : %d\n",frame_number);
                     print_specific_frame(list_frames, frame_number); // fonction to print frame N details
